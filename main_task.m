@@ -5,7 +5,7 @@
 % Please do not share or use this code without my written permission.
 % Author: Alex Breslav
 
-function exit_flag = main_task(initialization_struct, trials, block, tutorial_timing_struct)
+function exit_flag = main_task(initialization_struct, trials, block)
 
 % 1 - Initial setup
     format shortg
@@ -13,6 +13,10 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
 
     % ---- file set up; enables flexibility between OSX and Windows
     sl = initialization_struct.slash_convention;
+
+    % ---- test or not?
+    test = initialization_struct.test;
+    input_source = initialization_struct.input_source;
 
     % ---- shuffle the rng and save the seed
     rng('shuffle');
@@ -23,13 +27,19 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
     Screen('Preference', 'SkipSyncTests', 1);
     Screen('Preference', 'VisualDebugLevel', 1);% change psych toolbox screen check to black
     FlushEvents;
-    HideCursor;
+    if test == 0
+        HideCursor;
+    end
     PsychDefaultSetup(1);
 
     % ---- Screen selection
     screens = Screen('Screens'); %count the screen
     whichScreen = max(screens); %select the screen; ALTERED THIS BECAUSE IT KEPT SHOWING UP ON MY LAPTOP INSTEAD OF THE ATTACHED MONITOR
-    [w, rect] = Screen('OpenWindow', whichScreen);
+    if test == 0
+        [w, rect] = Screen('OpenWindow', whichScreen);
+    else
+        [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
+    end
 
     % --- font sizes
     textsize_fixcross = initialization_struct.textsize_fixcross;
@@ -322,7 +332,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
             ], 'center','center', white, [], [], [], 1.6);
         Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
-        KbWait([],2);
+        KbWait(input_source, 2);
 
         DrawFormattedText(w,[
             'After you finish the practice rounds,' '\n' ...
@@ -330,13 +340,13 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
             ], 'center','center', white, [], [], [], 1.6);
         Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
-        KbWait([],2);
+        KbWait(input_source, 2);
 
         DrawFormattedText(w, 'Press p to begin the practice rounds.', 'center', 'center', white);
         Screen(w, 'Flip');
 
         while 1 %wait for response and allow exit if necessesary
-          [keyIsDown, ~, keyCode] = KbCheck;
+          [keyIsDown, ~, keyCode] = KbCheck(input_source);
           if keyIsDown && any(keyCode(exitKeys))
               exit_flag = 1; Screen('CloseAll'); FlushEvents;
               sca; return
@@ -346,7 +356,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         end
 
 % ---- Intro screen for food block
-    elseif block == 2 % block == 2 is food
+    else
     % ---- Food version
         DrawFormattedText(w, [
             'In this version of the game, you will be playing for food rewards!' ...
@@ -354,7 +364,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         WaitSecs(1)
-        KbWait([],2);
+        KbWait(input_source, 2);
 
     % ---- New rooms
         Screen('DrawTexture', w, token_room, [], room_Lpoint);
@@ -366,7 +376,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         WaitSecs(1)
-        KbWait([],2);
+        KbWait(input_source, 2);
 
     % ---- New colors and labels
         Screen('DrawTexture', w, token_room, [], room_Lpoint);
@@ -377,7 +387,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         WaitSecs(1)
-        KbWait([],2);
+        KbWait(input_source, 2);
 
     % ---- Reset chances
         Screen('DrawTexture', w, token_room, [], room_Lpoint);
@@ -390,7 +400,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         WaitSecs(1)
-        KbWait([],2);
+        KbWait(input_source, 2);
 
     % ---- Win = food
         Screen('DrawTexture', w, token_room, [], room_Lpoint);
@@ -403,7 +413,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         WaitSecs(1)
-        KbWait([],2);
+        KbWait(input_source, 2);
 
     % ---- Eat as much of either as you like
         DrawFormattedText(w, [
@@ -412,7 +422,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
             'make sure that you cannot run out.' ...
             ],'center', 'center', white, [], [], [], 1.6);
         Screen(w, 'Flip');
-        KbWait([],2);
+        KbWait(input_source, 2);
 
     % ---- Questions? Begin
         DrawFormattedText(w, [
@@ -424,7 +434,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         Screen(w, 'Flip');
 
         while 1 %wait for response and allow exit if necessesary
-          [keyIsDown, ~, keyCode] = KbCheck;
+          [keyIsDown, ~, keyCode] = KbCheck(input_source);
           if keyIsDown && any(keyCode(exitKeys))
               exit_flag = 1; Screen('CloseAll'); FlushEvents;
               sca; return
@@ -432,96 +442,6 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
               break
           end
         end
-
-% ---- Intro screen for money block
-    else % block = 1 is money
-    % ---- Money version
-        DrawFormattedText(w, [
-            'In this version of the game, you will be playing for money!' ...
-            ],'center', 'center', white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait([],2);
-
-    % ---- New rooms
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'In the money version of the game, there is' '\n' ...
-            'a new TOKEN ROOM, and a MONEY PRIZE ROOM!'
-            ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait([],2);
-
-    % ---- New colors and labels
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'The slots are labeled with new colors and new symbols.' ...
-            ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait([],2);
-
-    % ---- Reset chances
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'All of your chances of winning have been reset,' '\n' ...
-            'but the rules of the game and all of the' '\n' ...
-            'programming are exactly the same.'
-            ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait([],2);
-
-    % ---- Win = food
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'Each time you win in the MONEY PRIZE ROOM,' '\n' ...
-            'you''ll earn 10 cents. Each time you win' '\n' ...
-            '10 cents, you''ll take a dime out of one' '\n' ...
-            'of the two bowls and place it in your bank.' ...
-            ],'center', rect(4)*0.7, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait([],2);
-
-    % ---- Eat as much of either as you like
-        DrawFormattedText(w, [
-            'You can choose from either bowl as much or as little' '\n'...
-            'as you like. We have given you enough dimes in' '\n' ...
-            'each bowl to make sure that you cannot run out.' ...
-            ],'center', 'center', white, [], [], [], 1.6);
-        Screen(w, 'Flip');
-        KbWait([],2);
-
-    % ---- Questions? Begin
-        DrawFormattedText(w, [
-            'If you have any questions at all about the the money version' '\n' ...
-            'of the game, this is a great time to ask the experimenter.' '\n\n' ...
-            'Once the experimenter has answered all of your questions,' '\n' ...
-            'press y to begin the money version of the game!' ...
-            ], 'center', 'center', white, [], [], [], 1.6);
-        Screen(w, 'Flip');
-
-        while 1 %wait for response and allow exit if necessesary
-          [keyIsDown, ~, keyCode] = KbCheck;
-          if keyIsDown && any(keyCode(exitKeys))
-              exit_flag = 1; Screen('CloseAll'); FlushEvents;
-              sca; return
-          elseif keyIsDown && any(keyCode(startFirstKeys))
-              break
-          end
-        end
-
     end
 
 % -----------------------------------------------------------------------------
@@ -530,19 +450,6 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
 % -----------------------------------------------------------------------------
 % 8 - Begin trials
     t0 = GetSecs;
-    
-    if block ~= 0
-        Screen('TextSize', w,10);
-        DrawFormattedText(w, [
-            'subject: ' num2str(initialization_struct.sub) '\n'...
-            'block index: ' num2str(find(initialization_struct.block == block)) '\n' ...
-            'block type (1 = money, 2 = food): ' num2str(block) ...
-            ],rect(3)*0.8, rect(4)*0.8, white, [], [], [], 1.6);
-        Screen(w, 'Flip');
-        WaitSecs(1/10)
-    end
-
-
     for trial = 1:trials
 
 % -----------------------------------------------------------------------------
@@ -573,7 +480,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
 
                 Screen(w, 'Flip');
                 while 1 %wait for response and allow exit if necessesary
-                  [keyIsDown, ~, keyCode] = KbCheck;
+                  [keyIsDown, ~, keyCode] = KbCheck(input_source);
 %                   if keyIsDown && any(keyCode(exitKeys))
 %                       exit_flag = 1; Screen('CloseAll'); FlushEvents;
 %                       sca; return
@@ -620,10 +527,10 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
 % ---- capture key press
         key_is_down = 0;
         FlushEvents;
-        [key_is_down, secs, key_code] = KbCheck;
+        [key_is_down, secs, key_code] = KbCheck(input_source);
 
         while key_code(L) == 0 && key_code(R) == 0
-                [key_is_down, secs, key_code] = KbCheck;
+                [key_is_down, secs, key_code] = KbCheck(input_source);
         end
 
 % ---- stop reaction timer
@@ -741,7 +648,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
             RestrictKeysForKbCheck([L,R]);
 
             while key_is_down==0
-                    [key_is_down, secs, key_code] = KbCheck(-3);
+                    [key_is_down, secs, key_code] = KbCheck(input_source);
             end
 
 % ---- stop reaction timer
@@ -930,7 +837,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
             RestrictKeysForKbCheck([L,R]);
 
             while key_is_down==0
-                    [key_is_down, secs, key_code] = KbCheck(-3);
+                    [key_is_down, secs, key_code] = KbCheck(input_source);
             end
 
 % ---- stop reaction timer
@@ -1104,72 +1011,38 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
 % ---- unique to this block
         practice_struct.block = find(initialization_struct.block == 0);
         practice_struct.stim_symbol = initialization_struct.stim_prac_symbol;
-        practice_struct.tutorial_timing_names = tutorial_timing_struct.names; % these are the times pulled during the tutorial
-        practice_struct.tutorial_timing_times = tutorial_timing_struct.times; % these are the names of the timed chunks of the tutorial
-        delete([initialization_struct.data_file_path sl 'tutorial_timing.mat']);
         save([initialization_struct.data_file_path sl 'practice'], 'practice_struct', '-v6');
 
-    elseif block == 1 % money block
-        money_struct = struct;
-        money_struct.rng_seed = rng_seed; % save the rng seed set at the top of the script
-        money_struct.subject = initialization_struct.sub;
-        money_struct.stim_color_step1 = initialization_struct.stim_color_step1(block+1); % stimuli are always selected where 1st item in array goes to practice, then money, then food
-        money_struct.stim_colors_step2 = initialization_struct.stim_colors_step2(block+1);
-        money_struct.position = position;
-        money_struct.action = action;
-        money_struct.on = choice_on_time;
-        money_struct.off = choice_off_time;
+    elseif block == 1 % main task block
+        task_struct = struct;
+        task_struct.rng_seed = rng_seed; % save the rng seed set at the top of the script
+        task_struct.subject = initialization_struct.sub;
+        task_struct.stim_color_step1 = initialization_struct.stim_color_step1(block+1); % stimuli are always selected where 1st item in array goes to practice, then money, then food
+        task_struct.stim_colors_step2 = initialization_struct.stim_colors_step2(block+1);
+        task_struct.position = position;
+        task_struct.action = action;
+        task_struct.on = choice_on_time;
+        task_struct.off = choice_off_time;
 
-        money_struct.on_datetime = choice_on_datetime;
-        money_struct.off_datetime = choice_off_datetime;
+        task_struct.on_datetime = choice_on_datetime;
+        task_struct.off_datetime = choice_off_datetime;
 
-        money_struct.rt = choice_off_time-choice_on_time;
-        money_struct.reward_feedback_on = reward_feedback_on;
-        money_struct.iti_actual = iti_actual;
-        money_struct.iti_selected = iti_selected;
-        money_struct.transition_prob = a;
-        money_struct.transition_det = r;
-        money_struct.payoff_det = payoff_det;
-        money_struct.payoff = payoff;
-        money_struct.state = state;
-
-% ---- unique to this block
-        money_struct.block = find(initialization_struct.block == 1);
-        money_struct.stim_symbol = initialization_struct.stim_symbol(1:6); % first 6 symbols always go to money block
-        money_struct.payoff_sum = sum(nansum(payoff))/10;
-        money_struct.payoff_total = 10 + ceil(money_struct.payoff_sum);
-        save([initialization_struct.data_file_path sl 'money'], 'money_struct', '-v6');
-
-    else % food block
-        food_struct = struct;
-        food_struct.rng_seed = rng_seed; % save the rng seed set at the top of the script
-        food_struct.subject = initialization_struct.sub;
-        food_struct.stim_color_step1 = initialization_struct.stim_color_step1(block+1); % stimuli are always selected where 1st item in array goes to practice, then money, then food
-        food_struct.stim_colors_step2 = initialization_struct.stim_colors_step2(block+1);
-        food_struct.position = position;
-        food_struct.action = action;
-        food_struct.on = choice_on_time;
-        food_struct.off = choice_off_time;
-
-        food_struct.on_datetime = choice_on_datetime;
-        food_struct.off_datetime = choice_off_datetime;
-
-        food_struct.rt = choice_off_time-choice_on_time;
-        food_struct.reward_feedback_on = reward_feedback_on;
-        food_struct.iti_actual = iti_actual;
-        food_struct.iti_selected = iti_selected;
-
-        food_struct.transition_prob = a;
-        food_struct.transition_det = r;
-        food_struct.payoff_det = payoff_det;
-        food_struct.payoff = payoff;
-        food_struct.state = state;
+        task_struct.rt = choice_off_time-choice_on_time;
+        task_struct.reward_feedback_on = reward_feedback_on;
+        task_struct.iti_actual = iti_actual;
+        task_struct.iti_selected = iti_selected;
+        task_struct.transition_prob = a;
+        task_struct.transition_det = r;
+        task_struct.payoff_det = payoff_det;
+        task_struct.payoff = payoff;
+        task_struct.state = state;
 
 % ---- unique to this block
-        food_struct.block = find(initialization_struct.block == 2);
-        food_struct.stim_symbol = initialization_struct.stim_symbol(7:12); % second 6 symbols in the arrary always go to food block
-        save([initialization_struct.data_file_path sl 'food'], 'food_struct', '-v6');
-
+        task_struct.block = find(initialization_struct.block == 1);
+        task_struct.stim_symbol = initialization_struct.stim_symbol(1:6); % first 6 symbols always go to money block
+        task_struct.payoff_sum = sum(nansum(payoff))/10;
+        task_struct.payoff_total = 10 + ceil(task_struct.payoff_sum);
+        save([initialization_struct.data_file_path sl 'money'], 'task_struct', '-v6');
     end
 
 % -----------------------------------------------------------------------------
@@ -1190,7 +1063,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         WaitSecs(1);
 
         while 1 %wait for response and allow exit if necessesary
-          [keyIsDown, ~, keyCode] = KbCheck;
+          [keyIsDown, ~, keyCode] = KbCheck(input_source);
           if keyIsDown && any(keyCode(exitKeys))
               break
           end
@@ -1202,7 +1075,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         Screen('TextSize', w, textsize_directions);
         DrawFormattedText(w, [
             'You have completed the money rounds.' '\n\n' ...
-            'You earned: $' sprintf('%.2f', money_struct.payoff_sum) '\n\n' ...
+            'You earned: $' sprintf('%.2f', task_struct.payoff_sum) '\n\n' ...
             'Please alert the experimenter, and' '\n' ...
             'press ESCAPE to close to game.'
             ], 'center', 'center', white);
@@ -1210,7 +1083,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         WaitSecs(1);
 
         while 1 %wait for response and allow exit if necessesary
-          [keyIsDown, ~, keyCode] = KbCheck;
+          [keyIsDown, ~, keyCode] = KbCheck(input_source);
           if keyIsDown && any(keyCode(exitKeys))
               break
           end
@@ -1229,7 +1102,7 @@ function exit_flag = main_task(initialization_struct, trials, block, tutorial_ti
         WaitSecs(1);
 
         while 1 %wait for response and allow exit if necessesary
-          [keyIsDown, ~, keyCode] = KbCheck;
+          [keyIsDown, ~, keyCode] = KbCheck(input_source);
           if keyIsDown && any(keyCode(exitKeys))
               break
           end
