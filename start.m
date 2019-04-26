@@ -47,21 +47,33 @@ if test == 1
       file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/4_raw_data'; % for Alex's computer
       sl = '/'; % for OSX
     else
-      file_root = '\Users\ads48\Documents\MDT project files\run1\raw data\matlab'; % for the eye-tracker
+      file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % for the eye-tracker
       sl = '\'; % for Windows
     end
 
     % using a touchscreen or keyboard?
-      input_source = input(['\n\n' ...
-        'Are you using a keyboard or touchscreen?' '\n' ...
-        '1 = Touchscreen' '\n' ...
-        '3 = Local Keyboard' '\n' ...
-        '6 = External Keyboard' '\n' ...
-        'Response: ' ]);
+      if comp_os == 1
+          input_source = input(['\n\n' ...
+            'Are you using a keyboard or touchscreen?' '\n' ...
+            '3 = Local Keyboard' '\n' ...
+            '6 = External Keyboard' '\n' ...
+            'Response: ' ]);
 
-      if ~ismember(input_source, [1 3 6])
-          disp('Invalid entry, please try again.')
-          sca; return
+            if ~ismember(input_source, [3 6])
+                disp('Invalid entry, please try again.')
+                sca; return
+            end
+      else
+        input_source = input(['\n\n' ...
+          'Are you using a keyboard or touchscreen?' '\n' ...
+          '0 = Local Keyboard' '\n' ...
+          '1 = Touchscreen' '\n' ...
+          'Response: ' ]);
+
+          if ~ismember(input_source, [0 1])
+              disp('Invalid entry, please try again.')
+              sca; return
+          end
       end
 
     % --- Check that file root is correct
@@ -172,7 +184,7 @@ else
       '2 = Sticker Condition' '\n' ...
       'Response: ' ]);
 
-    if ~ismember(comp_os, [1 2])
+    if ~ismember(condition, [1 2])
         disp('Invalid entry, please try again.')
         sca;
         clear initialization_struct;
