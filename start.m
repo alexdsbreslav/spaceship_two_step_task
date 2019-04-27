@@ -274,7 +274,7 @@ else
         initialization_struct.condition = 'sticker';
     end
     % stimuli sets
-    spaceships = {'cornhusk', 'stingray', 'triangle', 'tripod'}
+    spaceships = {'cornhusk', 'stingray', 'triangle', 'tripod'};
     aliens = {'gizmo', 'sully', 'bear', 'vlad', 'piglet', 'elmo', 'mac', 'sid'};
     step1_colors = {'blue', 'orange'};
     step2_color_pairs = {'red_purple', 'yellow_green'};
@@ -284,8 +284,8 @@ else
     initialization_struct.stim_color_step1 = step1_colors(randperm(numel(step1_colors)));
     initialization_struct.stim_colors_step2 = step2_color_pairs(randperm(numel(step2_color_pairs)));
     initialization_struct.stim_step2_color_select = step2_color(randperm(numel(step2_color)));
-    initialization_struct.spaceships = prac_symbols(randperm(numel(spaceships)));
-    initialization_struct.aliens = symbols(randperm(numel(aliens)));
+    initialization_struct.spaceships = spaceships(randperm(numel(spaceships)));
+    initialization_struct.aliens = aliens(randperm(numel(aliens)));
 
     % This was randomized when there was more than 1 block
     % however the code still uses this to differentiate between practice and main experiment
