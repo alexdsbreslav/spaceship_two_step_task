@@ -38,8 +38,8 @@ function exit_flag = main_task(initialization_struct, trials, block)
     if test == 0
         [w, rect] = Screen('OpenWindow', whichScreen);
     else
-        [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
-        % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
+        % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
+        [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
     end
 
     % --- font sizes
@@ -54,20 +54,21 @@ function exit_flag = main_task(initialization_struct, trials, block)
 % 2 - Define image locations
 
 % ---- display coordinates setup
-    r = [0,0,400,290]; %stimuli rectangle
-    rc = [0,0,420,310]; %choice rectangle
+    r = [0,0,800,600]; %stimuli rectangle
+    r_small = [0,0,400,290]
+    rc = [0,0,750,620]; %choice rectangle
     r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 
 % ---- location of the alien when alone
-    Mpoint = CenterRectOnPoint(r, rect(3)*.5, rect(4)*0.5);
+    Mpoint = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 
 % ---- location of the aliens
-    alien_Lpoint = CenterRectOnPoint(r, rect(3)*0.2, rect(4)*0.4);
-    alien_Rpoint = CenterRectOnPoint(r, rect(3)*0.8, rect(4)*0.4);
+    alien_Lpoint = CenterRectOnPoint(r, rect(3)*0.25, rect(4)*0.5);
+    alien_Rpoint = CenterRectOnPoint(r, rect(3)*0.75, rect(4)*0.5);
 
 % ---- frames - white during every trial; green when chosen
-    alien_Lframe = CenterRectOnPoint(rc, rect(3)*0.2, rect(4)*0.4);
-    alien_Rframe = CenterRectOnPoint(rc, rect(3)*0.8, rect(4)*0.4);
+    alien_Lframe = CenterRectOnPoint(rc, rect(3)*0.25, rect(4)*0.5);
+    alien_Rframe = CenterRectOnPoint(rc, rect(3)*0.75, rect(4)*0.5);
 
 % ---- next arrow location
     next_arrow_loc = CenterRectOnPoint(r_next_arrow, rect(3)*0.9, rect(4)*0.9);
