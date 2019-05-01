@@ -38,6 +38,7 @@ function exit_flag = main_task(initialization_struct, trials, block)
     if test == 0
         [w, rect] = Screen('OpenWindow', whichScreen);
     else
+        % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
         [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
     end
 
@@ -53,41 +54,24 @@ function exit_flag = main_task(initialization_struct, trials, block)
 % 2 - Define image locations
 
 % ---- display coordinates setup
-    r = [0,0,400,290]; %stimuli rectangle
-    rc = [0,0,420,310]; %choice rectangle
-    slot_r = [0,0,600,480]; % slot rectangle
-    r_spenttoken = [0,0,400*.4, 290*.4]; % spent token rectangle
-    r_coinslot = [0,0,400*.8, 290*.8]; % coin slot rectangle
+    r = [0,0,800,600]; %stimuli rectangle
+    r_small = [0,0,400,290]
+    rc = [0,0,750,620]; %choice rectangle
     r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
-    room_r = [0,0,620*.9,500*.9]; % room rectangle
 
-% ---- locations of original stimuli alone
-    Mpoint = CenterRectOnPoint(r, rect(3)*.5, rect(4)*0.5);
+% ---- location of the alien when alone
+    Mpoint = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 
-% ---- slot machine locations
-    slot_Lpoint = CenterRectOnPoint(slot_r, rect(3)*0.2, rect(4)*0.375);
-    slot_Rpoint = CenterRectOnPoint(slot_r, rect(3)*0.8, rect(4)*0.375);
-
-% ---- stimuli within slot locations
-    slot_label_Lpoint = CenterRectOnPoint(r, rect(3)*0.2, rect(4)*0.4);
-    slot_label_Rpoint = CenterRectOnPoint(r, rect(3)*0.8, rect(4)*0.4);
+% ---- location of the aliens
+    alien_Lpoint = CenterRectOnPoint(r, rect(3)*0.25, rect(4)*0.5);
+    alien_Rpoint = CenterRectOnPoint(r, rect(3)*0.75, rect(4)*0.5);
 
 % ---- frames - white during every trial; green when chosen
-    slot_label_Lframe = CenterRectOnPoint(rc, rect(3)*0.2, rect(4)*0.4);
-    slot_label_Rframe = CenterRectOnPoint(rc, rect(3)*0.8, rect(4)*0.4);
-
-% ---- coin/coin slot locations
-    coinslot_Lpoint = CenterRectOnPoint(r_coinslot, rect(3)*0.2, rect(4)*0.8);
-    coinslot_Rpoint = CenterRectOnPoint(r_coinslot, rect(3)*0.8, rect(4)*0.8);
-    spent_token_Mpoint = CenterRectOnPoint(r_spenttoken, rect(3)*0.5, rect(4)*0.8);
+    alien_Lframe = CenterRectOnPoint(rc, rect(3)*0.25, rect(4)*0.5);
+    alien_Rframe = CenterRectOnPoint(rc, rect(3)*0.75, rect(4)*0.5);
 
 % ---- next arrow location
     next_arrow_loc = CenterRectOnPoint(r_next_arrow, rect(3)*0.9, rect(4)*0.9);
-
-% ---- room locations
-    room_Lpoint = CenterRectOnPoint(room_r, rect(3)*.25, rect(4)*0.3);
-    room_Rpoint = CenterRectOnPoint(room_r, 3*rect(3)*.25, rect(4)*0.3);
-
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -96,41 +80,20 @@ function exit_flag = main_task(initialization_struct, trials, block)
 % 3 - Load images for practice block
     if block == 0
 % --- load basic stimuli
-        A1 = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_color_step1(1)) sl ...
-          char(initialization_struct.stim_prac_symbol(1)) '.png'],'png');
-        B1 = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_color_step1(1)) sl ...
-          char(initialization_struct.stim_prac_symbol(2)) '.png'],'png');
+        A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+          char(initialization_struct.spaceships(1)) '.png'],'png');
+        B1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+          char(initialization_struct.spaceships(2)) '.png'],'png');
 
-        A2 = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-          char(initialization_struct.stim_prac_symbol(3)) '.png'],'png');
-        B2 = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-          char(initialization_struct.stim_prac_symbol(4)) '.png'],'png');
+        A2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
+          char(initialization_struct.aliens(1)) '.png'],'png');
+        B2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
+          char(initialization_struct.aliens(2)) '.png'],'png');
 
-        A3 = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          char(initialization_struct.stim_prac_symbol(5)) '.png'],'png');
-        B3 = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          char(initialization_struct.stim_prac_symbol(6)) '.png'],'png');
-
-% ---- load slot machine files
-        step1_slot_L = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_color_step1(1)) sl 'Slot Machine_L.png'],'png');
-        step1_slot_R = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_color_step1(1)) sl 'Slot Machine_R.png'],'png');
-
-        state2_slot_L = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'Slot Machine_L.png'],'png');
-        state2_slot_R = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'Slot Machine_R.png'],'png');
-
-        state3_slot_L = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'Slot Machine_L.png'],'png');
-        state3_slot_R = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'Slot Machine_R.png'],'png');
-
-% ---- load coin slot files
-        state2_coin_slot = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'coin slot.png'],'png');
-        state3_coin_slot = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'coin slot.png'],'png');
-
-% ---- read token files
-        state2_token = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-           'token.png'],'png');
-        state3_token = imread(['stimuli' sl 'practice' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          'token.png'],'png');
-        spent_token = imread(['stimuli' sl 'practice' sl 'spent token.png'],'png');
+        A3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
+          char(initialization_struct.aliens(3)) '.png'],'png');
+        B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
+          char(initialization_struct.aliens(4)) '.png'],'png');
 
 % ---- read next arrow file
         next_arrow = imread(['stimuli' sl 'main_task' sl 'next arrow.png'],'png');
@@ -140,100 +103,25 @@ function exit_flag = main_task(initialization_struct, trials, block)
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % 4 - Load and create images for money block
-    elseif block == 1
-% --- load basic stimuli files
-        A1 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(2)) sl ...
-          char(initialization_struct.stim_symbol(1)) '.png'],'png');
-        B1 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(2)) sl ...
-          char(initialization_struct.stim_symbol(2)) '.png'],'png');
-
-        A2 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-          char(initialization_struct.stim_symbol(3)) '.png'],'png');
-        B2 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-          char(initialization_struct.stim_symbol(4)) '.png'],'png');
-
-        A3 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          char(initialization_struct.stim_symbol(5)) '.png'],'png');
-        B3 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          char(initialization_struct.stim_symbol(6)) '.png'],'png');
-
-% ---- load slot machine files
-        step1_slot_L = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(2)) sl 'Slot Machine_L.png'],'png');
-        step1_slot_R = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(2)) sl 'Slot Machine_R.png'],'png');
-
-        state2_slot_L = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'Slot Machine_L.png'],'png');
-        state2_slot_R = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'Slot Machine_R.png'],'png');
-
-        state3_slot_L = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'Slot Machine_L.png'],'png');
-        state3_slot_R = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'Slot Machine_R.png'],'png');
-
-% ---- load coin slot files
-        state2_coin_slot = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'coin slot.png'],'png');
-        state3_coin_slot = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'coin slot.png'],'png');
-
-% ---- read token files
-        state2_token = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-           'token.png'],'png');
-        state3_token = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          'token.png'],'png');
-        spent_token = imread(['stimuli' sl 'main_task' sl 'spent token.png'],'png');
-
-% ---- read next arrow file
-        next_arrow = imread(['stimuli' sl 'main_task' sl 'next arrow.png'],'png');
-
-% ---- load room stimuli
-        token_room = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(2)) sl 'token room.png'],'png');
-        prize_room = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(2)) sl 'money prize room.png'],'png');
-
-% -----------------------------------------------------------------------------
-% -----------------------------------------------------------------------------
-% -----------------------------------------------------------------------------
-% -----------------------------------------------------------------------------
-% 5 - Load and create images for food block
     else
-% --- load basic stimuli
-        A1 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(3)) sl ...
-          char(initialization_struct.stim_symbol(7)) '.png'],'png');
-        B1 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(3)) sl ...
-          char(initialization_struct.stim_symbol(8)) '.png'],'png');
+% --- load basic stimuli files
+        A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+          char(initialization_struct.spaceships(3)) '.png'],'png');
+        B1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+          char(initialization_struct.spaceships(4)) '.png'],'png');
 
-        A2 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-          char(initialization_struct.stim_symbol(9)) '.png'],'png');
-        B2 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-          char(initialization_struct.stim_symbol(10)) '.png'],'png');
+        A2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
+          char(initialization_struct.aliens(5)) '.png'],'png');
+        B2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
+          char(initialization_struct.aliens(6)) '.png'],'png');
 
-        A3 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          char(initialization_struct.stim_symbol(11)) '.png'],'png');
-        B3 = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          char(initialization_struct.stim_symbol(12)) '.png'],'png');
-
-% ---- load slot machine files
-        step1_slot_L = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(3)) sl 'Slot Machine_L.png'],'png');
-        step1_slot_R = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(3)) sl 'Slot Machine_R.png'],'png');
-
-        state2_slot_L = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'Slot Machine_L.png'],'png');
-        state2_slot_R = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'Slot Machine_R.png'],'png');
-
-        state3_slot_L = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'Slot Machine_L.png'],'png');
-        state3_slot_R = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'Slot Machine_R.png'],'png');
-
-% ---- load coin slot files
-        state2_coin_slot = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'coin slot.png'],'png');
-        state3_coin_slot = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'coin slot.png'],'png');
-
-% ---- read token files
-        state2_token = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-           'token.png'],'png');
-        state3_token = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-          'token.png'],'png');
-        spent_token = imread(['stimuli' sl 'main_task' sl 'spent token.png'],'png');
+        A3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
+          char(initialization_struct.aliens(7)) '.png'],'png');
+        B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
+          char(initialization_struct.aliens(8)) '.png'],'png');
 
 % ---- read next arrow file
         next_arrow = imread(['stimuli' sl 'main_task' sl 'next arrow.png'],'png');
-
-% ---- load room stimuli
-        token_room = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_color_step1(3)) sl 'token room.png'],'png');
-        prize_room = imread(['stimuli' sl 'main_task' sl char(initialization_struct.stim_colors_step2(3)) sl 'food prize room.png'],'png');
 
     end
 
@@ -242,33 +130,6 @@ function exit_flag = main_task(initialization_struct, trials, block)
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % 6 - Additional set up
-% ---- create image files to draw that are not randomized later on (i.e. the original stimuli)
-    % ---- create slot machines
-    step1_slot_L = Screen('MakeTexture', w, step1_slot_L);
-    state2_slot_L = Screen('MakeTexture', w, state2_slot_L);
-    state3_slot_L = Screen('MakeTexture', w, state3_slot_L);
-
-    step1_slot_R = Screen('MakeTexture', w, step1_slot_R);
-    state2_slot_R = Screen('MakeTexture', w, state2_slot_R);
-    state3_slot_R = Screen('MakeTexture', w, state3_slot_R);
-
-    % ---- create coin slots
-    state2_coin_slot = Screen('MakeTexture', w, state2_coin_slot);
-    state3_coin_slot = Screen('MakeTexture', w, state3_coin_slot);
-
-    % ---- create tokens
-    state2_token = Screen('MakeTexture', w, state2_token);
-    state3_token = Screen('MakeTexture', w, state3_token);
-    spent_token = Screen('MakeTexture', w, spent_token);
-
-    % ---- create next arrow
-    next_arrow = Screen('MakeTexture', w, next_arrow);
-
-    % ---- create rooms
-    if block ~= 0
-        token_room = Screen('MakeTexture', w, token_room);
-        prize_room = Screen('MakeTexture', w, prize_room);
-    end
 % ---- Keyboard
     KbName('UnifyKeyNames');
     L = KbName('LeftArrow');
@@ -330,7 +191,7 @@ function exit_flag = main_task(initialization_struct, trials, block)
             'This is the last part of the tutorial.' '\n' ...
             'You''ll get to play 15 practice rounds.' ....
             ], 'center','center', white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+        % Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         KbWait(input_source, 2);
 
@@ -338,7 +199,7 @@ function exit_flag = main_task(initialization_struct, trials, block)
             'After you finish the practice rounds,' '\n' ...
             'you''ll play the strategy game for real rewards!' ....
             ], 'center','center', white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+        % Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         KbWait(input_source, 2);
 
@@ -357,72 +218,72 @@ function exit_flag = main_task(initialization_struct, trials, block)
 
 % ---- Intro screen for food block
     else
-    % ---- Food version
-        DrawFormattedText(w, [
-            'In this version of the game, you will be playing for food rewards!' ...
-            ],'center', 'center', white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait(input_source, 2);
-
-    % ---- New rooms
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'In the food version of the game, there is' '\n' ...
-            'a new TOKEN ROOM, and a FOOD PRIZE ROOM!'
-            ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait(input_source, 2);
-
-    % ---- New colors and labels
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'The slots are labeled with new colors and new symbols.' ...
-            ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait(input_source, 2);
-
-    % ---- Reset chances
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'All of your chances of winning have been reset,' '\n' ...
-            'but the rules of the game and all of the' '\n' ...
-            'programming are exactly the same.'
-            ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait(input_source, 2);
-
-    % ---- Win = food
-        Screen('DrawTexture', w, token_room, [], room_Lpoint);
-        Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-        DrawFormattedText(w, [
-            'Each time you win in the FOOD PRIZE' '\n' ...
-            'ROOM, you''ll get to take a one bite of' '\n' ...
-            'either one of your two snacks!'
-            ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-        Screen('Flip',w);
-        WaitSecs(1)
-        KbWait(input_source, 2);
-
-    % ---- Eat as much of either as you like
-        DrawFormattedText(w, [
-            'You can choose either snack as much or as little as you like.' '\n\n'...
-            'We have given you enough of each snack to' '\n' ...
-            'make sure that you cannot run out.' ...
-            ],'center', 'center', white, [], [], [], 1.6);
-        Screen(w, 'Flip');
-        KbWait(input_source, 2);
+    % % ---- Food version
+    %     DrawFormattedText(w, [
+    %         'In this version of the game, you will be playing for food rewards!' ...
+    %         ],'center', 'center', white, [], [], [], 1.6);
+    %     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+    %     Screen('Flip',w);
+    %     WaitSecs(1)
+    %     KbWait(input_source, 2);
+    %
+    % % ---- New rooms
+    %     Screen('DrawTexture', w, token_room, [], room_Lpoint);
+    %     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
+    %     DrawFormattedText(w, [
+    %         'In the food version of the game, there is' '\n' ...
+    %         'a new TOKEN ROOM, and a FOOD PRIZE ROOM!'
+    %         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
+    %     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+    %     Screen('Flip',w);
+    %     WaitSecs(1)
+    %     KbWait(input_source, 2);
+    %
+    % % ---- New colors and labels
+    %     Screen('DrawTexture', w, token_room, [], room_Lpoint);
+    %     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
+    %     DrawFormattedText(w, [
+    %         'The slots are labeled with new colors and new symbols.' ...
+    %         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
+    %     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+    %     Screen('Flip',w);
+    %     WaitSecs(1)
+    %     KbWait(input_source, 2);
+    %
+    % % ---- Reset chances
+    %     Screen('DrawTexture', w, token_room, [], room_Lpoint);
+    %     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
+    %     DrawFormattedText(w, [
+    %         'All of your chances of winning have been reset,' '\n' ...
+    %         'but the rules of the game and all of the' '\n' ...
+    %         'programming are exactly the same.'
+    %         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
+    %     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+    %     Screen('Flip',w);
+    %     WaitSecs(1)
+    %     KbWait(input_source, 2);
+    %
+    % % ---- Win = food
+    %     Screen('DrawTexture', w, token_room, [], room_Lpoint);
+    %     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
+    %     DrawFormattedText(w, [
+    %         'Each time you win in the FOOD PRIZE' '\n' ...
+    %         'ROOM, you''ll get to take a one bite of' '\n' ...
+    %         'either one of your two snacks!'
+    %         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
+    %     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+    %     Screen('Flip',w);
+    %     WaitSecs(1)
+    %     KbWait(input_source, 2);
+    %
+    % % ---- Eat as much of either as you like
+    %     DrawFormattedText(w, [
+    %         'You can choose either snack as much or as little as you like.' '\n\n'...
+    %         'We have given you enough of each snack to' '\n' ...
+    %         'make sure that you cannot run out.' ...
+    %         ],'center', 'center', white, [], [], [], 1.6);
+    %     Screen(w, 'Flip');
+    %     KbWait(input_source, 2);
 
     % ---- Questions? Begin
         DrawFormattedText(w, [
@@ -509,15 +370,12 @@ function exit_flag = main_task(initialization_struct, trials, block)
         picR = drawimage(w, A1, B1, A2, B2, A3, B3,1-type,1);
 
 % ---- Draw trial screen
-        % draw slots
-        Screen('DrawTexture', w, step1_slot_L, [], slot_Lpoint);
-        Screen('DrawTexture', w, step1_slot_R, [], slot_Rpoint);
         % draw original stimuli
-        Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-        Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+        Screen('DrawTexture', w, picL, [], alien_Lpoint);
+        Screen('DrawTexture', w, picR, [], alien_Rpoint);
         % draw frames around original stimuli
-        Screen('FrameRect',w,step1_frame_color,slot_label_Lframe,10);
-        Screen('FrameRect',w,step1_frame_color,slot_label_Rframe,10);
+        Screen('FrameRect',w,step1_frame_color,alien_Lframe,10);
+        Screen('FrameRect',w,step1_frame_color,alien_Rframe,10);
         Screen('Flip', w);
 
 % ---- start reaction timer
@@ -548,28 +406,22 @@ function exit_flag = main_task(initialization_struct, trials, block)
 
 % ---- feedback screen
         if down_key == L
-            % draw slots
-            Screen('DrawTexture', w, step1_slot_L, [], slot_Lpoint);
-            Screen('DrawTexture', w, step1_slot_R, [], slot_Rpoint);
             % draw original stimuli
-            Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-            Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+            Screen('DrawTexture', w, picL, [], alien_Lpoint);
+            Screen('DrawTexture', w, picR, [], alien_Rpoint);
             % draw frames around original stimuli
-            Screen('FrameRect',w,chosen_color,slot_label_Lframe,10);
-            Screen('FrameRect',w,step1_frame_color,slot_label_Rframe,10);
+            Screen('FrameRect',w,chosen_color,alien_Lframe,10);
+            Screen('FrameRect',w,step1_frame_color,alien_Rframe,10);
             Screen('Flip', w);
 
        elseif down_key == R
 
-           % draw slots
-           Screen('DrawTexture', w, step1_slot_L, [], slot_Lpoint);
-           Screen('DrawTexture', w, step1_slot_R, [], slot_Rpoint);
            % draw original stimuli
-           Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-           Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+           Screen('DrawTexture', w, picL, [], alien_Lpoint);
+           Screen('DrawTexture', w, picR, [], alien_Rpoint);
            % draw frames around original stimuli
-           Screen('FrameRect',w,step1_frame_color,slot_label_Lframe,10);
-           Screen('FrameRect',w,chosen_color,slot_label_Rframe,10);
+           Screen('FrameRect',w,step1_frame_color,alien_Lframe,10);
+           Screen('FrameRect',w,chosen_color,alien_Rframe,10);
            Screen('Flip', w);
 
         end
@@ -624,17 +476,12 @@ function exit_flag = main_task(initialization_struct, trials, block)
             picR = drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,2);
 
 % ---- Draw trial screen
-            % draw slots
-            Screen('DrawTexture', w, state2_slot_L, [], slot_Lpoint);
-            Screen('DrawTexture', w, state2_slot_R, [], slot_Rpoint);
             % draw original stimuli
-            Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-            Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+            Screen('DrawTexture', w, picL, [], alien_Lpoint);
+            Screen('DrawTexture', w, picR, [], alien_Rpoint);
             % draw frames around original stimuli
-            Screen('FrameRect',w,white,slot_label_Lframe,10);
-            Screen('FrameRect',w,white,slot_label_Rframe,10);
-            % draw token
-            Screen('DrawTexture', w, state2_token, [], spent_token_Mpoint);
+            Screen('FrameRect',w,white,alien_Lframe,10);
+            Screen('FrameRect',w,white,alien_Rframe,10);
 
             Screen('Flip', w);
 
@@ -674,35 +521,23 @@ function exit_flag = main_task(initialization_struct, trials, block)
 
 % ---- feedback screen
             if down_key == L
-              % draw slots
-              Screen('DrawTexture', w, state2_slot_L, [], slot_Lpoint);
-              Screen('DrawTexture', w, state2_slot_R, [], slot_Rpoint);
               % draw original stimuli
-              Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-              Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+              Screen('DrawTexture', w, picL, [], alien_Lpoint);
+              Screen('DrawTexture', w, picR, [], alien_Rpoint);
               % draw frames around original stimuli
-              Screen('FrameRect',w,chosen_color,slot_label_Lframe,10);
-              Screen('FrameRect',w,white,slot_label_Rframe,10);
-              % draw coinslot and spent token
-              Screen('DrawTexture', w, spent_token, [], spent_token_Mpoint);
-              Screen('DrawTexture', w, state2_coin_slot, [], coinslot_Lpoint);
+              Screen('FrameRect',w,chosen_color,alien_Lframe,10);
+              Screen('FrameRect',w,white,alien_Rframe,10);
               Screen('Flip', w);
               % wait 1 second
               WaitSecs(1)
 
            elseif down_key == R
-              % draw slots
-              Screen('DrawTexture', w, state2_slot_L, [], slot_Lpoint);
-              Screen('DrawTexture', w, state2_slot_R, [], slot_Rpoint);
               % draw original stimuli
-              Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-              Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+              Screen('DrawTexture', w, picL, [], alien_Lpoint);
+              Screen('DrawTexture', w, picR, [], alien_Rpoint);
               % draw frames around original stimuli
-              Screen('FrameRect',w,white,slot_label_Lframe,10);
-              Screen('FrameRect',w,chosen_color,slot_label_Rframe,10);
-              % draw coinslot and spent token
-              Screen('DrawTexture', w, spent_token, [], spent_token_Mpoint);
-              Screen('DrawTexture', w, state2_coin_slot, [], coinslot_Rpoint);
+              Screen('FrameRect',w,white,alien_Lframe,10);
+              Screen('FrameRect',w,chosen_color,alien_Rframe,10);
               Screen('Flip', w);
               % wait 1 second
               WaitSecs(1)
@@ -814,17 +649,13 @@ function exit_flag = main_task(initialization_struct, trials, block)
             picR = drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,3);
 
 % ---- Draw trial screen
-            % draw slots
-            Screen('DrawTexture', w, state3_slot_L, [], slot_Lpoint);
-            Screen('DrawTexture', w, state3_slot_R, [], slot_Rpoint);
             % draw original stimuli
-            Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-            Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+            Screen('DrawTexture', w, picL, [], alien_Lpoint);
+            Screen('DrawTexture', w, picR, [], alien_Rpoint);
             % draw frames around original stimuli
-            Screen('FrameRect',w,white,slot_label_Lframe,10);
-            Screen('FrameRect',w,white,slot_label_Rframe,10);
-            % draw token
-            Screen('DrawTexture', w, state3_token, [], spent_token_Mpoint);
+            Screen('FrameRect',w,white,alien_Lframe,10);
+            Screen('FrameRect',w,white,alien_Rframe,10);
+
             Screen('Flip', w);
 
 % ---- start reaction timer
@@ -862,35 +693,23 @@ function exit_flag = main_task(initialization_struct, trials, block)
 
 % ---- feedback screen
             if down_key == L
-              % draw slots
-              Screen('DrawTexture', w, state3_slot_L, [], slot_Lpoint);
-              Screen('DrawTexture', w, state3_slot_R, [], slot_Rpoint);
               % draw original stimuli
-              Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-              Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+              Screen('DrawTexture', w, picL, [], alien_Lpoint);
+              Screen('DrawTexture', w, picR, [], alien_Rpoint);
               % draw frames around original stimuli
-              Screen('FrameRect',w,chosen_color,slot_label_Lframe,10);
-              Screen('FrameRect',w,white,slot_label_Rframe,10);
-              % draw spent token and coin slot
-              Screen('DrawTexture', w, spent_token, [], spent_token_Mpoint);
-              Screen('DrawTexture', w, state3_coin_slot, [], coinslot_Lpoint);
+              Screen('FrameRect',w,chosen_color,alien_Lframe,10);
+              Screen('FrameRect',w,white,alien_Rframe,10);
               Screen('Flip', w);
               % wait 1 second
               WaitSecs(1)
 
             elseif down_key == R
-              % draw slots
-              Screen('DrawTexture', w, state3_slot_L, [], slot_Lpoint);
-              Screen('DrawTexture', w, state3_slot_R, [], slot_Rpoint);
               % draw original stimuli
-              Screen('DrawTexture', w, picL, [], slot_label_Lpoint);
-              Screen('DrawTexture', w, picR, [], slot_label_Rpoint);
+              Screen('DrawTexture', w, picL, [], alien_Lpoint);
+              Screen('DrawTexture', w, picR, [], alien_Rpoint);
               % draw frames around original stimuli
-              Screen('FrameRect',w,white,slot_label_Lframe,10);
-              Screen('FrameRect',w,chosen_color,slot_label_Rframe,10);
-              % draw spent token and coin slot
-              Screen('DrawTexture', w, spent_token, [], spent_token_Mpoint);
-              Screen('DrawTexture', w, state3_coin_slot, [], coinslot_Rpoint);
+              Screen('FrameRect',w,white,alien_Lframe,10);
+              Screen('FrameRect',w,chosen_color,alien_Rframe,10);
               Screen('Flip', w);
               % wait 1 second
               WaitSecs(1)
@@ -1010,7 +829,8 @@ function exit_flag = main_task(initialization_struct, trials, block)
 
 % ---- unique to this block
         practice_struct.block = find(initialization_struct.block == 0);
-        practice_struct.stim_symbol = initialization_struct.stim_prac_symbol;
+        practice_struct.spaceships = initialization_struct.spaceships(1:2);
+        practice_struct.aliens = initialization_struct.aliens(1:4);
         save([initialization_struct.data_file_path sl 'practice'], 'practice_struct', '-v6');
 
     elseif block == 1 % main task block
@@ -1039,7 +859,8 @@ function exit_flag = main_task(initialization_struct, trials, block)
 
 % ---- unique to this block
         task_struct.block = find(initialization_struct.block == 1);
-        task_struct.stim_symbol = initialization_struct.stim_symbol(1:6); % first 6 symbols always go to money block
+        practice_struct.spaceships = initialization_struct.spaceships(3:4);
+        practice_struct.aliens = initialization_struct.aliens(5:8);
         task_struct.payoff_sum = sum(nansum(payoff))/10;
         task_struct.payoff_total = 10 + ceil(task_struct.payoff_sum);
         save([initialization_struct.data_file_path sl 'money'], 'task_struct', '-v6');
