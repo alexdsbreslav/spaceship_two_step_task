@@ -27,8 +27,8 @@ if test == 1
     % ------------------------------------------------------------------------------
     % ---- Flexible parameters that need to be checked
     % ---- Task specificiations
-    num_trials_practice = 2;
-    num_trials_main_task = 2;
+    num_trials_practice = 5;
+    num_trials_main_task = 5;
 
     % --- File specifications
     % --- get input from user on comptuer system

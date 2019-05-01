@@ -38,8 +38,8 @@ function exit_flag = main_task(initialization_struct, trials, block)
     if test == 0
         [w, rect] = Screen('OpenWindow', whichScreen);
     else
-        [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
-        % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
+        % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
+        [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
     end
 
     % --- font sizes
@@ -51,16 +51,18 @@ function exit_flag = main_task(initialization_struct, trials, block)
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
-% 2 - Define image locations
+% 2 - Define image locations and stimuli used across blocks
 
 % ---- display coordinates setup
     r = [0,0,800,600]; %stimuli rectangle
-    r_small = [0,0,400,290]
+    r_small = [0,0,600,400];
     rc = [0,0,750,620]; %choice rectangle
     r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 
 % ---- location of the alien when alone
-    Mpoint = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
+    alien_win = CenterRectOnPoint(r_small, rect(3)*.3, rect(4)*0.5);
+    treasure_win = CenterRectOnPoint(r_small, rect(3)*.7, rect(4)*0.5);
+    alien_lose = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 
 % ---- location of the aliens
     alien_Lpoint = CenterRectOnPoint(r, rect(3)*0.25, rect(4)*0.5);
@@ -72,6 +74,19 @@ function exit_flag = main_task(initialization_struct, trials, block)
 
 % ---- next arrow location
     next_arrow_loc = CenterRectOnPoint(r_next_arrow, rect(3)*0.9, rect(4)*0.9);
+
+% ---- read/draw next arrow
+    next_arrow = imread(['stimuli' sl 'next arrow.png'],'png');
+    next_arrow = Screen('MakeTexture', w, next_arrow);
+
+% ---- read/draw the rewards
+    treasure = imread(['stimuli' sl 'treasure.png'],'png');
+    snacks = imread(['stimuli' sl 'snacks.png'],'png');
+    tickets = imread(['stimuli' sl 'tickets.png'],'png');
+
+    treasure = Screen('MakeTexture', w, treasure);
+    snacks = Screen('MakeTexture', w, snacks);
+    tickets = Screen('MakeTexture', w, tickets);
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -95,9 +110,6 @@ function exit_flag = main_task(initialization_struct, trials, block)
         B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
           char(initialization_struct.aliens(4)) '.png'],'png');
 
-% ---- read next arrow file
-        next_arrow = imread(['stimuli' sl 'next arrow.png'],'png');
-
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -119,10 +131,6 @@ function exit_flag = main_task(initialization_struct, trials, block)
           char(initialization_struct.aliens(7)) '.png'],'png');
         B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
           char(initialization_struct.aliens(8)) '.png'],'png');
-
-% ---- read next arrow file
-        next_arrow = imread(['stimuli' sl 'next arrow.png'],'png');
-
     end
 
 % -----------------------------------------------------------------------------
@@ -191,7 +199,7 @@ function exit_flag = main_task(initialization_struct, trials, block)
             'This is the last part of the tutorial.' '\n' ...
             'You''ll get to play 15 practice rounds.' ....
             ], 'center','center', white, [], [], [], 1.6);
-        % Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         KbWait(input_source, 2);
 
@@ -199,7 +207,7 @@ function exit_flag = main_task(initialization_struct, trials, block)
             'After you finish the practice rounds,' '\n' ...
             'you''ll play the strategy game for real rewards!' ....
             ], 'center','center', white, [], [], [], 1.6);
-        % Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+        Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
         Screen('Flip',w);
         KbWait(input_source, 2);
 
@@ -285,24 +293,24 @@ function exit_flag = main_task(initialization_struct, trials, block)
     %     Screen(w, 'Flip');
     %     KbWait(input_source, 2);
 
-    % ---- Questions? Begin
-        DrawFormattedText(w, [
-            'If you have any questions at all about the the food version' '\n' ...
-            'of the game, this is a great time to ask the experimenter.' '\n\n' ...
-            'Once the experimenter has answered all of your questions,' '\n' ...
-            'press d to begin the food version of the game!' ...
-            ], 'center', 'center', white, [], [], [], 1.6);
-        Screen(w, 'Flip');
-
-        while 1 %wait for response and allow exit if necessesary
-          [keyIsDown, ~, keyCode] = KbCheck(input_source);
-          if keyIsDown && any(keyCode(exitKeys))
-              exit_flag = 1; Screen('CloseAll'); FlushEvents;
-              sca; return
-          elseif keyIsDown && any(keyCode(startFirstKeys))
-              break
-          end
-        end
+    % % ---- Questions? Begin
+    %     DrawFormattedText(w, [
+    %         'If you have any questions at all about the the food version' '\n' ...
+    %         'of the game, this is a great time to ask the experimenter.' '\n\n' ...
+    %         'Once the experimenter has answered all of your questions,' '\n' ...
+    %         'press d to begin the food version of the game!' ...
+    %         ], 'center', 'center', white, [], [], [], 1.6);
+    %     Screen(w, 'Flip');
+    %
+    %     while 1 %wait for response and allow exit if necessesary
+    %       [keyIsDown, ~, keyCode] = KbCheck(input_source);
+    %       if keyIsDown && any(keyCode(exitKeys))
+    %           exit_flag = 1; Screen('CloseAll'); FlushEvents;
+    %           sca; return
+    %       elseif keyIsDown && any(keyCode(startFirstKeys))
+    %           break
+    %       end
+    %     end
     end
 
 % -----------------------------------------------------------------------------
@@ -544,25 +552,15 @@ function exit_flag = main_task(initialization_struct, trials, block)
             end
 
 % ---- payoff screen
-    % ---- determine reward based on block
-            if block == 0
-                reward = 'Win!';
-                noreward = 'Lose';
-            elseif block == 1
-                reward = '+10 cents';
-                noreward = 'Lose';
-            else
-                reward = 'Take one bite of a snack';
-                noreward = 'Lose';
-            end
-
     % ---- determine second step choice
             picD = drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,2),2);
-            Screen('DrawTexture', w, picD, [], Mpoint);
             if payoff(trial,1) == 1
-                DrawFormattedText(w, reward, 'center', rect(4)*0.8, white);
+                Screen('DrawTexture', w, picD, [], alien_win);
+                Screen('DrawTexture', w, treasure, [], treasure_win);
+                DrawFormattedText(w, 'Win!', 'center', rect(4)*0.8, white);
             else
-                DrawFormattedText(w, noreward, 'center', rect(4)*0.8, white);
+                Screen('DrawTexture', w, picD, [], alien_lose);
+                DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
             end
 
     % ---- show feedback for 1 second and then show countdown
@@ -600,9 +598,9 @@ function exit_flag = main_task(initialization_struct, trials, block)
                 % feedback text
                 Screen('TextSize', w, textsize_fixcross);
                 if payoff(trial,1) == 1
-                    DrawFormattedText(w, reward, 'center', rect(4)*0.8, white);
+                    DrawFormattedText(w, 'Win!', 'center', rect(4)*0.8, white);
                 else
-                    DrawFormattedText(w, noreward, 'center', rect(4)*0.8, white);
+                    DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
                 end
 
                 % load bar fill calculation
@@ -716,25 +714,15 @@ function exit_flag = main_task(initialization_struct, trials, block)
             end
 
 % ---- payoff screen
-    % ---- determine reward based on block
-            if block == 0
-               reward = 'Win!';
-               noreward = 'Lose';
-            elseif block == 1
-               reward = '+10 cents';
-               noreward = 'Lose';
-            else
-               reward = 'Take one bite of a snack';
-               noreward = 'Lose';
-            end
-
     % ---- determine second step choice
             picD = drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,3),3);
-            Screen('DrawTexture', w, picD, [], Mpoint);
             if payoff(trial,2) == 1
-                DrawFormattedText(w, reward, 'center', rect(4)*0.8, white);
+                Screen('DrawTexture', w, picD, [], alien_win);
+                Screen('DrawTexture', w, treasure, [], treasure_win);
+                DrawFormattedText(w, 'Win!', 'center', rect(4)*0.8, white);
             else
-                DrawFormattedText(w, noreward, 'center', rect(4)*0.8, white);
+                Screen('DrawTexture', w, picD, [], alien_lose);
+                DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
             end
 
     % ---- show feedback for 1 second and then show countdown
@@ -772,9 +760,9 @@ function exit_flag = main_task(initialization_struct, trials, block)
                 % feedback text
                 Screen('TextSize', w, textsize_fixcross);
                 if payoff(trial,2) == 1
-                    DrawFormattedText(w, reward, 'center', rect(4)*0.8, white);
+                    DrawFormattedText(w, 'Win!', 'center', rect(4)*0.8, white);
                 else
-                    DrawFormattedText(w, noreward, 'center', rect(4)*0.8, white);
+                    DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
                 end
 
                 % load bar fill calculation
