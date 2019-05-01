@@ -75,24 +75,6 @@ if test == 1
               sca; return
           end
       end
-
-    % --- Check that file root is correct
-    file_root_cor = input(['Is the file root correct?' '\n' ...
-    file_root '\n\n' ...
-    '0 = No; restart the function' '\n' ...
-    '1 = Yes' '\n' ...
-    'Response: ']);
-
-    if ~ismember(file_root_cor, [0 1])
-      disp('Invalid entry, please try again.')
-      sca; return
-    end
-
-    if file_root_cor == 0
-       disp([fprintf('\n') ...
-       'OK, fix the file root and restart the function to try again'])
-       sca; return
-    end
 else
     num_trials_practice = 15;
     num_trials_main_task = 150;

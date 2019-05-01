@@ -38,8 +38,8 @@ function exit_flag = main_task(initialization_struct, trials, block)
     if test == 0
         [w, rect] = Screen('OpenWindow', whichScreen);
     else
-        % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
-        [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
+        [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
+        % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
     end
 
     % --- font sizes
@@ -81,9 +81,9 @@ function exit_flag = main_task(initialization_struct, trials, block)
     if block == 0
 % --- load basic stimuli
         A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-          char(initialization_struct.spaceships(1)) '.png'],'png');
+          'docked' sl char(initialization_struct.spaceships(1)) '.png'],'png');
         B1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-          char(initialization_struct.spaceships(2)) '.png'],'png');
+          'docked' sl char(initialization_struct.spaceships(2)) '.png'],'png');
 
         A2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
           char(initialization_struct.aliens(1)) '.png'],'png');
@@ -96,7 +96,7 @@ function exit_flag = main_task(initialization_struct, trials, block)
           char(initialization_struct.aliens(4)) '.png'],'png');
 
 % ---- read next arrow file
-        next_arrow = imread(['stimuli' sl 'main_task' sl 'next arrow.png'],'png');
+        next_arrow = imread(['stimuli' sl 'next arrow.png'],'png');
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -106,9 +106,9 @@ function exit_flag = main_task(initialization_struct, trials, block)
     else
 % --- load basic stimuli files
         A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-          char(initialization_struct.spaceships(3)) '.png'],'png');
+          'docked' sl char(initialization_struct.spaceships(3)) '.png'],'png');
         B1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-          char(initialization_struct.spaceships(4)) '.png'],'png');
+          'docked' sl char(initialization_struct.spaceships(4)) '.png'],'png');
 
         A2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
           char(initialization_struct.aliens(5)) '.png'],'png');
@@ -121,7 +121,7 @@ function exit_flag = main_task(initialization_struct, trials, block)
           char(initialization_struct.aliens(8)) '.png'],'png');
 
 % ---- read next arrow file
-        next_arrow = imread(['stimuli' sl 'main_task' sl 'next arrow.png'],'png');
+        next_arrow = imread(['stimuli' sl 'next arrow.png'],'png');
 
     end
 
