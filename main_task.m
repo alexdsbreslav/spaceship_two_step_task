@@ -43,9 +43,8 @@ else
 end
 
 % --- font sizes
-textsize_fixcross = initialization_struct.textsize_fixcross;
-textsize_countdown = initialization_struct.textsize_countdown;
-textsize_directions = initialization_struct.textsize_directions;
+textsize = initialization_struct.textsize;
+textsize_feedback = initialization_struct.textsize_feedback;
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -56,9 +55,13 @@ textsize_directions = initialization_struct.textsize_directions;
 % ---- display coordinates setup
 r = [0,0,800,600]; %stimuli rectangle
 r_small = [0,0,600,400]; % smaller rect for stimuli and rewards
-rc = [0,0,700,700]; %choice rectangle for aliens and spaceships
-rc_small = [0,0,400,400];
+rc = [0,0,800,600]; %choice rectangle for aliens and spaceships
+rc_small = [0,0,600,425];
 r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
+r_space = [0,0,1920,1080];
+
+% ---- space background
+space_bg = CenterRectOnPoint(r_space, rect(3)*0.5, rect(4)*0.5);
 
 % ---- locations on the win screen
 alien_win = CenterRectOnPoint(r_small, rect(3)*.3, rect(4)*0.5);
@@ -66,13 +69,13 @@ treasure_win = CenterRectOnPoint(r_small, rect(3)*.7, rect(4)*0.5);
 alien_lose = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 
 % ---- locations on the trade screen
-treasure_trade = CenterRectOnPoint(r_small, rect(3)*.25, rect(4)*0.6);
-reward_top_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.3);
-reward_bot_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.7);
+treasure_trade = CenterRectOnPoint(r_small, rect(3)*.25, rect(4)*0.55);
+reward_top_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.25);
+reward_bot_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.75);
 
 % ---- frames during the trade screen
-reward_top_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.3);
-reward_bot_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.7);
+reward_top_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.25);
+reward_bot_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.75);
 
 % ---- location of the aliens
 alien_Lpoint = CenterRectOnPoint(r, rect(3)*0.25, rect(4)*0.5);
@@ -89,12 +92,21 @@ next_arrow_loc = CenterRectOnPoint(r_next_arrow, rect(3)*0.9, rect(4)*0.9);
 next_arrow = imread(['stimuli' sl 'next arrow.png'],'png');
 next_arrow = Screen('MakeTexture', w, next_arrow);
 
-% ---- read/draw the rewards
+% ---- read/draw the treasure
 treasure = imread(['stimuli' sl 'treasure.png'],'png');
-snacks = imread(['stimuli' sl 'snacks.png'],'png');
-tickets = imread(['stimuli' sl 'tickets.png'],'png');
+treasure_spent = imread(['stimuli' sl 'treasure_spent.png'],'png');
+earth = imread(['stimuli' sl 'earth.png'],'png');
+return_home = imread(['stimuli' sl 'return_home.png'],'png');
 
 treasure = Screen('MakeTexture', w, treasure);
+treasure_spent = Screen('MakeTexture', w, treasure_spent);
+earth = Screen('MakeTexture', w, earth);
+return_home = Screen('MakeTexture', w, return_home);
+
+% ---- these are drawn later because their location is randomized
+stickers = imread(['stimuli' sl 'stickers.png'],'png');
+snacks = imread(['stimuli' sl 'snacks.png'],'png');
+tickets = imread(['stimuli' sl 'tickets.png'],'png');
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -118,6 +130,10 @@ if block == 0
     B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
       char(initialization_struct.aliens(4)) '.png'],'png');
 
+    % read and draw space stimulus
+    space = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl 'space.png'],'png');
+    space = Screen('MakeTexture', w, space);
+
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -139,6 +155,10 @@ else
       char(initialization_struct.aliens(7)) '.png'],'png');
     B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
       char(initialization_struct.aliens(8)) '.png'],'png');
+
+    % read and draw space stimulus
+    space = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl 'space.png'],'png');
+    space = Screen('MakeTexture', w, space);
 end
 
 % -----------------------------------------------------------------------------
@@ -187,9 +207,11 @@ payoff = NaN(trials,2);
 iti_selected = zeros(trials, 1);
 iti_actual = zeros(trials, 1);
 
+condition = initialization_struct.condition;
+
 % ---- Waiting screen
 Screen('FillRect', w, black);
-Screen('TextSize', w, textsize_directions);
+Screen('TextSize', w, textsize);
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -334,7 +356,7 @@ for trial = 1:trials
         RestrictKeysForKbCheck([]);
         if trial == (trials/5) + 1 || trial == (2*trials/5) + 1 || trial == (3*trials/5) + 1 || trial == (4*trials/5) + 1
             Screen('FillRect', w, black);
-            Screen('TextSize', w, textsize_directions);
+            Screen('TextSize', w, textsize);
 
             if block == 1
                 DrawFormattedText(w, [
@@ -365,6 +387,7 @@ for trial = 1:trials
 
     % ---- Drawimage indicators
     Screen(w, 'FillRect', black);
+    Screen('TextSize', w, textsize_feedback);
     position(trial,1) = round(rand); %randomizing images positions
     type = position(trial,1);
 
@@ -560,13 +583,13 @@ for trial = 1:trials
         type = position(trial,1);
 
         % ---- Draw reward stimuli; this randomizes their location
-        reward_top = drawrewards(w, snacks, tickets, type);
-        reward_bot = drawrewards(w,  snacks, tickets, 1 - type);
+        reward_top = drawrewards(w, condition, snacks, stickers, tickets, type);
+        reward_bot = drawrewards(w, condition, snacks, stickers, tickets, 1 - type);
 
         if payoff(trial, 1) == 1
         % ---- Draw trial screen
               % draw treasure to trade
-              DrawFormattedText(w, '1 space treasure', rect(3)*0.15, rect(4)*0.3, white);
+              DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
               Screen('DrawTexture', w, treasure, [], treasure_trade)
               % draw rewards
               Screen('DrawTexture', w, reward_top, [], reward_top_point);
@@ -606,8 +629,8 @@ for trial = 1:trials
         % ---- feedback screen
               if down_key == U
                   % draw treasure to trade
-                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.15, rect(4)*0.3, white);
-                  Screen('DrawTexture', w, treasure, [], treasure_trade)
+                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                   % draw original stimuli
                   Screen('DrawTexture', w, reward_top, [], reward_top_point);
                   Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -620,8 +643,8 @@ for trial = 1:trials
 
              elseif down_key == D
                  % draw treasure to trade
-                 DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.15, rect(4)*0.3, white);
-                 Screen('DrawTexture', w, treasure, [], treasure_trade)
+                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                 DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                  % draw original stimuli
                  Screen('DrawTexture', w, reward_top, [], reward_top_point);
                  Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -634,15 +657,22 @@ for trial = 1:trials
               end
         else
             type = position(trial,1);
-
-            % ---- Draw reward stimuli; this randomizes their location
-            reward_top = drawrewards(w, snacks, tickets, type);
+            if type == 0
+                earth_loc = reward_top_point;
+                earth_frame = reward_top_frame;
+                RestrictKeysForKbCheck([U]);
+            else
+                earth_loc = reward_bot_point;
+                earth_frame = reward_bot_frame;
+                RestrictKeysForKbCheck([D]);
+            end
 
             % ---- Draw trial screen
             % draw original stimuli
-            Screen('DrawTexture', w, reward_top, [], reward_top_point);
+            DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+            Screen('DrawTexture', w, earth, [], earth_loc);
             % draw frames around original stimuli
-            Screen('FrameRect',w,frame_color,reward_top_frame,10);
+            Screen('FrameRect',w,frame_color,earth_frame,10);
             Screen('Flip', w);
             % wait 1 second
             WaitSecs(1)
@@ -654,7 +684,6 @@ for trial = 1:trials
             % ---- capture key press
             key_is_down = 0;
             FlushEvents;
-            RestrictKeysForKbCheck([U,D]);
             [key_is_down, secs, key_code] = KbCheck(input_source);
 
             while key_code(U) == 0 && key_code(D) == 0
@@ -677,9 +706,10 @@ for trial = 1:trials
             % ---- feedback screen
             if down_key == U
                 % draw original stimuli
-                Screen('DrawTexture', w, reward_top, [], reward_top_point);
+                DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+                Screen('DrawTexture', w, earth, [], earth_loc);
                 % draw frames around original stimuli
-                Screen('FrameRect',w,chosen_color,reward_top_frame,10);
+                Screen('FrameRect',w,chosen_color,earth_frame,10);
                 Screen('Flip', w);
                 % wait 1 second
                 WaitSecs(1)
@@ -687,9 +717,10 @@ for trial = 1:trials
            elseif down_key == D
 
                % draw original stimuli
-               Screen('DrawTexture', w, reward_top, [], reward_top_point);
+               DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+               Screen('DrawTexture', w, earth, [], earth_loc);
                % draw frames around original stimuli
-               Screen('FrameRect',w,frame_color,reward_top_frame,10);
+               Screen('FrameRect',w,chosen_color,earth_frame,10);
                Screen('Flip', w);
                % wait 1 second
                WaitSecs(1)
@@ -698,11 +729,12 @@ for trial = 1:trials
 
 
         % variable text that will change on the last trial of the game
+        Screen('TextSize', w, textsize);
         if block == 0
             if trial == trials
                 countdown_text = 'The game will end shortly.';
             else
-                countdown_text = 'The next trial will begin shortly.';
+                countdown_text = 'Returning Home!';
             end
         else
             if trial == trials
@@ -710,27 +742,18 @@ for trial = 1:trials
             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                 countdown_text = 'A break will begin shortly.';
             else
-                countdown_text = 'The next trial will begin shortly.';
+                countdown_text = 'Returning Home!';
             end
         end
 
         % countdown to next trial
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,1)+3)
-            Screen(w, 'FillRect', black);
-            Screen('TextSize', w, textsize_countdown);
+            Screen('DrawTexture', w, return_home, [], space_bg);
 
             % countdown text
             DrawFormattedText(w, [
                 countdown_text ...
                 ], 'center', 'center', white, [], [], [], 1.6);
-
-            % feedback text
-            Screen('TextSize', w, textsize_fixcross);
-            if payoff(trial,1) == 1
-                DrawFormattedText(w, 'Returning Home', 'center', rect(4)*0.8, white);
-            else
-                DrawFormattedText(w, 'Returning Home', 'center', rect(4)*0.8, white);
-            end
 
             % load bar fill calculation
             fill_width = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+5) * i;
@@ -855,13 +878,13 @@ for trial = 1:trials
         type = position(trial,1);
 
         % ---- Draw reward stimuli; this randomizes their location
-        reward_top = drawrewards(w, snacks, tickets, type);
-        reward_bot = drawrewards(w,  snacks, tickets, 1 - type);
+        reward_top = drawrewards(w, condition, snacks, stickers, tickets, type);
+        reward_bot = drawrewards(w, condition, snacks, stickers, tickets, 1 - type);
 
         if payoff(trial, 2) == 1
         % ---- Draw trial screen
               % draw treasure to trade
-              DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.15, rect(4)*0.3, white);
+              DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
               Screen('DrawTexture', w, treasure, [], treasure_trade)
               % draw original stimuli
               Screen('DrawTexture', w, reward_top, [], reward_top_point);
@@ -901,8 +924,8 @@ for trial = 1:trials
         % ---- feedback screen
               if down_key == U
                   % draw treasure to trade
-                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.15, rect(4)*0.3, white);
-                  Screen('DrawTexture', w, treasure, [], treasure_trade)
+                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                   % draw original stimuli
                   Screen('DrawTexture', w, reward_top, [], reward_top_point);
                   Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -915,8 +938,8 @@ for trial = 1:trials
 
              elseif down_key == D
                  % draw treasure to trade
-                 DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.15, rect(4)*0.3, white);
-                 Screen('DrawTexture', w, treasure, [], treasure_trade)
+                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                 DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                  % draw original stimuli
                  Screen('DrawTexture', w, reward_top, [], reward_top_point);
                  Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -929,16 +952,25 @@ for trial = 1:trials
               end
         else
             type = position(trial,1);
-
-            % ---- Draw reward stimuli; this randomizes their location
-            reward_top = drawrewards(w, snacks, tickets, type);
+            if type == 0
+                earth_loc = reward_top_point;
+                earth_frame = reward_top_frame;
+                RestrictKeysForKbCheck([U]);
+            else
+                earth_loc = reward_bot_point;
+                earth_frame = reward_bot_frame;
+                RestrictKeysForKbCheck([D]);
+            end
 
             % ---- Draw trial screen
             % draw original stimuli
-            Screen('DrawTexture', w, reward_top, [], reward_top_point);
+            DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+            Screen('DrawTexture', w, earth, [], earth_loc);
             % draw frames around original stimuli
-            Screen('FrameRect',w,frame_color,reward_top_frame,10);
+            Screen('FrameRect',w,frame_color,earth_frame,10);
             Screen('Flip', w);
+            % wait 1 second
+            WaitSecs(1)
 
             % ---- start reaction timer
             choice_on_time(trial,4) = GetSecs - t0;
@@ -947,7 +979,6 @@ for trial = 1:trials
             % ---- capture key press
             key_is_down = 0;
             FlushEvents;
-            RestrictKeysForKbCheck([U,D]);
             [key_is_down, secs, key_code] = KbCheck(input_source);
 
             while key_code(U) == 0 && key_code(D) == 0
@@ -970,18 +1001,21 @@ for trial = 1:trials
             % ---- feedback screen
             if down_key == U
                 % draw original stimuli
-                Screen('DrawTexture', w, reward_top, [], reward_top_point);
+                DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+                Screen('DrawTexture', w, earth, [], earth_loc);
                 % draw frames around original stimuli
-                Screen('FrameRect',w,chosen_color,reward_top_frame,10);
+                Screen('FrameRect',w,chosen_color,earth_frame,10);
                 Screen('Flip', w);
                 % wait 1 second
                 WaitSecs(1)
 
            elseif down_key == D
+
                % draw original stimuli
-               Screen('DrawTexture', w, reward_top, [], reward_top_point);
+               DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+               Screen('DrawTexture', w, earth, [], earth_loc);
                % draw frames around original stimuli
-               Screen('FrameRect',w,frame_color,reward_top_frame,10);
+               Screen('FrameRect',w,chosen_color,earth_frame,10);
                Screen('Flip', w);
                % wait 1 second
                WaitSecs(1)
@@ -989,11 +1023,12 @@ for trial = 1:trials
        end
 
         % variable tex that will change on the last trial of the game
+        Screen('TextSize', w, textsize);
         if block == 0
             if trial == trials
                 countdown_text = 'The game will end shortly.';
             else
-                countdown_text = 'The next trial will begin shortly.';
+                countdown_text = 'Returning Home!';
             end
         else
             if trial == trials
@@ -1001,27 +1036,18 @@ for trial = 1:trials
             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                 countdown_text = 'A break will begin shortly.';
             else
-                countdown_text = 'The next trial will begin shortly.';
+                countdown_text = 'Returning Home!';
             end
         end
 
         % countdown to next trial
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)
-            Screen(w, 'FillRect', black);
-            Screen('TextSize', w, textsize_countdown);
+            Screen('DrawTexture', w, return_home, [], space_bg);
 
             % countdown text
             DrawFormattedText(w, [
                 countdown_text ...
                 ], 'center', 'center', white, [], [], [], 1.6);
-
-            % feedback text
-            Screen('TextSize', w, textsize_fixcross);
-            if payoff(trial,2) == 1
-                DrawFormattedText(w, 'Returning Home', 'center', rect(4)*0.8, white);
-            else
-                DrawFormattedText(w, 'Returning Home', 'center', rect(4)*0.8, white);
-            end
 
             % load bar fill calculation
             fill_width = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+5) * i;
@@ -1118,9 +1144,9 @@ end
 % -----------------------------------------------------------------------------
 % 9 - Payoff screens
 % ---- Practice block end screens
+Screen('TextSize', w, textsize)
 if block == 0 % practice
     Screen(w, 'FillRect', black);
-    Screen('TextSize', w, textsize_directions);
     DrawFormattedText(w,[
         'You have completed the practice rounds!' '\n' ...
         'Please alert the experimenter, and' '\n' ...
@@ -1139,7 +1165,6 @@ if block == 0 % practice
 % ---- Money block end screen
 elseif block == 1 % money block
     Screen(w, 'FillRect', black);
-    Screen('TextSize', w, textsize_directions);
     DrawFormattedText(w, [
         'You have completed the money rounds.' '\n\n' ...
         'You earned: $' sprintf('%.2f', task_struct.payoff_sum) '\n\n' ...
@@ -1159,7 +1184,6 @@ elseif block == 1 % money block
 % ---- Food block end screen
 elseif block == 2 % food block
     Screen(w, 'FillRect', black);
-    Screen('TextSize', w, textsize_directions);
     DrawFormattedText(w,[
         'You have completed the food rounds!' '\n' ...
         'Please alert the experimenter, and' '\n' ...
