@@ -29,7 +29,7 @@ if test == 1
     % ------------------------------------------------------------------------------
     % ---- Flexible parameters that need to be checked
     % ---- Task specificiations
-    num_trials_practice = 2;
+    num_trials_practice = 5;
     num_trials_main_task = 2;
 
     % --- File specifications
@@ -59,7 +59,7 @@ if test == 1
       if comp_os == 1
           input_source = 6;
       else
-          input_source = 99
+          input_source = 99;
           while ~ismember(input_source, [0 1])
               input_source = input(['\n\n' ...
                 'Are you using a keyboard or touchscreen?' '\n' ...
@@ -82,8 +82,9 @@ end
 
 
 % ---- Text formatting specifications
-textsize = 30;
+textsize = 30; %30
 textsize_feedback = 50;
+textsize_tickets = 140;
 
 % ---- loading bar formatting
 load_bar_dimensions = [400, 15];
@@ -158,7 +159,7 @@ else
     initialization_struct = struct;
 
     % Enter the condition that the subject is in
-    condition = 99
+    condition = 99;
     while ~ismember(condition, [1 2])
         condition = input(['\n\n' ...
           'What condition is this subject in?' '\n' ...
@@ -281,6 +282,7 @@ else
     % set the text formatting specs
     initialization_struct.textsize = textsize;
     initialization_struct.textsize_feedback = textsize_feedback;
+    initialization_struct.textsize_tickets = textsize_tickets;
 
     % set the load bar formaating
     initialization_struct.load_bar_dimensions = load_bar_dimensions;
@@ -308,7 +310,7 @@ else
 
 
     % --- Double check everything
-    double_check = 99
+    double_check = 99;
     while ~ismember(double_check, [0 1])
         double_check = input(['\n\n' ...
           'Nest ID = ' num2str(initialization_struct.sub) '\n' ...
