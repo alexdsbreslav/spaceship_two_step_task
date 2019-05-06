@@ -57,18 +57,7 @@ if test == 1
 
     % using a touchscreen or keyboard?
       if comp_os == 1
-          input_source = 99;
-          while ~ismember(input_source, [3 6])
-              input_source = input(['\n\n' ...
-                'Are you using a keyboard or touchscreen?' '\n' ...
-                '3 = Local Keyboard' '\n' ...
-                '6 = External Keyboard' '\n' ...
-                'Response: ' ]);
-
-                if ~ismember(input_source, [3 6])
-                    disp('Invalid entry, please try again.')
-                end
-            end
+          input_source = 6;
       else
           input_source = 99
           while ~ismember(input_source, [0 1])
