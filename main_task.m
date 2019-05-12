@@ -234,7 +234,9 @@ payoff = NaN(trials,2);
 iti_selected = zeros(trials, 1);
 iti_actual = zeros(trials, 1);
 
-ticket_total = zeros(trials, 1)
+ticket_total = zeros(trials, 3)
+ticket_total(1, 1:2) = 10;
+ticket_total(1,3) = 5;
 
 condition = initialization_struct.condition;
 
@@ -487,7 +489,7 @@ for trial = 1:trials
 
     % ---- space exploration page
     Screen('DrawTexture', w, space, [], space_bg);
-    ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out')
+    ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out');
     Screen('DrawTexture', w, ship, [], spaceship_out);
     Screen('Flip', w);
     WaitSecs(1)
@@ -634,9 +636,9 @@ for trial = 1:trials
               % draw number of tickets
               Screen('TextSize', w, textsize_tickets)
               if type == 0
-                  DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                  DrawFormattedText(w, num2str(ticket_total(trial,1)), rect(3)*.725, rect(4)*0.795, white);
               else
-                  DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                  DrawFormattedText(w, num2str(ticket_total(trial,1)), rect(3)*.725, rect(4)*0.295, white);
               end
               Screen('Flip', w);
 
@@ -663,8 +665,25 @@ for trial = 1:trials
 
               if (down_key==U && type == 0) || (down_key==D && type == 1)
                   action(trial,4)=0;
+                  % mean of dist
+                  ticket_total(trial+1,2) = ticket_total(trial,2) + 1;
+                  % sd of dist
+                  ticket_total(trial+1,3) = ticket_total(trial,3);
+                  % selected amount from normal dist
+                  ticket_total(trial+1,1) = ticket_total(trial,2);
               elseif (down_key==U && type == 1) || (down_key==D && type == 0)
                   action(trial,4)=1;
+                  if ticket_total(trial,2) >= 1
+                      % mean of dist
+                      ticket_total(trial+1,2) = ticket_total(trial,2) - 1;
+                  else
+                      % mean of dist if hit bottom
+                      ticket_total(trial+1,2) = ticket_total(trial,1);
+                  end
+                  % sd of dist
+                  ticket_total(trial+1,3) = ticket_total(trial,3);
+                  % selected amount from normal dist
+                  ticket_total(trial+1,1) = ticket_total(trial,2);
               end
 
         % ---- feedback screen
@@ -722,6 +741,9 @@ for trial = 1:trials
                 earth_frame = reward_bot_frame;
                 RestrictKeysForKbCheck([D]);
             end
+
+            % carry the ticket total values from the last trial
+            ticket_total(trial+1,:) = ticket_total(trial,:)
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -791,7 +813,7 @@ for trial = 1:trials
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,1)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return')
+            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
             Screen('DrawTexture', w, ship, [], spaceship_return);
 
             % countdown text
@@ -965,8 +987,25 @@ for trial = 1:trials
 
               if (down_key==U && type == 0) || (down_key==D && type == 1)
                   action(trial,4)=0;
+                  % mean of dist
+                  ticket_total(trial+1,2) = ticket_total(trial,2) + 1;
+                  % sd of dist
+                  ticket_total(trial+1,3) = ticket_total(trial,3);
+                  % selected amount from normal dist
+                  ticket_total(trial+1,1) = ticket_total(trial,2);
               elseif (down_key==U && type == 1) || (down_key==D && type == 0)
                   action(trial,4)=1;
+                  if ticket_total(trial,2) >= 1
+                      % mean of dist
+                      ticket_total(trial+1,2) = ticket_total(trial,2) - 1;
+                  else
+                      % mean of dist if hit bottom
+                      ticket_total(trial+1,2) = ticket_total(trial,1);
+                  end
+                  % sd of dist
+                  ticket_total(trial+1,3) = ticket_total(trial,3);
+                  % selected amount from normal dist
+                  ticket_total(trial+1,1) = ticket_total(trial,2);
               end
 
         % ---- feedback screen
@@ -984,9 +1023,9 @@ for trial = 1:trials
                   % draw number of tickets
                   Screen('TextSize', w, textsize_tickets)
                   if type == 0
-                      DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                      DrawFormattedText(w, num2str(ticket_total(trial,1)), rect(3)*.725, rect(4)*0.795, white);
                   else
-                      DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                      DrawFormattedText(w, num2str(ticket_total(trial,1)), rect(3)*.725, rect(4)*0.295, white);
                   end
                   Screen('Flip', w);
                   % wait 1 second
@@ -1006,9 +1045,9 @@ for trial = 1:trials
                  % draw number of tickets
                  Screen('TextSize', w, textsize_tickets)
                  if type == 0
-                     DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                     DrawFormattedText(w, num2str(ticket_total(trial,1)), rect(3)*.725, rect(4)*0.795, white);
                  else
-                     DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                     DrawFormattedText(w, num2str(ticket_total(trial,1)), rect(3)*.725, rect(4)*0.295, white);
                  end
                  Screen('Flip', w);
                  % wait 1 second
@@ -1024,6 +1063,9 @@ for trial = 1:trials
                 earth_frame = reward_bot_frame;
                 RestrictKeysForKbCheck([D]);
             end
+
+            % carry the ticket total values from the last trial
+            ticket_total(trial+1,:) = ticket_total(trial,:)
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -1091,7 +1133,7 @@ for trial = 1:trials
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return')
+            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
             Screen('DrawTexture', w, ship, [], spaceship_return);
 
             % countdown text
@@ -1148,6 +1190,7 @@ if block == 0 % practice trials
     practice_struct.payoff_det = payoff_det;
     practice_struct.payoff = payoff;
     practice_struct.state = state;
+    practice_struct.ticket_total = ticket_total;
 
 % ---- unique to this block
     practice_struct.block = find(initialization_struct.block == 0);
@@ -1178,6 +1221,7 @@ elseif block == 1 % main task block
     task_struct.payoff_det = payoff_det;
     task_struct.payoff = payoff;
     task_struct.state = state;
+    task_struct.ticket_total = ticket_total;
 
 % ---- unique to this block
     task_struct.block = find(initialization_struct.block == 1);

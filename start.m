@@ -29,7 +29,7 @@ if test == 1
     % ------------------------------------------------------------------------------
     % ---- Flexible parameters that need to be checked
     % ---- Task specificiations
-    num_trials_practice = 5;
+    num_trials_practice = 10;
     num_trials_main_task = 2;
 
     % --- File specifications
