@@ -61,6 +61,7 @@ rc_small = [0,0,600,425];
 r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 r_space = [0,0,1920,1080];
 r_ship = [0,0,400,290]
+r_tick_text = [0,0,300,150]
 
 % ---- space background
 space_bg = CenterRectOnPoint(r_space, rect(3)*0.5, rect(4)*0.5);
@@ -77,6 +78,8 @@ alien_lose = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 treasure_trade = CenterRectOnPoint(r_small, rect(3)*.25, rect(4)*0.55);
 reward_top_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.25);
 reward_bot_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.75);
+tick_text_top = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.25);
+tick_text_bot = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.75);
 
 % ---- frames during the trade screen
 reward_top_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.25);
@@ -117,7 +120,7 @@ tickets = imread(['stimuli' sl 'tickets.png'],'png');
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
-% 3 - Load images for practice block
+% tick(trial,2) - Load images for practice block
 if block == 0
 % --- spaceships
     A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
@@ -234,7 +237,29 @@ payoff = NaN(trials,2);
 iti_selected = zeros(trials, 1);
 iti_actual = zeros(trials, 1);
 
-ticket_total = zeros(trials, 1)
+tick = zeros(trials, 6)
+
+% set initial values for distribution
+tick_mean = initialization_struct.auction_bet;
+tick_sd = 3;
+
+% set parameters for mf estimator of ticket value
+tick_alpha = 0.5;
+tick_beta = 5;
+tick(:,4) = tick_alpha
+tick(:,5) = tick_beta
+
+% set initial values for tickets
+tick(1,1) = tick_mean;
+tick(1,2) = tick_sd;
+tick(1,3) = tick_mean;
+% prob choose tickets given
+% if the value of snacks equals the mean of the dist for tickets
+% then the prob of choosing the tickets, given the pull equals
+% e^pull/(e^pull + e^mean)
+% I need to normalize the amount they are winning before plugging in here
+norm_factor = max(tick(1,1),tick(1,3))
+tick(1,6) = exp(tick_beta*tick(1,3)/norm_factor)/(exp(tick_beta*tick(1,3)/norm_factor) + exp(tick_beta*tick(1,1)/norm_factor))
 
 condition = initialization_struct.condition;
 
@@ -487,7 +512,7 @@ for trial = 1:trials
 
     % ---- space exploration page
     Screen('DrawTexture', w, space, [], space_bg);
-    ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out')
+    ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out');
     Screen('DrawTexture', w, ship, [], spaceship_out);
     Screen('Flip', w);
     WaitSecs(1)
@@ -634,12 +659,15 @@ for trial = 1:trials
               % draw number of tickets
               Screen('TextSize', w, textsize_tickets)
               if type == 0
-                  DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
               else
-                  DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
               end
               Screen('Flip', w);
 
+        % ---- calc prob of choosing tickets
+              norm_factor = max(tick(trial,1),tick(trial,3))
+              tick(trial,6) = exp(tick_beta*tick(trial,3)/norm_factor)/(exp(tick_beta*tick(trial,3)/norm_factor) + exp(tick_beta*tick(trial,1)/norm_factor))
         % ---- start reaction timer
               choice_on_time(trial,4) = GetSecs - t0;
               choice_on_datetime{trial,4} = clock;
@@ -662,9 +690,43 @@ for trial = 1:trials
               down_key = find(key_code,4);
 
               if (down_key==U && type == 0) || (down_key==D && type == 1)
+                  % chose snack
                   action(trial,4)=0;
+                  % chose snack/wrong --> increase value of snack, increase sd of dist
+                  if tick(trial, 3) > tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
+                  % chose snack/right --> decrease sd of dist
+                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
+                  else tick(trial, 3) <= tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1)
+                  end
+                  % selected amount from normal dist
+                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               elseif (down_key==U && type == 1) || (down_key==D && type == 0)
+                  % chose ticket
                   action(trial,4)=1;
+                  % chose ticket/right --> decrease sd of dist
+                  if tick(trial, 3) > tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1);
+                  % chose ticket/wrong --> increase sd of dist
+                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
+                  else tick(trial, 3) <= tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
+                  end
+                  % selected amount from normal dist
+                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               end
 
         % ---- feedback screen
@@ -682,9 +744,9 @@ for trial = 1:trials
                   % draw number of tickets
                   Screen('TextSize', w, textsize_tickets)
                   if type == 0
-                      DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                   else
-                      DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                   end
                   Screen('Flip', w);
                   % wait 1 second
@@ -704,9 +766,9 @@ for trial = 1:trials
                  % draw number of tickets
                  Screen('TextSize', w, textsize_tickets)
                  if type == 0
-                     DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                  else
-                     DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                  end
                  Screen('Flip', w);
                  % wait 1 second
@@ -722,6 +784,9 @@ for trial = 1:trials
                 earth_frame = reward_bot_frame;
                 RestrictKeysForKbCheck([D]);
             end
+
+            % carry the ticket total values from the last trial
+            tick(trial+1,:) = tick(trial,:)
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -791,7 +856,7 @@ for trial = 1:trials
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,1)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return')
+            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
             Screen('DrawTexture', w, ship, [], spaceship_return);
 
             % countdown text
@@ -936,11 +1001,15 @@ for trial = 1:trials
               % draw number of tickets
               Screen('TextSize', w, textsize_tickets)
               if type == 0
-                  DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
               else
-                  DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
               end
               Screen('Flip', w);
+
+        % ---- calc prob of choosing tickets
+              norm_factor = max(tick(trial,1),tick(trial,3))
+              tick(trial,6) = exp(tick_beta*tick(trial,3)/norm_factor)/(exp(tick_beta*tick(trial,3)/norm_factor) + exp(tick_beta*tick(trial,1)/norm_factor))
 
         % ---- start reaction timer
               choice_on_time(trial,4) = GetSecs - t0;
@@ -964,9 +1033,45 @@ for trial = 1:trials
               down_key = find(key_code,4);
 
               if (down_key==U && type == 0) || (down_key==D && type == 1)
+                  % chose snack
                   action(trial,4)=0;
+                  % chose snack/wrong --> increase sd of dist
+                  if tick(trial, 3) > tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
+                  % chose snack/right --> decrease sd of dist
+                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
+                  else tick(trial, 3) <= tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1);
+                  end
+                  % selected amount from normal dist
+                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               elseif (down_key==U && type == 1) || (down_key==D && type == 0)
+                  % chose ticket
                   action(trial,4)=1;
+                  % mean of dist
+                  tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3)-tick(trial,1));
+                  % chose ticket/right --> decrease sd of dist
+                  if tick(trial, 3) > tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1);
+                  % chose ticket/wrong --> increase sd of dist
+                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
+                  else tick(trial, 3) <= tick(trial, 1)
+                      % sd of dist
+                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
+                  end
+                  % selected amount from normal dist
+                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               end
 
         % ---- feedback screen
@@ -984,9 +1089,9 @@ for trial = 1:trials
                   % draw number of tickets
                   Screen('TextSize', w, textsize_tickets)
                   if type == 0
-                      DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                   else
-                      DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                   end
                   Screen('Flip', w);
                   % wait 1 second
@@ -1006,9 +1111,9 @@ for trial = 1:trials
                  % draw number of tickets
                  Screen('TextSize', w, textsize_tickets)
                  if type == 0
-                     DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.795, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                  else
-                     DrawFormattedText(w, num2str(ticket_total(trial)), rect(3)*.725, rect(4)*0.295, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                  end
                  Screen('Flip', w);
                  % wait 1 second
@@ -1024,6 +1129,9 @@ for trial = 1:trials
                 earth_frame = reward_bot_frame;
                 RestrictKeysForKbCheck([D]);
             end
+
+            % carry the ticket total values from the last trial
+            tick(trial+1,:) = tick(trial,:)
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -1091,7 +1199,7 @@ for trial = 1:trials
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return')
+            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
             Screen('DrawTexture', w, ship, [], spaceship_return);
 
             % countdown text
@@ -1148,6 +1256,7 @@ if block == 0 % practice trials
     practice_struct.payoff_det = payoff_det;
     practice_struct.payoff = payoff;
     practice_struct.state = state;
+    practice_struct.tick = tick;
 
 % ---- unique to this block
     practice_struct.block = find(initialization_struct.block == 0);
@@ -1178,6 +1287,7 @@ elseif block == 1 % main task block
     task_struct.payoff_det = payoff_det;
     task_struct.payoff = payoff;
     task_struct.state = state;
+    task_struct.tick = tick;
 
 % ---- unique to this block
     task_struct.block = find(initialization_struct.block == 1);
