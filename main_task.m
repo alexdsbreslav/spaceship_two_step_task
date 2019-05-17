@@ -61,6 +61,7 @@ rc_small = [0,0,600,425];
 r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 r_space = [0,0,1920,1080];
 r_ship = [0,0,400,290]
+r_tick_text = [0,0,300,150]
 
 % ---- space background
 space_bg = CenterRectOnPoint(r_space, rect(3)*0.5, rect(4)*0.5);
@@ -77,6 +78,8 @@ alien_lose = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 treasure_trade = CenterRectOnPoint(r_small, rect(3)*.25, rect(4)*0.55);
 reward_top_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.25);
 reward_bot_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.75);
+tick_text_top = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.25);
+tick_text_bot = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.75);
 
 % ---- frames during the trade screen
 reward_top_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.25);
@@ -237,8 +240,8 @@ iti_actual = zeros(trials, 1);
 tick = zeros(trials, 6)
 
 % set initial values for distribution
-tick_mean = round(normrnd(10,3));
-tick_sd = 3; % I want 1 to be 3sd from the mean
+tick_mean = initialization_struct.auction_bet;
+tick_sd = 3;
 
 % set parameters for mf estimator of ticket value
 tick_alpha = 0.5;
@@ -656,9 +659,9 @@ for trial = 1:trials
               % draw number of tickets
               Screen('TextSize', w, textsize_tickets)
               if type == 0
-                  DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.795, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
               else
-                  DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.295, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
               end
               Screen('Flip', w);
 
@@ -741,9 +744,9 @@ for trial = 1:trials
                   % draw number of tickets
                   Screen('TextSize', w, textsize_tickets)
                   if type == 0
-                      DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.795, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                   else
-                      DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.295, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                   end
                   Screen('Flip', w);
                   % wait 1 second
@@ -763,9 +766,9 @@ for trial = 1:trials
                  % draw number of tickets
                  Screen('TextSize', w, textsize_tickets)
                  if type == 0
-                     DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.795, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                  else
-                     DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.295, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                  end
                  Screen('Flip', w);
                  % wait 1 second
@@ -998,9 +1001,9 @@ for trial = 1:trials
               % draw number of tickets
               Screen('TextSize', w, textsize_tickets)
               if type == 0
-                  DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.795, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
               else
-                  DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.295, white);
+                  DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
               end
               Screen('Flip', w);
 
@@ -1086,9 +1089,9 @@ for trial = 1:trials
                   % draw number of tickets
                   Screen('TextSize', w, textsize_tickets)
                   if type == 0
-                      DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.795, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                   else
-                      DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.295, white);
+                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                   end
                   Screen('Flip', w);
                   % wait 1 second
@@ -1108,9 +1111,9 @@ for trial = 1:trials
                  % draw number of tickets
                  Screen('TextSize', w, textsize_tickets)
                  if type == 0
-                     DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.795, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                  else
-                     DrawFormattedText(w, num2str(tick(trial,3)), rect(3)*.725, rect(4)*0.295, white);
+                     DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                  end
                  Screen('Flip', w);
                  % wait 1 second

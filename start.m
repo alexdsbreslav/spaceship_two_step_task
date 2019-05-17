@@ -129,34 +129,58 @@ if sub_exists == 1
    sca;
    return
 
-
 elseif sub_exists == 0
     load([data_file_path sl 'initialization_structure.mat']);
 
     start_where = 99;
-    while ~ismember(start_where, [0 1 2 3])
+    while ~ismember(start_where, [0 1 2 3 4])
         start_where = input(['Where do you want to start?' '\n' ...
         'You will overwrite any existing data on and after the place you choose.' '\n\n' ...
         '0 = CANCEL and restart the function' '\n' ...
-        '1 = Tutorial' '\n' ...
-        '2 = Practice Rounds' '\n' ...
-        '3 = Test Rounds' '\n' ...
+        '1 = Re-initialize the subject''s data (this completely starts over)' '\n' ...
+        '2 = Tutorial' '\n' ...
+        '3 = Practice Rounds' '\n' ...
+        '4 = Test Rounds' '\n' ...
         'Response: ']);
 
-        if ~ismember(start_where, [0 1 2 3])
+        if ~ismember(start_where, [0 1 2 3 4])
           disp('Invalid entry, please try again.')
         end
     end
 
     if start_where == 0
-       disp([fprintf('\n') ...
-       'OK, you should restart the function to try again'])
-       sca; return
+         disp([fprintf('\n') ...
+         'OK, you should restart the function to try again'])
+         sca; return
+    elseif start_where == 1
+         rmdir(data_file_path, 's');
+         mkdir(data_file_path);
     end
 
 else
     start_where = 1;
+end
+
+if start_where <= 1;
     initialization_struct = struct;
+
+    % Identify the researcher
+    researcher = 99;
+    while ~ismember(researcher, [0 1 2 3 4 5])
+        researcher = input(['\n\n' ...
+          'What is the name of the researcher conducting the study?' '\n' ...
+          '0 = Test'  '\n' ...
+          '1 = Alesha' '\n' ...
+          '2 = Julia' '\n' ...
+          '3 = Logan' '\n' ...
+          '4 = Tony' '\n' ...
+          '5 = Other' '\n' ...
+          'Response: ' ]);
+
+        if ~ismember(researcher, [0 1 2 3 4 5])
+            disp('Invalid entry, please try again.')
+        end
+    end
 
     % Enter the condition that the subject is in
     condition = 99;
@@ -200,7 +224,7 @@ else
         img_file_names = {img_files(1:length(img_files)).name}';
         img_file_index = find(contains(img_file_names, 'sweet'))';
 
-        food_sweet = 99
+        food_sweet = 99;
         while ~ismember(food_sweet, [6 7 8 9 10])
             food_sweet = input(['Select the sweet food for this participant.' '\n' ...
             'Please select one of the following foods.' '\n\n' ...
@@ -235,6 +259,32 @@ else
       % NEED CODE HERE
     end
 
+    % Input initial WTP for snack food or stickers
+    auction = 99;
+    while ~ismember(auction, [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20])
+        auction = input(['\n\n' ...
+          'Auction results: how many tickets did the subject bet? (0-20)' '\n' ...
+          'Response: ' ]);
+
+        if ~ismember(auction, [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20])
+            disp('Invalid entry, please try again.')
+        end
+    end
+
+    % Input initial WTP for snack food or stickers
+    auction_result = 99;
+    while ~ismember(auction_result, [0 1])
+        auction_result = input(['\n\n' ...
+          'Auction results: did the subject win?' '\n' ...
+          '0 = No, the subject did not win.' '\n' ...
+          '1 = Yes, the subject did win.' '\n' ...
+          'Response: ' ]);
+
+        if ~ismember(auction_result, [0 1])
+            disp('Invalid entry, please try again.')
+        end
+    end
+
     % save whether this is a test or not
     initialization_struct.test = test;
     initialization_struct.input_source = input_source;
@@ -248,12 +298,17 @@ else
     initialization_struct.sub = sub; % save the subject number into the structure
     initialization_struct.data_file_path = data_file_path; % save the data file path as well
     initialization_struct.rng_seed = init_rng_seed; % save the rng seed for the initialization_structure
+    initialization_struct.researcher = researcher; % save the name of the researcher who conducted the study
     if condition == 1
         initialization_struct.condition = 'food'; % save the condition that the subject was randomized into
 
     else
         initialization_struct.condition = 'sticker';
     end
+    % auction result
+    initialization_struct.auction_bet = auction;
+    initialization_struct.auction_won = auction_result;
+
     % stimuli sets
     spaceships = {'cornhusk', 'stingray', 'triangle', 'tripod'};
     aliens = {'gizmo', 'sully', 'bear', 'vlad', 'piglet', 'elmo', 'mac', 'sid'};
@@ -313,10 +368,13 @@ else
     double_check = 99;
     while ~ismember(double_check, [0 1])
         double_check = input(['\n\n' ...
+          'Researcher = ' num2str(initialization_struct.researcher) '\n' ...
           'Nest ID = ' num2str(initialization_struct.sub) '\n' ...
           'Condition = ' initialization_struct.condition '\n' ...
           'Left item = ' initialization_struct.left_item '\n' ...
-          'Right item = ' initialization_struct.right_item '\n\n' ...
+          'Right item = ' initialization_struct.right_item '\n' ...
+          'Auction bet = ' num2str(initialization_struct.auction_bet) '\n' ...'
+          'Auction result = ' num2str(initialization_struct.auction_won) '\n\n' ...'
           '0 = I need to fix something; restart the function.' '\n' ...
           '1 = This is correct; continue.' '\n' ...
           'Response: ' ]);
@@ -335,7 +393,7 @@ else
 
 end
 
-% if start_where == 1
+% if start_where <= 2
 % % ---- 1: Tutorial
 %     exit_flag = tutorial_v4(initialization_struct);
 %
@@ -345,7 +403,7 @@ end
 %     end
 % end
 
-if start_where <= 2
+if start_where <= 3
 % ---- 2: practice trials (Block 0 in code)
     exit_flag = main_task(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
 
@@ -355,7 +413,7 @@ if start_where <= 2
     end
 end
 
-% if start_where <= 3
+% if start_where <= 4
 % % ---- 3: main experiment trials
 % % ---- space prepped?
 %     if condition == 1
