@@ -223,7 +223,7 @@ rate_obj = robotics.Rate(24);
 
 % ---- blank matrices for variables
 action = NaN(trials,4);
-click_coord = NaN(trials, 8)
+click_coord = NaN(trials, 8);
 choice_on_time = NaN(trials,4);
 choice_off_time = NaN(trials,4);
 choice_on_datetime = cell(trials,4);
@@ -470,7 +470,7 @@ for trial = 1:trials
     choice_off_datetime{trial,1} = clock;
 
     % ---- capture selection
-    action(trial,1), choice_loc = task_func.choice(input_source, type, [L,R], selection, x, y);
+    [action(trial,1), choice_loc] = task_func.choice(input_source, type, [L,R], selection, x, y);
 
     % ---- feedback screen
     if choice_loc == L
@@ -565,7 +565,7 @@ for trial = 1:trials
         choice_off_datetime{trial,2} = clock;
 
     % ---- capture selection and determine payoff
-        action(trial,2), choice_loc = task_func.choice(input_source, type, [L,R], selection, x, y);
+        [action(trial,2), choice_loc] = task_func.choice(input_source, type, [L,R], selection, x, y);
 
         if action(trial,2) == 0
             if payoff_det(trial, 1) <  initialization_struct.payoff_prob(trial,1)
@@ -664,7 +664,7 @@ for trial = 1:trials
               choice_off_datetime{trial,4} = clock;
 
         % ---- capture selection
-              action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
+              [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
 
               if action(trial,4) == 0
                   % chose snack/wrong --> increase value of snack, increase sd of dist
@@ -783,7 +783,7 @@ for trial = 1:trials
             choice_off_datetime{trial,4} = clock;
 
             % ---- capture selection
-            action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
+            [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
 
             % ---- feedback screen
             if choice_loc == U
@@ -885,7 +885,7 @@ for trial = 1:trials
         choice_off_datetime{trial,3} = clock;
 
     % ---- capture selection and determine payoff
-        action(trial,3), choice_loc = task_func.choice(input_source, type, [L,R], selection, x, y);
+        [action(trial,3), choice_loc] = task_func.choice(input_source, type, [L,R], selection, x, y);
 
         if action(trial,3) == 0
             if payoff_det(trial, 3) <  initialization_struct.payoff_prob(trial,3)
@@ -984,7 +984,7 @@ for trial = 1:trials
               choice_off_datetime{trial,4} = clock;
 
         % ---- capture selection
-              action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
+              [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
 
               if action(trial,4) == 0
                   % chose snack/wrong --> increase sd of dist
@@ -1105,7 +1105,7 @@ for trial = 1:trials
             choice_off_datetime{trial,4} = clock;
 
             % ---- capture selection
-            action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
+            [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
 
             % ---- feedback screen
             if choice_loc == U

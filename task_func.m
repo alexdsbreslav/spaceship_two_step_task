@@ -227,6 +227,7 @@ classdef task_func
                 x = NaN;
                 y = NaN;
             end
+        end
         function [action, choice_loc] = choice(input_source, type, keys, selection, x, y)
             if input_source == 1
 
@@ -239,7 +240,7 @@ classdef task_func
                     action = 1;
                 end
 
-                choice_loc = down_key
+                choice_loc = down_key;
             end
         end
     end
