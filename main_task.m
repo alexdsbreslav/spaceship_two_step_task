@@ -223,6 +223,7 @@ rate_obj = robotics.Rate(24);
 
 % ---- blank matrices for variables
 action = NaN(trials,4);
+click_coord = NaN(trials, 8)
 choice_on_time = NaN(trials,4);
 choice_off_time = NaN(trials,4);
 choice_on_datetime = cell(trials,4);
@@ -428,9 +429,6 @@ for trial = 1:trials
             Screen(w, 'Flip');
             while 1 %wait for response and allow exit if necessesary
               [keyIsDown, ~, keyCode] = KbCheck(input_source);
-    %                   if keyIsDown && any(keyCode(exitKeys))
-    %                       exit_flag = 1; Screen('CloseAll'); FlushEvents;
-    %                       sca; return
               if keyIsDown && any(keyCode(spacekey))
                   break
               end
@@ -463,30 +461,19 @@ for trial = 1:trials
     choice_on_datetime{trial,1} = clock;
 
     % ---- capture key press
-    key_is_down = 0;
-    FlushEvents;
-    RestrictKeysForKbCheck([L,R]);
-    [key_is_down, secs, key_code] = KbCheck(input_source);
-
-    while key_code(L) == 0 && key_code(R) == 0
-            [key_is_down, secs, key_code] = KbCheck(input_source);
-    end
+    [selection, x, y] = task_func.selection(input_source, [L,R]);
+    click_coord(trial, 1) = x;
+    click_coord(trial, 2) = y;
 
     % ---- stop reaction timer
     choice_off_time(trial,1) = GetSecs - t0;
     choice_off_datetime{trial,1} = clock;
 
     % ---- capture selection
-    down_key = find(key_code,1);
-
-    if (down_key==L && type == 0) || (down_key==R && type == 1)
-        action(trial,1)=0;
-    elseif (down_key==L && type == 1) || (down_key==R && type == 0)
-        action(trial,1)=1;
-    end
+    action(trial,1), choice_loc = task_func.choice(input_source, type, [L,R], selection, x, y);
 
     % ---- feedback screen
-    if down_key == L
+    if choice_loc == L
         % draw original stimuli
         Screen('DrawTexture', w, picL, [], alien_Lpoint);
         Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -495,8 +482,7 @@ for trial = 1:trials
         Screen('FrameRect',w,frame_color,alien_Rframe,10);
         Screen('Flip', w);
 
-    elseif down_key == R
-
+    elseif choice_loc == R
        % draw original stimuli
        Screen('DrawTexture', w, picL, [], alien_Lpoint);
        Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -570,37 +556,33 @@ for trial = 1:trials
         choice_on_datetime{trial,2} = clock;
 
     % ---- capture key press
-        key_is_down = 0;
-        FlushEvents;
-        RestrictKeysForKbCheck([L,R]);
-
-        while key_is_down==0
-                [key_is_down, secs, key_code] = KbCheck(input_source);
-        end
+        [selection, x, y] = task_func.selection(input_source, [L,R]);
+        click_coord(trial, 3) = x;
+        click_coord(trial, 4) = y;
 
     % ---- stop reaction timer
         choice_off_time(trial,2) = GetSecs - t0;
         choice_off_datetime{trial,2} = clock;
 
     % ---- capture selection and determine payoff
-        down_key = find(key_code,1);
+        action(trial,2), choice_loc = task_func.choice(input_source, type, [L,R], selection, x, y);
 
-        if (down_key==L && type == 0) || (down_key==R && type == 1)
-            action(trial,2)=0;
+        if action(trial,2) == 0
             if payoff_det(trial, 1) <  initialization_struct.payoff_prob(trial,1)
                 payoff(trial,1) = 1;
-            else payoff(trial,1) = 0;
+            else
+                payoff(trial,1) = 0;
             end
-        elseif (down_key==L && type == 1) || (down_key==R && type == 0)
-            action(trial,2)=1;
+        elseif action(trial,2) == 1
             if payoff_det(trial, 2) <  initialization_struct.payoff_prob(trial,2)
                 payoff(trial,1) = 1;
-            else payoff(trial,1) = 0;
+            else
+                payoff(trial,1) = 0;
             end
         end
 
     % ---- feedback screen
-        if down_key == L
+        if choice_loc == L
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -611,7 +593,7 @@ for trial = 1:trials
           % wait 1 second
           WaitSecs(1)
 
-       elseif down_key == R
+       elseif choice_loc == R
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -673,25 +655,18 @@ for trial = 1:trials
               choice_on_datetime{trial,4} = clock;
 
         % ---- capture key press
-              key_is_down = 0;
-              FlushEvents;
-              RestrictKeysForKbCheck([U,D]);
-              [key_is_down, secs, key_code] = KbCheck(input_source);
-
-              while key_code(U) == 0 && key_code(D) == 0
-                      [key_is_down, secs, key_code] = KbCheck(input_source);
-              end
+              [selection, x, y] = task_func.selection(input_source, [U,D]);
+              click_coord(trial, 7) = x;
+              click_coord(trial, 8) = y;
 
         % ---- stop reaction timer
               choice_off_time(trial,4) = GetSecs - t0;
               choice_off_datetime{trial,4} = clock;
 
         % ---- capture selection
-              down_key = find(key_code,4);
+              action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
 
-              if (down_key==U && type == 0) || (down_key==D && type == 1)
-                  % chose snack
-                  action(trial,4)=0;
+              if action(trial,4) == 0
                   % chose snack/wrong --> increase value of snack, increase sd of dist
                   if tick(trial, 3) > tick(trial, 1)
                       % sd of dist
@@ -708,9 +683,7 @@ for trial = 1:trials
                   end
                   % selected amount from normal dist
                   tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
-              elseif (down_key==U && type == 1) || (down_key==D && type == 0)
-                  % chose ticket
-                  action(trial,4)=1;
+              elseif action(trial,4) == 1;
                   % chose ticket/right --> decrease sd of dist
                   if tick(trial, 3) > tick(trial, 1)
                       % sd of dist
@@ -730,7 +703,7 @@ for trial = 1:trials
               end
 
         % ---- feedback screen
-              if down_key == U
+              if choice_loc == U
                   % draw treasure to trade
                   Screen('TextSize', w, textsize_feedback);
                   Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
@@ -752,7 +725,7 @@ for trial = 1:trials
                   % wait 1 second
                   WaitSecs(1)
 
-             elseif down_key == D
+             elseif choice_loc == D
                  % draw treasure to trade
                  Screen('TextSize', w, textsize_feedback);
                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
@@ -801,29 +774,19 @@ for trial = 1:trials
             choice_on_datetime{trial,4} = clock;
 
             % ---- capture key press
-            key_is_down = 0;
-            FlushEvents;
-            [key_is_down, secs, key_code] = KbCheck(input_source);
-
-            while key_code(U) == 0 && key_code(D) == 0
-                    [key_is_down, secs, key_code] = KbCheck(input_source);
-            end
+            [selection, x, y] = task_func.selection(input_source, [U,D]);
+            click_coord(trial, 7) = x;
+            click_coord(trial, 8) = y;
 
             % ---- stop reaction timer
             choice_off_time(trial,4) = GetSecs - t0;
             choice_off_datetime{trial,4} = clock;
 
             % ---- capture selection
-            down_key = find(key_code,4);
-
-            if (down_key==U && type == 0) || (down_key==D && type == 1)
-                action(trial,4)=0;
-            elseif (down_key==U && type == 1) || (down_key==D && type == 0)
-                action(trial,4)=1;
-            end
+            action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
 
             % ---- feedback screen
-            if down_key == U
+            if choice_loc == U
                 % draw original stimuli
                 DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
                 Screen('DrawTexture', w, earth, [], earth_loc);
@@ -833,8 +796,7 @@ for trial = 1:trials
                 % wait 1 second
                 WaitSecs(1)
 
-           elseif down_key == D
-
+           elseif choice_loc == D
                % draw original stimuli
                DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
                Screen('DrawTexture', w, earth, [], earth_loc);
@@ -914,36 +876,33 @@ for trial = 1:trials
         choice_on_datetime{trial,3} = clock;
 
     % ---- capture key press
-        key_is_down = 0;
-        FlushEvents;
-        RestrictKeysForKbCheck([L,R]);
-
-        while key_is_down==0
-                [key_is_down, secs, key_code] = KbCheck(input_source);
-        end
+        [selection, x, y] = task_func.selection(input_source, [L,R]);
+        click_coord(trial, 5) = x;
+        click_coord(trial, 6) = y;
 
     % ---- stop reaction timer
         choice_off_time(trial,3) = GetSecs - t0;
         choice_off_datetime{trial,3} = clock;
-        down_key = find(key_code,1);
 
     % ---- capture selection and determine payoff
-        if (down_key==L && type == 0) || (down_key==R && type == 1)
-            action(trial,3)=0;
+        action(trial,3), choice_loc = task_func.choice(input_source, type, [L,R], selection, x, y);
+
+        if action(trial,3) == 0
             if payoff_det(trial, 3) <  initialization_struct.payoff_prob(trial,3)
                 payoff(trial,2) = 1;
-            else payoff(trial,2) = 0;
+            else
+                payoff(trial,2) = 0;
             end
-        elseif (down_key==L && type == 1) || (down_key==R && type == 0)
-            action(trial,3)=1;
+        elseif action(trial,3) == 1
             if payoff_det(trial, 4) <  initialization_struct.payoff_prob(trial,4)
                 payoff(trial,2) = 1;
-            else payoff(trial,2) = 0;
+            else
+                payoff(trial,2) = 0;
             end
         end
 
     % ---- feedback screen
-        if down_key == L
+        if choice_loc == L
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -954,7 +913,7 @@ for trial = 1:trials
           % wait 1 second
           WaitSecs(1)
 
-        elseif down_key == R
+        elseif choice_loc == R
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -1016,25 +975,18 @@ for trial = 1:trials
               choice_on_datetime{trial,4} = clock;
 
         % ---- capture key press
-              key_is_down = 0;
-              FlushEvents;
-              RestrictKeysForKbCheck([U,D]);
-              [key_is_down, secs, key_code] = KbCheck(input_source);
-
-              while key_code(U) == 0 && key_code(D) == 0
-                      [key_is_down, secs, key_code] = KbCheck(input_source);
-              end
+              [selection, x, y] = task_func.selection(input_source, [U,D]);
+              click_coord(trial, 7) = x;
+              click_coord(trial, 8) = y;
 
         % ---- stop reaction timer
               choice_off_time(trial,4) = GetSecs - t0;
               choice_off_datetime{trial,4} = clock;
 
         % ---- capture selection
-              down_key = find(key_code,4);
+              action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
 
-              if (down_key==U && type == 0) || (down_key==D && type == 1)
-                  % chose snack
-                  action(trial,4)=0;
+              if action(trial,4) == 0
                   % chose snack/wrong --> increase sd of dist
                   if tick(trial, 3) > tick(trial, 1);
                       % sd of dist
@@ -1051,9 +1003,7 @@ for trial = 1:trials
                   end
                   % selected amount from normal dist
                   tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
-              elseif (down_key==U && type == 1) || (down_key==D && type == 0)
-                  % chose ticket
-                  action(trial,4)=1;
+              elseif action(trial,4) == 1
                   % mean of dist
                   tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3)-tick(trial,1));
                   % chose ticket/right --> decrease sd of dist
@@ -1075,7 +1025,7 @@ for trial = 1:trials
               end
 
         % ---- feedback screen
-              if down_key == U
+              if choice_loc == U
                   % draw treasure to trade
                   Screen('TextSize', w, textsize_feedback);
                   Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
@@ -1097,7 +1047,7 @@ for trial = 1:trials
                   % wait 1 second
                   WaitSecs(1)
 
-             elseif down_key == D
+             elseif choice_loc == D
                  % draw treasure to trade
                  Screen('TextSize', w, textsize_feedback);
                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
@@ -1146,29 +1096,19 @@ for trial = 1:trials
             choice_on_datetime{trial,4} = clock;
 
             % ---- capture key press
-            key_is_down = 0;
-            FlushEvents;
-            [key_is_down, secs, key_code] = KbCheck(input_source);
-
-            while key_code(U) == 0 && key_code(D) == 0
-                    [key_is_down, secs, key_code] = KbCheck(input_source);
-            end
+            [selection, x, y] = task_func.selection(input_source, [U,D]);
+            click_coord(trial, 7) = x;
+            click_coord(trial, 8) = y;
 
             % ---- stop reaction timer
             choice_off_time(trial,4) = GetSecs - t0;
             choice_off_datetime{trial,4} = clock;
 
             % ---- capture selection
-            down_key = find(key_code,4);
-
-            if (down_key==U && type == 0) || (down_key==D && type == 1)
-                action(trial,4)=0;
-            elseif (down_key==U && type == 1) || (down_key==D && type == 0)
-                action(trial,4)=1;
-            end
+            action(trial,4), choice_loc = task_func.choice(input_source, type, [U,D], selection, x, y);
 
             % ---- feedback screen
-            if down_key == U
+            if choice_loc == U
                 % draw original stimuli
                 DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
                 Screen('DrawTexture', w, earth, [], earth_loc);
@@ -1178,8 +1118,7 @@ for trial = 1:trials
                 % wait 1 second
                 WaitSecs(1)
 
-           elseif down_key == D
-
+           elseif choice_loc == D
                % draw original stimuli
                DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
                Screen('DrawTexture', w, earth, [], earth_loc);
@@ -1241,6 +1180,7 @@ if block == 0 % practice trials
     practice_struct.stim_colors_step2 = initialization_struct.stim_colors_step2(block+1);
     practice_struct.position = position;
     practice_struct.action = action;
+    practice_struct.click_coord = click_coord;
     practice_struct.on = choice_on_time;
     practice_struct.off = choice_off_time;
 
@@ -1272,6 +1212,7 @@ elseif block == 1 % main task block
     task_struct.stim_colors_step2 = initialization_struct.stim_colors_step2(block+1);
     task_struct.position = position;
     task_struct.action = action;
+    task_struct.click_coord = click_coord;
     task_struct.on = choice_on_time;
     task_struct.off = choice_off_time;
 
@@ -1291,11 +1232,11 @@ elseif block == 1 % main task block
 
 % ---- unique to this block
     task_struct.block = find(initialization_struct.block == 1);
-    practice_struct.spaceships = initialization_struct.spaceships(3:4);
-    practice_struct.aliens = initialization_struct.aliens(5:8);
+    task_struct.spaceships = initialization_struct.spaceships(3:4);
+    task_struct.aliens = initialization_struct.aliens(5:8);
     task_struct.payoff_sum = sum(nansum(payoff))/10;
     task_struct.payoff_total = 10 + ceil(task_struct.payoff_sum);
-    save([initialization_struct.data_file_path sl 'money'], 'task_struct', '-v6');
+    save([initialization_struct.data_file_path sl 'task'], 'task_struct', '-v6');
 end
 
 % -----------------------------------------------------------------------------

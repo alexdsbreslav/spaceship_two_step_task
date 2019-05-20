@@ -208,5 +208,39 @@ classdef task_func
                 end
             end
         end
+
+        function [selection, x, y]  = selection(input_source, keys)
+            if input_source == 1
+
+            else
+                % ---- capture selection
+                key_is_down = 0;
+                FlushEvents;
+                RestrictKeysForKbCheck(keys);
+                [key_is_down, secs, key_code] = KbCheck(input_source);
+
+                while key_code(keys(1)) == 0 && key_code(keys(2)) == 0
+                        [key_is_down, secs, key_code] = KbCheck(input_source);
+                end
+
+                selection = key_code;
+                x = NaN;
+                y = NaN;
+            end
+        function [action, choice_loc] = choice(input_source, type, keys, selection, x, y)
+            if input_source == 1
+
+            else
+                down_key = find(selection,1);
+
+                if (down_key==keys(1) && type == 0) || (down_key==keys(2) && type == 1)
+                    action = 0;
+                elseif (down_key==keys(1) && type == 1) || (down_key==keys(2) && type == 0)
+                    action = 1;
+                end
+
+                choice_loc = down_key
+            end
+        end
     end
 end
