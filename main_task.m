@@ -60,8 +60,8 @@ rc = [0,0,800,600]; %choice rectangle for aliens and spaceships
 rc_small = [0,0,600,425];
 r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 r_space = [0,0,1920,1080];
-r_ship = [0,0,400,290]
-r_tick_text = [0,0,300,150]
+r_ship = [0,0,400,290];
+r_tick_text = [0,0,300,150];
 
 % ---- space background
 space_bg = CenterRectOnPoint(r_space, rect(3)*0.5, rect(4)*0.5);
@@ -237,7 +237,7 @@ payoff = NaN(trials,2);
 iti_selected = zeros(trials, 1);
 iti_actual = zeros(trials, 1);
 
-tick = zeros(trials, 6)
+tick = zeros(trials, 6);
 
 % set initial values for distribution
 tick_mean = initialization_struct.auction_bet;
@@ -246,8 +246,8 @@ tick_sd = 3;
 % set parameters for mf estimator of ticket value
 tick_alpha = 0.5;
 tick_beta = 5;
-tick(:,4) = tick_alpha
-tick(:,5) = tick_beta
+tick(:,4) = tick_alpha;
+tick(:,5) = tick_beta;
 
 % set initial values for tickets
 tick(1,1) = tick_mean;
@@ -258,8 +258,8 @@ tick(1,3) = tick_mean;
 % then the prob of choosing the tickets, given the pull equals
 % e^pull/(e^pull + e^mean)
 % I need to normalize the amount they are winning before plugging in here
-norm_factor = max(tick(1,1),tick(1,3))
-tick(1,6) = exp(tick_beta*tick(1,3)/norm_factor)/(exp(tick_beta*tick(1,3)/norm_factor) + exp(tick_beta*tick(1,1)/norm_factor))
+norm_factor = max(tick(1,1),tick(1,3));
+tick(1,6) = exp(tick_beta*tick(1,3)/norm_factor)/(exp(tick_beta*tick(1,3)/norm_factor) + exp(tick_beta*tick(1,1)/norm_factor));
 
 condition = initialization_struct.condition;
 
@@ -446,8 +446,8 @@ for trial = 1:trials
     type = position(trial,1);
 
     % ---- Draw original stimuli using a function that Arkady wrote: drawimage
-    picL = drawimage(w, A1, B1, A2, B2, A3, B3,type,1);
-    picR = drawimage(w, A1, B1, A2, B2, A3, B3,1-type,1);
+    picL = task_func.drawimage(w, A1, B1, A2, B2, A3, B3,type,1);
+    picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3,1-type,1);
 
     % ---- Draw trial screen
     % draw original stimuli
@@ -512,7 +512,7 @@ for trial = 1:trials
 
     % ---- space exploration page
     Screen('DrawTexture', w, space, [], space_bg);
-    ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out');
+    ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out');
     Screen('DrawTexture', w, ship, [], spaceship_out);
     Screen('Flip', w);
     WaitSecs(1)
@@ -552,8 +552,8 @@ for trial = 1:trials
         type = position(trial,2);
 
     % ---- Draw original stimuli using a function that Arkady wrote: drawimage
-        picL = drawimage(w, A1, B1, A2, B2, A3, B3, type,2);
-        picR = drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,2);
+        picL = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, type,2);
+        picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,2);
 
     % ---- Draw trial screen
         % draw original stimuli
@@ -625,7 +625,7 @@ for trial = 1:trials
 
         % ---- payoff screen
         % ---- show feedback
-        picD = drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,2),2);
+        picD = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,2),2);
         if payoff(trial,1) == 1
             Screen('DrawTexture', w, picD, [], alien_win);
             Screen('DrawTexture', w, treasure, [], treasure_win);
@@ -642,8 +642,8 @@ for trial = 1:trials
         type = position(trial,4);
 
         % ---- Draw reward stimuli; this randomizes their location
-        reward_top = drawrewards(w, condition, snacks, stickers, tickets, type);
-        reward_bot = drawrewards(w, condition, snacks, stickers, tickets, 1 - type);
+        reward_top = task_func.drawrewards(w, condition, snacks, stickers, tickets, type);
+        reward_bot = task_func.drawrewards(w, condition, snacks, stickers, tickets, 1 - type);
 
         if payoff(trial, 1) == 1
         % ---- Draw trial screen
@@ -666,8 +666,8 @@ for trial = 1:trials
               Screen('Flip', w);
 
         % ---- calc prob of choosing tickets
-              norm_factor = max(tick(trial,1),tick(trial,3))
-              tick(trial,6) = exp(tick_beta*tick(trial,3)/norm_factor)/(exp(tick_beta*tick(trial,3)/norm_factor) + exp(tick_beta*tick(trial,1)/norm_factor))
+              norm_factor = max(tick(trial,1),tick(trial,3));
+              tick(trial,6) = exp(tick_beta*tick(trial,3)/norm_factor)/(exp(tick_beta*tick(trial,3)/norm_factor) + exp(tick_beta*tick(trial,1)/norm_factor));
         % ---- start reaction timer
               choice_on_time(trial,4) = GetSecs - t0;
               choice_on_datetime{trial,4} = clock;
@@ -704,10 +704,10 @@ for trial = 1:trials
                       % sd of dist
                       tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
                       % mean of dist
-                      tick(trial+1,1) = tick(trial,1)
+                      tick(trial+1,1) = tick(trial,1);
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               elseif (down_key==U && type == 1) || (down_key==D && type == 0)
                   % chose ticket
                   action(trial,4)=1;
@@ -726,7 +726,7 @@ for trial = 1:trials
                       tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               end
 
         % ---- feedback screen
@@ -786,7 +786,7 @@ for trial = 1:trials
             end
 
             % carry the ticket total values from the last trial
-            tick(trial+1,:) = tick(trial,:)
+            tick(trial+1,:) = tick(trial,:);
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -849,14 +849,14 @@ for trial = 1:trials
 
         % variable text that will change on the last trial of the game
         Screen('TextSize', w, textsize);
-        countdown_text = rewards_text(condition, block, trial, trials, payoff(trial,1), action(trial,4))
+        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,1), action(trial,4));
         iti_start(trial) = GetSecs - t0;
 
         % countdown to next trial
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,1)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
+            ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
             Screen('DrawTexture', w, ship, [], spaceship_return);
 
             % countdown text
@@ -896,8 +896,8 @@ for trial = 1:trials
         type = position(trial,3);
 
     % ---- Draw original stimuli using a function that Arkady wrote: drawimage
-        picL = drawimage(w, A1, B1, A2, B2, A3, B3, type,3);
-        picR = drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,3);
+        picL = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, type,3);
+        picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,3);
 
     % ---- Draw trial screen
         % draw original stimuli
@@ -968,7 +968,7 @@ for trial = 1:trials
 
     % ---- payoff screen
     % ---- determine second step choice
-        picD = drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,3),3);
+        picD = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,3),3);
         if payoff(trial,2) == 1
             Screen('DrawTexture', w, picD, [], alien_win);
             Screen('DrawTexture', w, treasure, [], treasure_win);
@@ -984,8 +984,8 @@ for trial = 1:trials
         position(trial,4) = round(rand); %randomizing images positions
         type = position(trial,4);
         % ---- Draw reward stimuli; this randomizes their location
-        reward_top = drawrewards(w, condition, snacks, stickers, tickets, type);
-        reward_bot = drawrewards(w, condition, snacks, stickers, tickets, 1 - type);
+        reward_top = task_func.drawrewards(w, condition, snacks, stickers, tickets, type);
+        reward_bot = task_func.drawrewards(w, condition, snacks, stickers, tickets, 1 - type);
 
         if payoff(trial, 2) == 1
         % ---- Draw trial screen
@@ -1008,8 +1008,8 @@ for trial = 1:trials
               Screen('Flip', w);
 
         % ---- calc prob of choosing tickets
-              norm_factor = max(tick(trial,1),tick(trial,3))
-              tick(trial,6) = exp(tick_beta*tick(trial,3)/norm_factor)/(exp(tick_beta*tick(trial,3)/norm_factor) + exp(tick_beta*tick(trial,1)/norm_factor))
+              norm_factor = max(tick(trial,1),tick(trial,3));
+              tick(trial,6) = exp(tick_beta*tick(trial,3)/norm_factor)/(exp(tick_beta*tick(trial,3)/norm_factor) + exp(tick_beta*tick(trial,1)/norm_factor));
 
         % ---- start reaction timer
               choice_on_time(trial,4) = GetSecs - t0;
@@ -1036,7 +1036,7 @@ for trial = 1:trials
                   % chose snack
                   action(trial,4)=0;
                   % chose snack/wrong --> increase sd of dist
-                  if tick(trial, 3) > tick(trial, 1)
+                  if tick(trial, 3) > tick(trial, 1);
                       % sd of dist
                       tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
                       % mean of dist
@@ -1050,7 +1050,7 @@ for trial = 1:trials
                       tick(trial+1,1) = tick(trial,1);
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               elseif (down_key==U && type == 1) || (down_key==D && type == 0)
                   % chose ticket
                   action(trial,4)=1;
@@ -1071,7 +1071,7 @@ for trial = 1:trials
                       tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               end
 
         % ---- feedback screen
@@ -1131,7 +1131,7 @@ for trial = 1:trials
             end
 
             % carry the ticket total values from the last trial
-            tick(trial+1,:) = tick(trial,:)
+            tick(trial+1,:) = tick(trial,:);
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -1193,13 +1193,13 @@ for trial = 1:trials
 
         % variable text that will change based on their reward choice and trial
         Screen('TextSize', w, textsize);
-        countdown_text = rewards_text(condition, block, trial, trials, payoff(trial,2), action(trial,4))
+        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,2), action(trial,4));
         iti_start(trial) = GetSecs - t0;
         % countdown to next trial
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
+            ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
             Screen('DrawTexture', w, ship, [], spaceship_return);
 
             % countdown text
