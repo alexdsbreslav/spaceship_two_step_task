@@ -76,7 +76,7 @@ classdef task_func
 
         function pull = pull_ticket(mean, sd)
             pull = round(normrnd(mean, sd));
-            if pull == 0
+            if pull < 1
                 pull = 1;
             end
         end
@@ -259,7 +259,7 @@ classdef task_func
             end
         end
 
-        
+
         function [action, choice_loc] = choice(type, keys, selection, x, y)
             if (selection==keys(1) && type == 0) || (selection==keys(2) && type == 1)
                 action = 0;

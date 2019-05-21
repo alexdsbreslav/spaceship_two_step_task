@@ -96,7 +96,7 @@ loss_iti = [3, 0.5];
 % ------------------------------------------------------------------------------
 % ------------------------------------------------------------------------------
 
-sub = input('Nest ID: '); %keep sub number as a string so we can validate easily below
+sub = input('Subject ID: '); %keep sub number as a string so we can validate easily below
 
 % create subject folder in the raw data folder
 filename_subnum = pad(num2str(sub), 4, 'left', '0');
@@ -165,6 +165,7 @@ if start_where <= 1;
     initialization_struct = struct;
 
     % Identify the researcher
+    researchers = {'Alesha', 'Julie', 'Logan', 'Tatyana', 'Other'}
     researcher = 99;
     while ~ismember(researcher, [0 1 2 3 4 5])
         researcher = input(['\n\n' ...
@@ -198,19 +199,16 @@ if start_where <= 1;
 
     if condition == 1
         % pick salty food
-        img_files = dir(['food_images' sl '*.png']);
-        img_file_names = {img_files(1:length(img_files)).name}';
-        img_file_index = find(contains(img_file_names, 'salt'))';
-
+        foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'}
         food_salt = 99;
         while ~ismember(food_salt, [1 2 3 4 5])
             food_salt = input(['Select the salty food for this participant.' '\n' ...
             'Please select one of the following foods.' '\n\n' ...
-            num2str(img_file_index(1)) ' = ' img_file_names{img_file_index(1)} '\n' ...
-            num2str(img_file_index(2)) ' = ' img_file_names{img_file_index(2)} '\n' ...
-            num2str(img_file_index(3)) ' = ' img_file_names{img_file_index(3)} '\n' ...
-            num2str(img_file_index(4)) ' = ' img_file_names{img_file_index(4)} '\n' ...
-            num2str(img_file_index(5)) ' = ' img_file_names{img_file_index(5)} '\n' ...
+            '1 = ' foods{1} '\n' ...
+            '2 = ' foods{2} '\n' ...
+            '3 = ' foods{3} '\n' ...
+            '4 = ' foods{4} '\n' ...
+            '5 = ' foods{5} '\n' ...
             'Response: ']);
 
             if ~ismember(food_salt, [1 2 3 4 5])
@@ -218,21 +216,19 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.food_salt = cellstr(img_file_names{food_salt});
+        initialization_struct.food_salt = cellstr(foods{food_salt});
+        initialization_struct.sticker = NaN;
 
         % pick sweet food
-        img_file_names = {img_files(1:length(img_files)).name}';
-        img_file_index = find(contains(img_file_names, 'sweet'))';
-
         food_sweet = 99;
         while ~ismember(food_sweet, [6 7 8 9 10])
             food_sweet = input(['Select the sweet food for this participant.' '\n' ...
             'Please select one of the following foods.' '\n\n' ...
-            num2str(img_file_index(1)) ' = ' img_file_names{img_file_index(1)} '\n' ...
-            num2str(img_file_index(2)) ' = ' img_file_names{img_file_index(2)} '\n' ...
-            num2str(img_file_index(3)) ' = ' img_file_names{img_file_index(3)} '\n' ...
-            num2str(img_file_index(4)) ' = ' img_file_names{img_file_index(4)} '\n' ...
-            num2str(img_file_index(5)) ' = ' img_file_names{img_file_index(5)} '\n' ...
+            '6 = ' foods{6} '\n' ...
+            '7 = ' foods{7} '\n' ...
+            '8 = ' foods{8} '\n' ...
+            '9 = ' foods{9} '\n' ...
+            '10 = ' foods{10} '\n' ...
             'Response: ']);
 
             if ~ismember(food_sweet, [6 7 8 9 10])
@@ -240,23 +236,71 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.food_sweet = cellstr(img_file_names{food_sweet});
+        initialization_struct.food_sweet = cellstr(foods{food_sweet});
+        initialization_struct.tattoo = NaN;
         % sweet left when equal zero
         initialization_struct.left_item = randi([0,1]);
 
         % identify which food is left or right
         if initialization_struct.left_item == 1
-            initialization_struct.left_item = initialization_struct.food_sweet{1}(7:end-4);
-            initialization_struct.right_item = initialization_struct.food_salt{1}(6:end-4);
+            initialization_struct.left_item = initialization_struct.food_sweet{1};
+            initialization_struct.right_item = initialization_struct.food_salt{1};
         else
-            initialization_struct.right_item = initialization_struct.food_sweet{1}(7:end-4);
-            initialization_struct.left_item = initialization_struct.food_salt{1}(6:end-4);
+            initialization_struct.right_item = initialization_struct.food_sweet{1};
+            initialization_struct.left_item = initialization_struct.food_salt{1};
         end
     else
-      % this is where stuff for the sticker condition needs to go that I haven't figure out yet
-      % NEED CODE HERE
-      % NEED CODE HERE
-      % NEED CODE HERE
+        % pick sticker
+        stickers_tattoos = {'s1', 's2', 's3', 's4', 's5', 't1', 't2', 't3', 't4', 't5'}
+        sticker = 99;
+        while ~ismember(sticker, [1 2 3 4 5])
+            sticker = input(['Select the stickers for this participant.' '\n' ...
+            'Please select one of the following stickers.' '\n\n' ...
+            '1 = ' stickers_tattoos{1} '\n' ...
+            '2 = ' stickers_tattoos{2} '\n' ...
+            '3 = ' stickers_tattoos{3} '\n' ...
+            '4 = ' stickers_tattoos{4} '\n' ...
+            '5 = ' stickers_tattoos{5} '\n' ...
+            'Response: ']);
+
+            if ~ismember(sticker, [1 2 3 4 5])
+                disp('Invalid entry, please try again.')
+            end
+        end
+
+        initialization_struct.sticker = cellstr(stickers_tattoos{sticker});
+        initialization_struct.food_salt = NaN;
+
+        % pick tattoo
+        tattoo = 99;
+        while ~ismember(tattoo, [6 7 8 9 10])
+            tattoo = input(['Select the tattoos for this participant.' '\n' ...
+            'Please select one of the following tattoos.' '\n\n' ...
+            '6 = ' stickers_tattoos{6} '\n' ...
+            '7 = ' stickers_tattoos{7} '\n' ...
+            '8 = ' stickers_tattoos{8} '\n' ...
+            '9 = ' stickers_tattoos{9} '\n' ...
+            '10 = ' stickers_tattoos{10} '\n' ...
+            'Response: ']);
+
+            if ~ismember(tattoo, [6 7 8 9 10])
+                disp('Invalid entry, please try again.')
+            end
+        end
+
+        initialization_struct.tattoo = cellstr(stickers_tattoos{tattoo});
+        initialization_struct.food_sweet = NaN;
+        % sweet left when equal zero
+        initialization_struct.left_item = randi([0,1]);
+
+        % identify which food is left or right
+        if initialization_struct.left_item == 1
+            initialization_struct.left_item = initialization_struct.sticker{1};
+            initialization_struct.right_item = initialization_struct.tattoo{1};
+        else
+            initialization_struct.right_item = initialization_struct.tattoo{1};
+            initialization_struct.left_item = initialization_struct.sticker{1};
+        end
     end
 
     % Input initial WTP for snack food or stickers
@@ -287,7 +331,7 @@ if start_where <= 1;
     initialization_struct.sub = sub; % save the subject number into the structure
     initialization_struct.data_file_path = data_file_path; % save the data file path as well
     initialization_struct.rng_seed = init_rng_seed; % save the rng seed for the initialization_structure
-    initialization_struct.researcher = researcher; % save the name of the researcher who conducted the study
+    initialization_struct.researcher = cellstr(researchers{researcher}); % save the name of the researcher who conducted the study
     if condition == 1
         initialization_struct.condition = 'food'; % save the condition that the subject was randomized into
 
@@ -356,8 +400,8 @@ if start_where <= 1;
     double_check = 99;
     while ~ismember(double_check, [0 1])
         double_check = input(['\n\n' ...
-          'Researcher = ' num2str(initialization_struct.researcher) '\n' ...
-          'Nest ID = ' num2str(initialization_struct.sub) '\n' ...
+          'Researcher = ' initialization_struct.researcher '\n' ...
+          'Subject ID = ' num2str(initialization_struct.sub) '\n' ...
           'Condition = ' initialization_struct.condition '\n' ...
           'Left item = ' initialization_struct.left_item '\n' ...
           'Right item = ' initialization_struct.right_item '\n' ...

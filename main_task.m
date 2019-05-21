@@ -246,7 +246,7 @@ payoff = NaN(trials,2);
 iti_selected = zeros(trials, 1);
 iti_actual = zeros(trials, 1);
 
-tick = zeros(trials, 6);
+tick = zeros(trials, 7);
 
 % set initial values for distribution
 tick_mean = 10 + (initialization_struct.purchase_early - 1)*5;
@@ -284,112 +284,23 @@ Screen('TextSize', w, textsize);
 % ---- Intro screen for practice block
 if block == 0
     DrawFormattedText(w,[
-        'This is the last part of the tutorial.' '\n' ...
-        'You''ll get to play 15 practice rounds.' ....
+        'Let''s practice!' '\n' ...
+        'When you are ready, the experimenter will start the practice game.' '\n' ...
+        'You will play 15 rounds in the practice game.'....
         ], 'center','center', white, [], [], [], 1.6);
     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
     Screen('Flip',w);
     KbWait(input_source, 2);
 
-    DrawFormattedText(w,[
-        'After you finish the practice rounds,' '\n' ...
-        'you''ll play the strategy game for real rewards!' ....
-        ], 'center','center', white, [], [], [], 1.6);
-    Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-    Screen('Flip',w);
-    KbWait(input_source, 2);
-
-    DrawFormattedText(w, 'Press p to begin the practice rounds.', 'center', 'center', white);
-    Screen(w, 'Flip');
-    KbWait(input_source, 2);
-
-% ---- Intro screen for food block
+% ---- Intro screen for the main task
 else
-% % ---- Food version
-%     DrawFormattedText(w, [
-%         'In this version of the game, you will be playing for food rewards!' ...
-%         ],'center', 'center', white, [], [], [], 1.6);
-%     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-%     Screen('Flip',w);
-%     WaitSecs(1)
-%     KbWait(input_source, 2);
-%
-% % ---- New rooms
-%     Screen('DrawTexture', w, token_room, [], room_Lpoint);
-%     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-%     DrawFormattedText(w, [
-%         'In the food version of the game, there is' '\n' ...
-%         'a new TOKEN ROOM, and a FOOD PRIZE ROOM!'
-%         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-%     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-%     Screen('Flip',w);
-%     WaitSecs(1)
-%     KbWait(input_source, 2);
-%
-% % ---- New colors and labels
-%     Screen('DrawTexture', w, token_room, [], room_Lpoint);
-%     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-%     DrawFormattedText(w, [
-%         'The slots are labeled with new colors and new symbols.' ...
-%         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-%     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-%     Screen('Flip',w);
-%     WaitSecs(1)
-%     KbWait(input_source, 2);
-%
-% % ---- Reset chances
-%     Screen('DrawTexture', w, token_room, [], room_Lpoint);
-%     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-%     DrawFormattedText(w, [
-%         'All of your chances of winning have been reset,' '\n' ...
-%         'but the rules of the game and all of the' '\n' ...
-%         'programming are exactly the same.'
-%         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-%     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-%     Screen('Flip',w);
-%     WaitSecs(1)
-%     KbWait(input_source, 2);
-%
-% % ---- Win = food
-%     Screen('DrawTexture', w, token_room, [], room_Lpoint);
-%     Screen('DrawTexture', w, prize_room, [], room_Rpoint);
-%     DrawFormattedText(w, [
-%         'Each time you win in the FOOD PRIZE' '\n' ...
-%         'ROOM, you''ll get to take a one bite of' '\n' ...
-%         'either one of your two snacks!'
-%         ],'center', rect(4)*0.75, white, [], [], [], 1.6);
-%     Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
-%     Screen('Flip',w);
-%     WaitSecs(1)
-%     KbWait(input_source, 2);
-%
-% % ---- Eat as much of either as you like
-%     DrawFormattedText(w, [
-%         'You can choose either snack as much or as little as you like.' '\n\n'...
-%         'We have given you enough of each snack to' '\n' ...
-%         'make sure that you cannot run out.' ...
-%         ],'center', 'center', white, [], [], [], 1.6);
-%     Screen(w, 'Flip');
-%     KbWait(input_source, 2);
-
-% % ---- Questions? Begin
-%     DrawFormattedText(w, [
-%         'If you have any questions at all about the the food version' '\n' ...
-%         'of the game, this is a great time to ask the experimenter.' '\n\n' ...
-%         'Once the experimenter has answered all of your questions,' '\n' ...
-%         'press d to begin the food version of the game!' ...
-%         ], 'center', 'center', white, [], [], [], 1.6);
-%     Screen(w, 'Flip');
-%
-%     while 1 %wait for response and allow exit if necessesary
-%       [keyIsDown, ~, keyCode] = KbCheck(input_source);
-%       if keyIsDown && any(keyCode(exitKeys))
-%           exit_flag = 1; Screen('CloseAll'); FlushEvents;
-%           sca; return
-%       elseif keyIsDown && any(keyCode(startFirstKeys))
-%           break
-%       end
-%     end
+  DrawFormattedText(w,[
+      'Let''s play!' '\n' ...
+      'When you are ready, the experimenter will start the game.' ...
+      ], 'center','center', white, [], [], [], 1.6);
+  Screen('DrawTexture', w, next_arrow, [], next_arrow_loc);
+  Screen('Flip',w);
+  KbWait(input_source, 2);
 end
 
 % -----------------------------------------------------------------------------
@@ -411,20 +322,21 @@ for trial = 1:trials
         if trial == (trials/5) + 1 || trial == (2*trials/5) + 1 || trial == (3*trials/5) + 1 || trial == (4*trials/5) + 1
             Screen('FillRect', w, black);
             Screen('TextSize', w, textsize);
-
-            if block == 1
+            if trial == (trials/5) + 1
                 DrawFormattedText(w, [
-                    'You can take a short break.' '\n\n' ...
-                    'Press space to continue' ...
-                    ],'center', 'center', white);
-            elseif block == 2
-                DrawFormattedText(w, [
-                    'You can take a short break.' '\n' ...
-                    'This is a good time to take a sip of water.' '\n\n' ...
-                    'Press space to continue' ...
+                    'Let''s pause the game and take a short break!' '\n\n' ...
+                    'You''ve earned ' num2str(sum(tick(1:trial-1,7))) 'tickets. Nice job!' '\n' ...
+                    'This is a good time to take a drink of water.' '\n' ...
+                    'When you are ready, the experimenter will unpause the game.' ...
                     ],'center', 'center', white, [], [], [], 1.6);
+            else
+              DrawFormattedText(w, [
+                  'Let''s pause the game and take a short break!' '\n\n' ...
+                  'You''ve earned ' num2str(sum(tick(trial-trials/5:trial-1,7))) 'more tickets. Nice job!' '\n' ...
+                  'This is a good time to take a drink of water.' '\n' ...
+                  'When you are ready, the experimenter will unpause the game.' ...
+                  ],'center', 'center', white, [], [], [], 1.6);
             end
-
             Screen(w, 'Flip');
             while 1 %wait for response and allow exit if necessesary
               [keyIsDown, ~, keyCode] = KbCheck(input_source);
@@ -682,7 +594,9 @@ for trial = 1:trials
                   end
                   % selected amount from normal dist
                   tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
-              elseif action(trial,4) == 1;
+              elseif action(trial,4) == 1
+                  % add tickets offered to tickets won!
+                  tick(trial,7) = tick(trial,3)
                   % chose ticket/right --> decrease sd of dist
                   if tick(trial, 3) > tick(trial, 1)
                       % sd of dist
@@ -1003,6 +917,8 @@ for trial = 1:trials
                   % selected amount from normal dist
                   tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
               elseif action(trial,4) == 1
+                  % add tickets offered to tickets won!
+                  tick(trial,7) = tick(trial,3)
                   % mean of dist
                   tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3)-tick(trial,1));
                   % chose ticket/right --> decrease sd of dist
