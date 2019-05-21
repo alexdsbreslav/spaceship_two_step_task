@@ -249,7 +249,7 @@ iti_actual = zeros(trials, 1);
 tick = zeros(trials, 6);
 
 % set initial values for distribution
-tick_mean = initialization_struct.auction_bet;
+tick_mean = 10 + (initialization_struct.purchase_early - 1)*5;
 tick_sd = 3;
 
 % set parameters for mf estimator of ticket value

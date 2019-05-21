@@ -260,27 +260,16 @@ if start_where <= 1;
     end
 
     % Input initial WTP for snack food or stickers
-    auction = 99;
-    while ~ismember(auction, [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20])
-        auction = input(['\n\n' ...
-          'Auction results: how many tickets did the subject bet? (0-20)' '\n' ...
+    purchase_early = 99;
+    while ~ismember(purchase_early, [0 1 2])
+        purchase_early = input(['\n\n' ...
+          'How many snacks did the subject buy?' '\n' ...
+          '0 = Bought 0 bites/stickers, kept all 20 tickets' '\n' ...
+          '1 = Bought 1 bite/sticker, kept 10 tickets' '\n' ...
+          '2 = Bought 2 bites/stickers, kept 0 tickets' '\n' ...
           'Response: ' ]);
 
-        if ~ismember(auction, [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20])
-            disp('Invalid entry, please try again.')
-        end
-    end
-
-    % Input initial WTP for snack food or stickers
-    auction_result = 99;
-    while ~ismember(auction_result, [0 1])
-        auction_result = input(['\n\n' ...
-          'Auction results: did the subject win?' '\n' ...
-          '0 = No, the subject did not win.' '\n' ...
-          '1 = Yes, the subject did win.' '\n' ...
-          'Response: ' ]);
-
-        if ~ismember(auction_result, [0 1])
+        if ~ismember(purchase_early, [0 1 2])
             disp('Invalid entry, please try again.')
         end
     end
@@ -305,9 +294,8 @@ if start_where <= 1;
     else
         initialization_struct.condition = 'sticker';
     end
-    % auction result
-    initialization_struct.auction_bet = auction;
-    initialization_struct.auction_won = auction_result;
+    % bought snacks before task?
+    initialization_struct.purchase_early = purchase_early;
 
     % stimuli sets
     spaceships = {'cornhusk', 'stingray', 'triangle', 'tripod'};
@@ -373,8 +361,7 @@ if start_where <= 1;
           'Condition = ' initialization_struct.condition '\n' ...
           'Left item = ' initialization_struct.left_item '\n' ...
           'Right item = ' initialization_struct.right_item '\n' ...
-          'Auction bet = ' num2str(initialization_struct.auction_bet) '\n' ...'
-          'Auction result = ' num2str(initialization_struct.auction_won) '\n\n' ...'
+          'Number of bites/stickers purchased = ' num2str(initialization_struct.buy_snack) '\n' ...'
           '0 = I need to fix something; restart the function.' '\n' ...
           '1 = This is correct; continue.' '\n' ...
           'Response: ' ]);
