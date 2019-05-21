@@ -209,8 +209,36 @@ classdef task_func
             end
         end
 
-        function [selection, x, y]  = selection(input_source, keys)
+        function [selection, x, y]  = selection(input_source, keys, w, rects)
+            % the code below is adapted from code written by Rosa Li (Duke University)
             if input_source == 1
+
+                  % ---- choose the rects
+                  if keys(1) == KbName('LeftArrow')
+                      rects_idx = 1
+                  else
+                      rects_idx = 2
+                  end
+
+                  % ---- capture useful key clicks
+                  KbQueueStart(input_source);
+                  useable_click = 0;
+                  while useable_click == 0 %wait for click inside designated area
+                      pressed = KbQueueCheck(input_source);
+                      if pressed %if touched
+                          [x, y, buttons] = GetMouse(w); %get touch location
+                          if (x > rects{rects_idx, 1}(1) && x < rects{rects_idx, 1}(3) && y > rects{rects_idx, 1}(2) && y < rects{rects_idx, 1}(4)) %click inside chosen box
+                              useable_click = 1;
+                              selection_idx = 1;
+                          elseif (x > rects{rects_idx, 2}(1) && x < rects{rects_idx, 2}(3) && y > rects{rects_idx, 2}(2) && y < rects{rects_idx, 2}(4))
+                              useable_click = 1;
+                              selection_idx = 2;
+                          end %click inside chosen box
+                      end %if touched
+                  end %click inside a designated area
+
+                  selection = keys(selection_idx)
+                  KbQueueStop(input_source);
 
             else
                 % ---- capture selection
@@ -223,7 +251,8 @@ classdef task_func
                         [key_is_down, secs, key_code] = KbCheck(input_source);
                 end
 
-                selection = key_code;
+                down_key = find(key_code,1);
+                selection = down_key;
                 x = NaN;
                 y = NaN;
             end
@@ -232,15 +261,13 @@ classdef task_func
             if input_source == 1
 
             else
-                down_key = find(selection,1);
-
-                if (down_key==keys(1) && type == 0) || (down_key==keys(2) && type == 1)
+                if (selection==keys(1) && type == 0) || (selection==keys(2) && type == 1)
                     action = 0;
-                elseif (down_key==keys(1) && type == 1) || (down_key==keys(2) && type == 0)
+                elseif (selection==keys(1) && type == 1) || (selection==keys(2) && type == 0)
                     action = 1;
                 end
 
-                choice_loc = down_key;
+                choice_loc = selection;
             end
         end
     end

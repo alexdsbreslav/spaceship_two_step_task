@@ -62,12 +62,12 @@ r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 r_space = [0,0,1920,1080];
 r_ship = [0,0,400,290];
 r_tick_text = [0,0,300,150];
+rects = cell(2,2) % rectangles for touchscreen
 
 % ---- space background
 space_bg = CenterRectOnPoint(r_space, rect(3)*0.5, rect(4)*0.5);
 spaceship_out = CenterRectOnPoint(r_ship, rect(3)*0.38, rect(4)*0.4);
 spaceship_return = CenterRectOnPoint(r_ship, rect(3)*0.2, rect(4)*0.4);
-
 
 % ---- locations on the win screen
 alien_win = CenterRectOnPoint(r_small, rect(3)*.3, rect(4)*0.5);
@@ -85,6 +85,10 @@ tick_text_bot = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.75);
 reward_top_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.25);
 reward_bot_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.75);
 
+% ---- define touchscreen rectangles to click (top/bottom)
+rects{2,1} = [rect(3)*0.75 - rc_small(3)/2, rect(4)*0.25 - rc_small(4)/2, rect(3)*0.75 + rc_small(3)/2, rect(4)*0.25 + rc_small(4)/2];
+rects{2,2} = [rect(3)*0.75 - rc_small(3)/2, rect(4)*0.75 - rc_small(4)/2, rect(3)*0.75 + rc_small(3)/2, rect(4)*0.75 + rc_small(4)/2];
+
 % ---- location of the aliens
 alien_Lpoint = CenterRectOnPoint(r, rect(3)*0.25, rect(4)*0.5);
 alien_Rpoint = CenterRectOnPoint(r, rect(3)*0.75, rect(4)*0.5);
@@ -92,6 +96,10 @@ alien_Rpoint = CenterRectOnPoint(r, rect(3)*0.75, rect(4)*0.5);
 % ---- frames - white during every trial; green when chosen
 alien_Lframe = CenterRectOnPoint(rc, rect(3)*0.25, rect(4)*0.5);
 alien_Rframe = CenterRectOnPoint(rc, rect(3)*0.75, rect(4)*0.5);
+
+% ---- define touchscreen rectangles to click (left/right)
+rects{1,1} = [rect(3)*0.25 - rc(3)/2, rect(4)*0.5 - rc(4)/2, rect(3)*0.25 + rc(3)/2, rect(4)*0.5 + rc(4)/2];
+rects{1,2} = [rect(3)*0.75 - rc(3)/2, rect(4)*0.5 - rc(4)/2, rect(3)*0.75 + rc(3)/2, rect(4)*0.5 + rc(4)/2];
 
 % ---- next arrow location
 next_arrow_loc = CenterRectOnPoint(r_next_arrow, rect(3)*0.9, rect(4)*0.9);
@@ -461,7 +469,7 @@ for trial = 1:trials
     choice_on_datetime{trial,1} = clock;
 
     % ---- capture key press
-    [selection, x, y] = task_func.selection(input_source, [L,R]);
+    [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
     click_coord(trial, 1) = x;
     click_coord(trial, 2) = y;
 
@@ -556,7 +564,7 @@ for trial = 1:trials
         choice_on_datetime{trial,2} = clock;
 
     % ---- capture key press
-        [selection, x, y] = task_func.selection(input_source, [L,R]);
+        [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
         click_coord(trial, 3) = x;
         click_coord(trial, 4) = y;
 
@@ -655,7 +663,7 @@ for trial = 1:trials
               choice_on_datetime{trial,4} = clock;
 
         % ---- capture key press
-              [selection, x, y] = task_func.selection(input_source, [U,D]);
+              [selection, x, y] = task_func.selection(input_source, [U,D], w, rects);
               click_coord(trial, 7) = x;
               click_coord(trial, 8) = y;
 
@@ -774,7 +782,7 @@ for trial = 1:trials
             choice_on_datetime{trial,4} = clock;
 
             % ---- capture key press
-            [selection, x, y] = task_func.selection(input_source, [U,D]);
+            [selection, x, y] = task_func.selection(input_source, [U,D], w, rects);
             click_coord(trial, 7) = x;
             click_coord(trial, 8) = y;
 
@@ -876,7 +884,7 @@ for trial = 1:trials
         choice_on_datetime{trial,3} = clock;
 
     % ---- capture key press
-        [selection, x, y] = task_func.selection(input_source, [L,R]);
+        [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
         click_coord(trial, 5) = x;
         click_coord(trial, 6) = y;
 
@@ -975,7 +983,7 @@ for trial = 1:trials
               choice_on_datetime{trial,4} = clock;
 
         % ---- capture key press
-              [selection, x, y] = task_func.selection(input_source, [U,D]);
+              [selection, x, y] = task_func.selection(input_source, [U,D], w, rects);
               click_coord(trial, 7) = x;
               click_coord(trial, 8) = y;
 
@@ -1096,7 +1104,7 @@ for trial = 1:trials
             choice_on_datetime{trial,4} = clock;
 
             % ---- capture key press
-            [selection, x, y] = task_func.selection(input_source, [U,D]);
+            [selection, x, y] = task_func.selection(input_source, [U,D], w, rects);
             click_coord(trial, 7) = x;
             click_coord(trial, 8) = y;
 
