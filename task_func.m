@@ -215,9 +215,9 @@ classdef task_func
 
                   % ---- choose the rects
                   if keys(1) == KbName('LeftArrow')
-                      rects_idx = 1
+                      rects_idx = 1;
                   else
-                      rects_idx = 2
+                      rects_idx = 2;
                   end
 
                   % ---- capture useful key clicks
@@ -237,8 +237,9 @@ classdef task_func
                       end %if touched
                   end %click inside a designated area
 
-                  selection = keys(selection_idx)
+                  selection = keys(selection_idx);
                   KbQueueStop(input_source);
+                  KbQueueFlush(input_source);
 
             else
                 % ---- capture selection
@@ -257,18 +258,16 @@ classdef task_func
                 y = NaN;
             end
         end
-        function [action, choice_loc] = choice(input_source, type, keys, selection, x, y)
-            if input_source == 1
 
-            else
-                if (selection==keys(1) && type == 0) || (selection==keys(2) && type == 1)
-                    action = 0;
-                elseif (selection==keys(1) && type == 1) || (selection==keys(2) && type == 0)
-                    action = 1;
-                end
-
-                choice_loc = selection;
+        
+        function [action, choice_loc] = choice(type, keys, selection, x, y)
+            if (selection==keys(1) && type == 0) || (selection==keys(2) && type == 1)
+                action = 0;
+            elseif (selection==keys(1) && type == 1) || (selection==keys(2) && type == 0)
+                action = 1;
             end
+
+            choice_loc = selection;
         end
     end
 end

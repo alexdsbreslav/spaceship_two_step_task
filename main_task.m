@@ -62,7 +62,7 @@ r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 r_space = [0,0,1920,1080];
 r_ship = [0,0,400,290];
 r_tick_text = [0,0,300,150];
-rects = cell(2,2) % rectangles for touchscreen
+rects = cell(2,2); % rectangles for touchscreen
 
 % ---- space background
 space_bg = CenterRectOnPoint(r_space, rect(3)*0.5, rect(4)*0.5);
@@ -301,16 +301,7 @@ if block == 0
 
     DrawFormattedText(w, 'Press p to begin the practice rounds.', 'center', 'center', white);
     Screen(w, 'Flip');
-
-    while 1 %wait for response and allow exit if necessesary
-      [keyIsDown, ~, keyCode] = KbCheck(input_source);
-      if keyIsDown && any(keyCode(exitKeys))
-          exit_flag = 1; Screen('CloseAll'); FlushEvents;
-          sca; return
-      elseif keyIsDown && any(keyCode(startFirstKeys))
-          break
-      end
-    end
+    KbWait(input_source, 2);
 
 % ---- Intro screen for food block
 else
@@ -478,7 +469,7 @@ for trial = 1:trials
     choice_off_datetime{trial,1} = clock;
 
     % ---- capture selection
-    [action(trial,1), choice_loc] = task_func.choice(input_source, type, [L,R], selection, x, y);
+    [action(trial,1), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
 
     % ---- feedback screen
     if choice_loc == L
@@ -573,7 +564,7 @@ for trial = 1:trials
         choice_off_datetime{trial,2} = clock;
 
     % ---- capture selection and determine payoff
-        [action(trial,2), choice_loc] = task_func.choice(input_source, type, [L,R], selection, x, y);
+        [action(trial,2), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
 
         if action(trial,2) == 0
             if payoff_det(trial, 1) <  initialization_struct.payoff_prob(trial,1)
@@ -672,7 +663,7 @@ for trial = 1:trials
               choice_off_datetime{trial,4} = clock;
 
         % ---- capture selection
-              [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
+              [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
               if action(trial,4) == 0
                   % chose snack/wrong --> increase value of snack, increase sd of dist
@@ -791,7 +782,7 @@ for trial = 1:trials
             choice_off_datetime{trial,4} = clock;
 
             % ---- capture selection
-            [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
+            [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
             % ---- feedback screen
             if choice_loc == U
@@ -893,7 +884,7 @@ for trial = 1:trials
         choice_off_datetime{trial,3} = clock;
 
     % ---- capture selection and determine payoff
-        [action(trial,3), choice_loc] = task_func.choice(input_source, type, [L,R], selection, x, y);
+        [action(trial,3), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
 
         if action(trial,3) == 0
             if payoff_det(trial, 3) <  initialization_struct.payoff_prob(trial,3)
@@ -992,7 +983,7 @@ for trial = 1:trials
               choice_off_datetime{trial,4} = clock;
 
         % ---- capture selection
-              [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
+              [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
               if action(trial,4) == 0
                   % chose snack/wrong --> increase sd of dist
@@ -1113,7 +1104,7 @@ for trial = 1:trials
             choice_off_datetime{trial,4} = clock;
 
             % ---- capture selection
-            [action(trial,4), choice_loc] = task_func.choice(input_source, type, [U,D], selection, x, y);
+            [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
             % ---- feedback screen
             if choice_loc == U
