@@ -29,7 +29,7 @@ if test == 1
     % ------------------------------------------------------------------------------
     % ---- Flexible parameters that need to be checked
     % ---- Task specificiations
-    num_trials_practice = 5;
+    num_trials_practice = 2;
     num_trials_main_task = 2;
 
     % --- File specifications
@@ -48,7 +48,7 @@ if test == 1
     end
 
     if comp_os == 1
-      file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/5_raw_data'; % for Alex's computer
+      file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % for Alex's computer
       sl = '/'; % for OSX
     else
       file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % for the eye-tracker
@@ -133,17 +133,18 @@ elseif sub_exists == 0
     load([data_file_path sl 'initialization_structure.mat']);
 
     start_where = 99;
-    while ~ismember(start_where, [0 1 2 3 4])
+    while ~ismember(start_where, [0 1 2 3 4 5])
         start_where = input(['Where do you want to start?' '\n' ...
         'You will overwrite any existing data on and after the place you choose.' '\n\n' ...
         '0 = CANCEL and restart the function' '\n' ...
         '1 = Re-initialize the subject''s data (this completely starts over)' '\n' ...
-        '2 = Tutorial' '\n' ...
-        '3 = Practice Rounds' '\n' ...
-        '4 = Test Rounds' '\n' ...
+        '2 = Tutorial Part 1' '\n' ...
+        '3 = Practice Game' '\n' ...
+        '4 = Tutorial Part 2' '\n' ...
+        '5 = Main Game' '\n' ...
         'Response: ']);
 
-        if ~ismember(start_where, [0 1 2 3 4])
+        if ~ismember(start_where, [0 1 2 3 4 5])
           disp('Invalid entry, please try again.')
         end
     end
@@ -165,12 +166,11 @@ if start_where <= 1;
     initialization_struct = struct;
 
     % Identify the researcher
-    researchers = {'Alesha', 'Julie', 'Logan', 'Tatyana', 'Other'}
+    researchers = {'Alesha', 'Julie', 'Logan', 'Tatyana', 'Other'};
     researcher = 99;
-    while ~ismember(researcher, [0 1 2 3 4 5])
+    while ~ismember(researcher, [1 2 3 4 5])
         researcher = input(['\n\n' ...
           'What is the name of the researcher conducting the study?' '\n' ...
-          '0 = Test'  '\n' ...
           '1 = Alesha' '\n' ...
           '2 = Julie' '\n' ...
           '3 = Logan' '\n' ...
@@ -178,7 +178,7 @@ if start_where <= 1;
           '5 = Other' '\n' ...
           'Response: ' ]);
 
-        if ~ismember(researcher, [0 1 2 3 4 5])
+        if ~ismember(researcher, [1 2 3 4 5])
             disp('Invalid entry, please try again.')
         end
     end
@@ -199,7 +199,7 @@ if start_where <= 1;
 
     if condition == 1
         % pick salty food
-        foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'}
+        foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'};
         food_salt = 99;
         while ~ismember(food_salt, [1 2 3 4 5])
             food_salt = input(['Select the salty food for this participant.' '\n' ...
@@ -216,7 +216,7 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.food_salt = cellstr(foods{food_salt});
+        initialization_struct.food_salt = foods{food_salt};
         initialization_struct.sticker = NaN;
 
         % pick sweet food
@@ -236,22 +236,22 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.food_sweet = cellstr(foods{food_sweet});
+        initialization_struct.food_sweet = foods{food_sweet};
         initialization_struct.tattoo = NaN;
         % sweet left when equal zero
         initialization_struct.left_item = randi([0,1]);
 
         % identify which food is left or right
         if initialization_struct.left_item == 1
-            initialization_struct.left_item = initialization_struct.food_sweet{1};
-            initialization_struct.right_item = initialization_struct.food_salt{1};
+            initialization_struct.left_item = initialization_struct.food_sweet;
+            initialization_struct.right_item = initialization_struct.food_salt;
         else
-            initialization_struct.right_item = initialization_struct.food_sweet{1};
-            initialization_struct.left_item = initialization_struct.food_salt{1};
+            initialization_struct.right_item = initialization_struct.food_sweet;
+            initialization_struct.left_item = initialization_struct.food_salt;
         end
     else
         % pick sticker
-        stickers_tattoos = {'s1', 's2', 's3', 's4', 's5', 't1', 't2', 't3', 't4', 't5'}
+        stickers_tattoos = {'s1', 's2', 's3', 's4', 's5', 't1', 't2', 't3', 't4', 't5'};
         sticker = 99;
         while ~ismember(sticker, [1 2 3 4 5])
             sticker = input(['Select the stickers for this participant.' '\n' ...
@@ -268,7 +268,7 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.sticker = cellstr(stickers_tattoos{sticker});
+        initialization_struct.sticker = stickers_tattoos{sticker};
         initialization_struct.food_salt = NaN;
 
         % pick tattoo
@@ -288,18 +288,18 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.tattoo = cellstr(stickers_tattoos{tattoo});
+        initialization_struct.tattoo = stickers_tattoos{tattoo};
         initialization_struct.food_sweet = NaN;
         % sweet left when equal zero
         initialization_struct.left_item = randi([0,1]);
 
         % identify which food is left or right
         if initialization_struct.left_item == 1
-            initialization_struct.left_item = initialization_struct.sticker{1};
-            initialization_struct.right_item = initialization_struct.tattoo{1};
+            initialization_struct.left_item = initialization_struct.sticker;
+            initialization_struct.right_item = initialization_struct.tattoo;
         else
-            initialization_struct.right_item = initialization_struct.tattoo{1};
-            initialization_struct.left_item = initialization_struct.sticker{1};
+            initialization_struct.right_item = initialization_struct.tattoo;
+            initialization_struct.left_item = initialization_struct.sticker;
         end
     end
 
@@ -331,7 +331,7 @@ if start_where <= 1;
     initialization_struct.sub = sub; % save the subject number into the structure
     initialization_struct.data_file_path = data_file_path; % save the data file path as well
     initialization_struct.rng_seed = init_rng_seed; % save the rng seed for the initialization_structure
-    initialization_struct.researcher = cellstr(researchers{researcher}); % save the name of the researcher who conducted the study
+    initialization_struct.researcher = researchers{researcher}; % save the name of the researcher who conducted the study
     if condition == 1
         initialization_struct.condition = 'food'; % save the condition that the subject was randomized into
 
@@ -405,7 +405,7 @@ if start_where <= 1;
           'Condition = ' initialization_struct.condition '\n' ...
           'Left item = ' initialization_struct.left_item '\n' ...
           'Right item = ' initialization_struct.right_item '\n' ...
-          'Number of bites/stickers purchased = ' num2str(initialization_struct.buy_snack) '\n' ...'
+          'Number of bites/stickers purchased = ' num2str(initialization_struct.purchase_early) '\n\n' ...'
           '0 = I need to fix something; restart the function.' '\n' ...
           '1 = This is correct; continue.' '\n' ...
           'Response: ' ]);
@@ -426,7 +426,7 @@ end
 
 % if start_where <= 2
 % % ---- 1: Tutorial
-%     exit_flag = tutorial_v4(initialization_struct);
+%     exit_flag = tutorial_part1(initialization_struct);
 %
 %     if exit_flag == 1
 %         disp('The script was exited because ESCAPE was pressed')
@@ -436,7 +436,7 @@ end
 
 if start_where <= 3
 % ---- 2: practice trials (Block 0 in code)
-    exit_flag = main_task(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
+    exit_flag = practice_trials(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
 
     if exit_flag == 1
         disp('The script was exited because ESCAPE was pressed')
@@ -445,45 +445,62 @@ if start_where <= 3
 end
 
 % if start_where <= 4
-% % ---- 3: main experiment trials
-% % ---- space prepped?
-%     if condition == 1
-%       reward_bowl_prep = input(['\n\n' ...
-%         'Left Food = ' initialization_struct.left_item '\n'...
-%         'Right Food = ' initialization_struct.right_item '\n\n' ...
-%         '1 = Food is set up/participant has water; continue.' '\n' ...
-%         '0 = I need to fix something; exit the script.' '\n' ...
-%         'Response: ' ]);
-%     else
-%       reward_bowl_prep = input(['\n\n' ...
-%         'Left Bowl = ' initialization_struct.left_item '\n'...
-%         'Right Bowl = ' initialization_struct.right_item '\n\n' ...
-%         '1 = Bowls are set up; continue.' '\n' ...
-%         '0 = I need to fix something; exit the script.' '\n' ...
-%         'Response: ' ]);
-%     end
-%
-%     if ~ismember(reward_bowl_prep, [0 1])
-%         disp('Invalid entry, please try again.')
-%         sca; return
-%     elseif reward_bowl_prep == 0
-%         disp([fprintf('\n') ...
-%         'OK, you should restart the function to try again'])
-%         sca; return
-%     end
-%
-% % --- run the task
-%     exit_flag = main_task(initialization_struct, initialization_struct.num_trials(2), initialization_struct.block(2));
+% % ---- 1: Tutorial
+%     exit_flag = tutorial_part2(initialization_struct);
 %
 %     if exit_flag == 1
 %         disp('The script was exited because ESCAPE was pressed')
 %         sca; return
 %     end
 % end
+
+if start_where <= 5
+% ---- 3: main experiment trials
+% ---- space prepped?
+    reward_bowl_prep = 99;
+    while ~ismember(reward_bowl_prep, [0 1])
+        if strcmp(initialization_struct.condition, 'food')
+          reward_bowl_prep = input(['\n\n' ...
+            'Left Food = ' initialization_struct.left_item '\n'...
+            'Right Food = ' initialization_struct.right_item '\n\n' ...
+            '**Left and right is from the participant''s perspective**' '\n\n' ...
+            '1 = Food is set up/participant has water; continue.' '\n' ...
+            '0 = I need to fix something; exit the script.' '\n' ...
+            'Response: ' ]);
+        else
+          reward_bowl_prep = input(['\n\n' ...
+            'Left Bowl = ' initialization_struct.left_item '\n'...
+            'Right Bowl = ' initialization_struct.right_item '\n\n' ...
+            '**Left and right is from the participant''s perspective**' '\n\n' ...
+            '1 = Bowls are set up; continue.' '\n' ...
+            '0 = I need to fix something; exit the script.' '\n' ...
+            'Response: ' ]);
+        end
+
+        if ~ismember(reward_bowl_prep, [0 1])
+            disp('Invalid entry, please try again.')
+        end
+    end
+
+    if reward_bowl_prep == 0
+        disp([fprintf('\n') ...
+        'OK, you should restart the function to try again'])
+        sca;
+        return
+    end
+
+% --- run the task
+    exit_flag = main_task(initialization_struct, initialization_struct.num_trials(2), initialization_struct.block(2));
+
+    if exit_flag == 1
+        disp('The script was exited because ESCAPE was pressed')
+        sca; return
+    end
+end
 %
-% % --- display winnings
-% load([data_file_path sl 'money.mat']);
-% fprintf('\n\n\n\n\n\n\n\n\n\nThe participant earned $ %.2f during the money rounds', money_struct.payoff_sum);
-% fprintf('\nRound up to the nearest dollar and pay them (show up fee included) = $ %.2f', money_struct.payoff_total);
+% --- display winnings
+load([data_file_path sl 'task.mat']);
+disp([fprintf('\n\n\n\n') ...
+'The participant earned ' num2str(task_struct.ticket_sum) ' tickets'])
 
 end

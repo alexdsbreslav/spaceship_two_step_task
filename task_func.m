@@ -110,7 +110,7 @@ classdef task_func
                         end
                     else
                         if trial == trials
-                            countdown_text = 'The game will end shortly...'
+                            countdown_text = 'The game will end shortly...';
                         elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                             countdown_text = 'A break will begin shortly...';
                         else
@@ -144,7 +144,7 @@ classdef task_func
                         end
                     else
                         if trial == trials
-                            countdown_text = 'The game will end shortly...'
+                            countdown_text = 'The game will end shortly...';
                         elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                             countdown_text = 'A break will begin shortly...';
                         else
@@ -206,6 +206,15 @@ classdef task_func
                         end
                     end
                 end
+            end
+        end
+
+        function advance_screen(input_source)
+            if input_source == 1
+                KbWait(input_source, 2)
+            else
+                RestrictKeysForKbCheck(KbName('space'));
+                KbWait(input_source, 2)
             end
         end
 
