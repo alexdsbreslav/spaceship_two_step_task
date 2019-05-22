@@ -56,15 +56,13 @@ textsize_tickets = initialization_struct.textsize_tickets;
 % ---- display coordinates setup
 r = [0,0,800,600]; %stimuli rectangle
 r_small = [0,0,600,400]; % smaller rect for stimuli and rewards
-rc = [0,0,800,600]; %choice rectangle for aliens and spaceships
 rc_small = [0,0,600,425];
-r_next_arrow = [0,0,150,108.75]; % next arrow rectangle
 r_space = [0,0,1920,1080];
 r_ship = [0,0,400,290];
 r_tick_text = [0,0,300,150];
 rects = cell(2,2); % rectangles for touchscreen
 
-% ---- space background
+% ---- backgrounds
 space_bg = CenterRectOnPoint(r_space, rect(3)*0.5, rect(4)*0.5);
 spaceship_out = CenterRectOnPoint(r_ship, rect(3)*0.38, rect(4)*0.4);
 spaceship_return = CenterRectOnPoint(r_ship, rect(3)*0.2, rect(4)*0.4);
@@ -94,19 +92,12 @@ alien_Lpoint = CenterRectOnPoint(r, rect(3)*0.25, rect(4)*0.5);
 alien_Rpoint = CenterRectOnPoint(r, rect(3)*0.75, rect(4)*0.5);
 
 % ---- frames - white during every trial; green when chosen
-alien_Lframe = CenterRectOnPoint(rc, rect(3)*0.25, rect(4)*0.5);
-alien_Rframe = CenterRectOnPoint(rc, rect(3)*0.75, rect(4)*0.5);
+alien_Lframe = CenterRectOnPoint(r, rect(3)*0.25, rect(4)*0.5);
+alien_Rframe = CenterRectOnPoint(r, rect(3)*0.75, rect(4)*0.5);
 
 % ---- define touchscreen rectangles to click (left/right)
-rects{1,1} = [rect(3)*0.25 - rc(3)/2, rect(4)*0.5 - rc(4)/2, rect(3)*0.25 + rc(3)/2, rect(4)*0.5 + rc(4)/2];
-rects{1,2} = [rect(3)*0.75 - rc(3)/2, rect(4)*0.5 - rc(4)/2, rect(3)*0.75 + rc(3)/2, rect(4)*0.5 + rc(4)/2];
-
-% ---- next arrow location
-next_arrow_loc = CenterRectOnPoint(r_next_arrow, rect(3)*0.9, rect(4)*0.9);
-
-% ---- read/draw next arrow
-next_arrow = imread(['stimuli' sl 'next arrow.png'],'png');
-next_arrow = Screen('MakeTexture', w, next_arrow);
+rects{1,1} = [rect(3)*0.25 - r(3)/2, rect(4)*0.5 - r(4)/2, rect(3)*0.25 + r(3)/2, rect(4)*0.5 + r(4)/2];
+rects{1,2} = [rect(3)*0.75 - r(3)/2, rect(4)*0.5 - r(4)/2, rect(3)*0.75 + r(3)/2, rect(4)*0.5 + r(4)/2];
 
 % ---- read/draw the treasure
 treasure = imread(['stimuli' sl 'treasure.png'],'png');
@@ -130,36 +121,42 @@ tickets = imread(['stimuli' sl 'tickets.png'],'png');
 % -----------------------------------------------------------------------------
 % 4 - Load and create images
 % --- spaceships
-  A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+  A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(2)) sl ...
      char(initialization_struct.spaceships(3)) sl 'docked.png'],'png');
-  B1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+  B1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(2)) sl ...
      char(initialization_struct.spaceships(4)) sl 'docked.png'],'png');
 
-  A1_out = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+  A1_out = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(2)) sl ...
      char(initialization_struct.spaceships(3)) sl 'out.png'],'png');
-  A1_return = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+  A1_return = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(2)) sl ...
      char(initialization_struct.spaceships(3)) sl 'return.png'],'png');
 
-  B1_out = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+  B1_out = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(2)) sl ...
      char(initialization_struct.spaceships(4)) sl 'out.png'],'png');
-  B1_return = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
+  B1_return = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(2)) sl ...
      char(initialization_struct.spaceships(4)) sl 'return.png'],'png');
 
 % ---- aliens
-A2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
+A2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
   char(initialization_struct.aliens(5)) '.png'],'png');
-B2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
+B2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
   char(initialization_struct.aliens(6)) '.png'],'png');
 
-A3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
+A3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
   char(initialization_struct.aliens(7)) '.png'],'png');
-B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
+B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
   char(initialization_struct.aliens(8)) '.png'],'png');
 
-% read and draw space stimulus
+% read and draw background stimuli
 space = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl 'space.png'],'png');
-space = Screen('MakeTexture', w, space);
+planet_home = imread(['stimuli' sl 'home_planet.png'],'png');
+planet_2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'planet.png'],'png');
+planet_3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(2)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'planet.png'],'png');
 
+space = Screen('MakeTexture', w, space);
+planet_home = Screen('MakeTexture', w, planet_home);
+planet_2 = Screen('MakeTexture', w, planet_2);
+planet_3 = Screen('MakeTexture', w, planet_3);
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -295,6 +292,9 @@ for trial = 1:trials
     picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3,1-type,1);
 
     % ---- Draw trial screen
+    % draw background
+    Screen('DrawTexture', w, planet_home, [], space_bg);
+
     % draw original stimuli
     Screen('DrawTexture', w, picL, [], alien_Lpoint);
     Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -321,6 +321,8 @@ for trial = 1:trials
 
     % ---- feedback screen
     if choice_loc == L
+        % draw background
+        Screen('DrawTexture', w, planet_home, [], space_bg);
         % draw original stimuli
         Screen('DrawTexture', w, picL, [], alien_Lpoint);
         Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -330,6 +332,8 @@ for trial = 1:trials
         Screen('Flip', w);
 
     elseif choice_loc == R
+       % draw background
+       Screen('DrawTexture', w, planet_home, [], space_bg);
        % draw original stimuli
        Screen('DrawTexture', w, picL, [], alien_Lpoint);
        Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -389,6 +393,8 @@ for trial = 1:trials
         picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,2);
 
     % ---- Draw trial screen
+        % draw background
+        Screen('DrawTexture', w, planet_2, [], space_bg);
         % draw original stimuli
         Screen('DrawTexture', w, picL, [], alien_Lpoint);
         Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -430,6 +436,8 @@ for trial = 1:trials
 
     % ---- feedback screen
         if choice_loc == L
+          % draw background
+          Screen('DrawTexture', w, planet_2, [], space_bg);
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -441,6 +449,8 @@ for trial = 1:trials
           WaitSecs(1);
 
        elseif choice_loc == R
+          % draw background
+          Screen('DrawTexture', w, planet_2, [], space_bg);
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -477,7 +487,7 @@ for trial = 1:trials
         if payoff(trial, 1) == 1
         % ---- Draw trial screen
               % draw treasure to trade
-              Screen('DrawTexture', w, treasure, [], treasure_trade)
+              Screen('DrawTexture', w, treasure, [], treasure_trade);
               DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
               % draw rewards
               Screen('DrawTexture', w, reward_top, [], reward_top_point);
@@ -555,7 +565,7 @@ for trial = 1:trials
               if choice_loc == U
                   % draw treasure to trade
                   Screen('TextSize', w, textsize_feedback);
-                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                   DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                   % draw original stimuli
                   Screen('DrawTexture', w, reward_top, [], reward_top_point);
@@ -577,7 +587,7 @@ for trial = 1:trials
              elseif choice_loc == D
                  % draw treasure to trade
                  Screen('TextSize', w, textsize_feedback);
-                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                  % draw original stimuli
                  Screen('DrawTexture', w, reward_top, [], reward_top_point);
@@ -711,6 +721,8 @@ for trial = 1:trials
         picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, 1-type,3);
 
     % ---- Draw trial screen
+        % draw background
+        Screen('DrawTexture', w, planet_3, [], space_bg);
         % draw original stimuli
         Screen('DrawTexture', w, picL, [], alien_Lpoint);
         Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -752,6 +764,8 @@ for trial = 1:trials
 
     % ---- feedback screen
         if choice_loc == L
+          % draw background
+          Screen('DrawTexture', w, planet_3, [], space_bg);
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -763,6 +777,8 @@ for trial = 1:trials
           WaitSecs(1);
 
         elseif choice_loc == R
+          % draw background
+          Screen('DrawTexture', w, planet_3, [], space_bg);
           % draw original stimuli
           Screen('DrawTexture', w, picL, [], alien_Lpoint);
           Screen('DrawTexture', w, picR, [], alien_Rpoint);
@@ -798,7 +814,7 @@ for trial = 1:trials
         if payoff(trial, 2) == 1
         % ---- Draw trial screen
               % draw treasure to trade
-              Screen('DrawTexture', w, treasure, [], treasure_trade)
+              Screen('DrawTexture', w, treasure, [], treasure_trade);
               DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
               % draw original stimuli
               Screen('DrawTexture', w, reward_top, [], reward_top_point);
@@ -879,7 +895,7 @@ for trial = 1:trials
               if choice_loc == U
                   % draw treasure to trade
                   Screen('TextSize', w, textsize_feedback);
-                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                   DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                   % draw original stimuli
                   Screen('DrawTexture', w, reward_top, [], reward_top_point);
@@ -901,7 +917,7 @@ for trial = 1:trials
              elseif choice_loc == D
                  % draw treasure to trade
                  Screen('TextSize', w, textsize_feedback);
-                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade)
+                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
                  % draw original stimuli
                  Screen('DrawTexture', w, reward_top, [], reward_top_point);
