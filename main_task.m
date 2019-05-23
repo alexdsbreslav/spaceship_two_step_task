@@ -234,7 +234,7 @@ Screen('TextSize', w, textsize);
 % -----------------------------------------------------------------------------
 % 7 - Task intro screens
 % ---- Intro screen for the main task
-DrawFormatted(w,[
+DrawFormattedText(w,[
     'Let''s play!' '\n' ...
     'When you are ready, the experimenter will start the game.' ...
     ], 'center','center', white, [], [], [], 1.6);
@@ -261,17 +261,17 @@ for trial = 1:trials
         Screen('TextSize', w, textsize);
         if trial == (trials/5) + 1
             DrawFormattedText(w, [
-                'Let''s pause the game and take a short break!' '\n\n' ...
-                'You''ve earned ' num2str(sum(tick(1:trial-1,7))) 'tickets. Nice job!' '\n' ...
-                'This is a good time to take a drink of water.' '\n' ...
-                'When you are ready, the experimenter will unpause the game.' ...
+                'Let''s pause the game and take a short break!' '\n' ...
+                'You''ve earned ' num2str(sum(tick(1:trial-1,7))) ' tickets. Nice job!' '\n\n' ...
+                'This is a good time to take a drink of water.' '\n\n' ...
+                'When you are ready, ' initialization_struct.researcher ' will unpause the game.' ...
                 ],'center', 'center', white, [], [], [], 1.6);
         else
           DrawFormattedText(w, [
-              'Let''s pause the game and take a short break!' '\n\n' ...
-              'You''ve earned ' num2str(sum(tick(trial-trials/5:trial-1,7))) 'more tickets. Nice job!' '\n' ...
-              'This is a good time to take a drink of water.' '\n' ...
-              'When you are ready, the experimenter will unpause the game.' ...
+              'Let''s pause the game and take a short break!' '\n' ...
+              'You''ve earned ' num2str(sum(tick(trial-trials/5:trial-1,7))) ' more tickets. Nice job!' '\n\n' ...
+              'This is a good time to take a drink of water.' '\n\n' ...
+              'When you are ready, ' initialization_struct.researcher ' will unpause the game.' ...
               ],'center', 'center', white, [], [], [], 1.6);
         end
         Screen(w, 'Flip');
@@ -637,68 +637,19 @@ for trial = 1:trials
             choice_off_time(trial,4) = GetSecs - t0;
             choice_off_datetime{trial,4} = clock;
 
-            % ---- capture selection
-            [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
+            % ---- code selection
+            action(trial,4)= NaN;
 
             % ---- feedback screen
-            if choice_loc == U
-                % draw original stimuli
-                DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
-                Screen('DrawTexture', w, earth, [], earth_loc);
-                % draw frames around original stimuli
-                Screen('FrameRect',w,chosen_color,earth_frame,10);
-                Screen('Flip', w);
-                % wait 1 second
-                WaitSecs(1);
-
-           elseif choice_loc == D
-               % draw original stimuli
-               DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
-               Screen('DrawTexture', w, earth, [], earth_loc);
-               % draw frames around original stimuli
-               Screen('FrameRect',w,chosen_color,earth_frame,10);
-               Screen('Flip', w);
-               % wait 1 second
-               WaitSecs(1);
-           end
+            % draw original stimuli
+            DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+            Screen('DrawTexture', w, earth, [], earth_loc);
+            % draw frames around original stimuli
+            Screen('FrameRect',w,chosen_color,earth_frame,10);
+            Screen('Flip', w);
+            % wait 1 second
+            WaitSecs(1);
        end
-
-
-        % variable text that will change on the last trial of the game
-        Screen('TextSize', w, textsize);
-        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,1), action(trial,4), tick(trial,3));
-        iti_start(trial) = GetSecs - t0;
-
-        % countdown to next trial
-        for i = 1:initialization_struct.iti_init(trial, payoff(trial,1)+3)
-            % ---- space exploration page
-            Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
-            Screen('DrawTexture', w, ship, [], spaceship_return);
-
-            % countdown text
-            DrawFormattedText(w, [
-                countdown_text ...
-                ], 'center', 'center', white, [], [], [], 1.6);
-
-            % load bar fill calculation
-            fill_width = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+5) * i;
-
-            % fill for the load bar
-            Screen('FillRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,fill_width, initialization_struct.load_bar_dimensions(2)], hor_align - initialization_struct.load_bar_dimensions(1)/2 + fill_width/2, ver_align));
-
-           % outline for the load bar
-            Screen('FrameRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,initialization_struct.load_bar_dimensions(1),initialization_struct.load_bar_dimensions(2)], hor_align, ver_align), 3);
-
-           Screen(w, 'Flip');
-           waitfor(rate_obj);
-        end
-
-        iti_actual(trial) = GetSecs - t0 - iti_start(trial);
-        iti_selected(trial) = initialization_struct.iti_init(trial, payoff(trial,1)+1);
-
 
     % -----------------------------------------------------------------------------
     % -----------------------------------------------------------------------------
@@ -967,66 +918,56 @@ for trial = 1:trials
             choice_off_time(trial,4) = GetSecs - t0;
             choice_off_datetime{trial,4} = clock;
 
-            % ---- capture selection
-            [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
+            % ---- code selection
+            action(trial,4) = NaN;
 
             % ---- feedback screen
-            if choice_loc == U
-                % draw original stimuli
-                DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
-                Screen('DrawTexture', w, earth, [], earth_loc);
-                % draw frames around original stimuli
-                Screen('FrameRect',w,chosen_color,earth_frame,10);
-                Screen('Flip', w);
-                % wait 1 second
-                WaitSecs(1);
-
-           elseif choice_loc == D
-               % draw original stimuli
-               DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
-               Screen('DrawTexture', w, earth, [], earth_loc);
-               % draw frames around original stimuli
-               Screen('FrameRect',w,chosen_color,earth_frame,10);
-               Screen('Flip', w);
-               % wait 1 second
-               WaitSecs(1);
-           end
+            % draw original stimuli
+            DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
+            Screen('DrawTexture', w, earth, [], earth_loc);
+            % draw frames around original stimuli
+            Screen('FrameRect',w,chosen_color,earth_frame,10);
+            Screen('Flip', w);
+            % wait 1 second
+            WaitSecs(1);
        end
-
-        % variable text that will change based on their reward choice and trial
-        Screen('TextSize', w, textsize);
-        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,2), action(trial,4), tick(trial,3));
-        iti_start(trial) = GetSecs - t0;
-        % countdown to next trial
-        for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)
-            % ---- space exploration page
-            Screen('DrawTexture', w, return_home, [], space_bg);
-            ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
-            Screen('DrawTexture', w, ship, [], spaceship_return);
-
-            % countdown text
-            DrawFormattedText(w, [
-                countdown_text ...
-                ], 'center', 'center', white, [], [], [], 1.6);
-
-            % load bar fill calculation
-            fill_width = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+5) * i;
-
-            % fill for the load bar
-            Screen('FillRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,fill_width, initialization_struct.load_bar_dimensions(2)], hor_align - initialization_struct.load_bar_dimensions(1)/2 + fill_width/2, ver_align));
-
-           % outline for the load bar
-            Screen('FrameRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,initialization_struct.load_bar_dimensions(1),initialization_struct.load_bar_dimensions(2)], hor_align, ver_align), 3);
-
-           Screen(w, 'Flip');
-           waitfor(rate_obj);
-        end
-
-        iti_actual(trial) = GetSecs - t0 - iti_start(trial);
-        iti_selected(trial) = initialization_struct.iti_init(trial, payoff(trial,2)+1);
     end % close the if/else for state
+
+    % ---- Return Home Screen
+    % variable text that will change based on their reward choice and trial
+    Screen('TextSize', w, textsize);
+    countdown_text = task_func.rewards_text(condition, block, trial, trials, nansum(payoff(trial, :)), action(trial,4), tick(trial,3));
+    iti_start(trial) = GetSecs - t0;
+    % countdown to next trial
+    for i = 1:initialization_struct.iti_init(trial, nansum(payoff(trial,:))+3)
+        % ---- space exploration page
+        Screen('DrawTexture', w, return_home, [], space_bg);
+        ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
+        Screen('DrawTexture', w, ship, [], spaceship_return);
+
+        % countdown text
+        DrawFormattedText(w, [
+            countdown_text ...
+            ], 'center', 'center', white, [], [], [], 1.6);
+
+        % load bar fill calculation
+        fill_width = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+5) * i;
+
+        % fill for the load bar
+        Screen('FillRect',w, [255 255 255], ...
+        CenterRectOnPoint([0,0,fill_width, initialization_struct.load_bar_dimensions(2)], hor_align - initialization_struct.load_bar_dimensions(1)/2 + fill_width/2, ver_align));
+
+       % outline for the load bar
+        Screen('FrameRect',w, [255 255 255], ...
+        CenterRectOnPoint([0,0,initialization_struct.load_bar_dimensions(1),initialization_struct.load_bar_dimensions(2)], hor_align, ver_align), 3);
+
+       Screen(w, 'Flip');
+       waitfor(rate_obj);
+    end
+
+    iti_actual(trial) = GetSecs - t0 - iti_start(trial);
+    iti_selected(trial) = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+1);
+
 end % close the entire for loop
 RestrictKeysForKbCheck([]);
 

@@ -34,7 +34,10 @@ classdef task_func
             f = Screen('MakeTexture', w, X);
         end
 
-
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function f = drawrewards(w, condition, snacks, stickers, tickets, type)
             if strcmp(condition, 'food')
 
@@ -55,7 +58,10 @@ classdef task_func
             f = Screen('MakeTexture', w, X);
         end
 
-
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function f = drawspaceship(w, A1_out, A1_return, B1_out, B1_return, type, direction)
             if type == 0
                 if strcmp(direction, 'out')
@@ -74,6 +80,10 @@ classdef task_func
             f = Screen('MakeTexture', w, X);
         end
 
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function pull = pull_ticket(mean, sd)
             pull = round(normrnd(mean, sd));
             if pull < 1
@@ -81,6 +91,10 @@ classdef task_func
             end
         end
 
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function countdown_text = rewards_text(condition, block, trial, trials, win, action, ticks)
             if block == 1
                 if strcmp(condition, 'food')
@@ -209,6 +223,10 @@ classdef task_func
             end
         end
 
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function advance_screen(input_source)
             if input_source == 1
                 KbWait(input_source, 2);
@@ -218,6 +236,10 @@ classdef task_func
             end
         end
 
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function [selection, x, y]  = selection(input_source, keys, w, rects)
             % the code below is adapted from code written by Rosa Li (Duke University)
             if input_source == 1
@@ -274,7 +296,10 @@ classdef task_func
             end
         end
 
-
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function [action, choice_loc] = choice(type, keys, selection, x, y)
             if (selection==keys(1) && type == 0) || (selection==keys(2) && type == 1)
                 action = 0;
@@ -285,6 +310,10 @@ classdef task_func
             choice_loc = selection;
         end
 
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
         function img_idx = get_img(img_idx, initialization_struct, img_collect_on, w)
             if img_collect_on == 1
                 imageArray = Screen('GetImage', w);
@@ -292,5 +321,41 @@ classdef task_func
                 img_idx = img_idx + 1;
             end
         end
+
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+        function output_for_food_choice(initialization_struct)
+            data_file_path = initialization_struct.data_file_path;
+            sl = initialization_struct.slash_convention;
+
+            % load all of the necessary structures
+            load([data_file_path sl 'task.mat']);
+
+            % number of trials/size of the array
+            trials = initialization_struct.num_trials(2);
+            df = cell(trials, 9);
+            df(:, 1) = num2cell(initialization_struct.sub);
+            df(:, 2) = cellstr(initialization_struct.researcher);
+            df(:, 3) = cellstr(initialization_struct.condition);
+            df(:, 4) = cellstr(initialization_struct.left_item);
+            df(:, 5) = cellstr(initialization_struct.right_item);
+            df(:, 6) = num2cell(1:trials);
+            df(:, 7) = num2cell(nansum(task_struct.payoff, 2));
+            df(:, 8) = num2cell((task_struct.action(:,4) - 1)*-1);
+
+            % convert array to table
+            T = table(df(:,1), df(:,2), df(:,3), df(:,4), df(:,5), df(:,6), df(:,7), df(:,8), df(:,9), ...
+            'VariableNames', {'subject', 'researcher', 'condition', 'left_item', 'right_item', 'trial', 'win', 'choose_snack_stick', 'choose_left'});
+
+            % print table to excel
+            writetable(T, [data_file_path sl 'food_choice.xlsx']);
+        end
+
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
     end
 end

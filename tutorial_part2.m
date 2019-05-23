@@ -279,7 +279,7 @@ trials = 3;
 type = 0;
 state = [2 2; 2 2; 3 3];
 payoff = [1 1; 0 0; 1 1];
-tick = [5 10 8];
+tick = [5 10 12];
 
 for trial = 1:trials
   % ---- Draw original stimuli using a function that Arkady wrote: drawimage
