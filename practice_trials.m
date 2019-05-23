@@ -72,17 +72,6 @@ alien_win = CenterRectOnPoint(r_small, rect(3)*.3, rect(4)*0.5);
 treasure_win = CenterRectOnPoint(r_small, rect(3)*.7, rect(4)*0.5);
 alien_lose = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 
-% ---- locations on the trade screen
-treasure_trade = CenterRectOnPoint(r_small, rect(3)*.25, rect(4)*0.55);
-reward_top_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.25);
-reward_bot_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.75);
-tick_text_top = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.25);
-tick_text_bot = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.75);
-
-% ---- frames during the trade screen
-reward_top_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.25);
-reward_bot_frame = CenterRectOnPoint(rc_small, rect(3)*0.75, rect(4)*0.75);
-
 % ---- define touchscreen rectangles to click (top/bottom)
 rects{2,1} = [rect(3)*0.75 - rc_small(3)/2, rect(4)*0.25 - rc_small(4)/2, rect(3)*0.75 + rc_small(3)/2, rect(4)*0.25 + rc_small(4)/2];
 rects{2,2} = [rect(3)*0.75 - rc_small(3)/2, rect(4)*0.75 - rc_small(4)/2, rect(3)*0.75 + rc_small(3)/2, rect(4)*0.75 + rc_small(4)/2];
@@ -208,8 +197,8 @@ Screen('TextSize', w, textsize);
 % ---- Intro screen for practice block
 DrawFormattedText(w,[
     'Let''s practice!' '\n\n' ...
-    'When you are ready, the experimenter will start the practice game.' '\n' ...
-    'You will play 15 rounds in the practice game.'....
+    'When you are ready, the experimenter will start the practice flights.' '\n' ...
+    'You will have 15 days to explore this galaxy.'....
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
 task_func.advance_screen(input_source)

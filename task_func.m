@@ -211,10 +211,10 @@ classdef task_func
 
         function advance_screen(input_source)
             if input_source == 1
-                KbWait(input_source, 2)
+                KbWait(input_source, 2);
             else
                 RestrictKeysForKbCheck(KbName('space'));
-                KbWait(input_source, 2)
+                KbWait(input_source, 2);
             end
         end
 
@@ -257,8 +257,14 @@ classdef task_func
                 RestrictKeysForKbCheck(keys);
                 [key_is_down, secs, key_code] = KbCheck(input_source);
 
-                while key_code(keys(1)) == 0 && key_code(keys(2)) == 0
-                        [key_is_down, secs, key_code] = KbCheck(input_source);
+                if length(keys) == 2
+                    while key_code(keys(1)) == 0 && key_code(keys(2)) == 0
+                            [key_is_down, secs, key_code] = KbCheck(input_source);
+                    end
+                else
+                    while key_code(keys(1)) == 0
+                            [key_is_down, secs, key_code] = KbCheck(input_source);
+                    end
                 end
 
                 down_key = find(key_code,1);
@@ -277,6 +283,14 @@ classdef task_func
             end
 
             choice_loc = selection;
+        end
+
+        function img_idx = get_img(img_idx, initialization_struct, img_collect_on, w)
+            if img_collect_on == 1
+                imageArray = Screen('GetImage', w);
+                imwrite(imageArray, [initialization_struct.file_root '/tutorial_screen_' num2str(img_idx) '.jpg'], 'Quality', 50);
+                img_idx = img_idx + 1;
+            end
         end
     end
 end

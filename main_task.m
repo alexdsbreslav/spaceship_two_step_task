@@ -237,7 +237,7 @@ Screen('TextSize', w, textsize);
 % -----------------------------------------------------------------------------
 % 7 - Task intro screens
 % ---- Intro screen for the main task
-DrawFormattedText(w,[
+DrawFormatted(w,[
     'Let''s play!' '\n' ...
     'When you are ready, the experimenter will start the game.' ...
     ], 'center','center', white, [], [], [], 1.6);
@@ -294,7 +294,6 @@ for trial = 1:trials
     % ---- Draw trial screen
     % draw background
     Screen('DrawTexture', w, planet_home, [], space_bg);
-
     % draw original stimuli
     Screen('DrawTexture', w, picL, [], alien_Lpoint);
     Screen('DrawTexture', w, picR, [], alien_Rpoint);

@@ -181,6 +181,14 @@ if start_where <= 1;
         if ~ismember(researcher, [1 2 3 4 5])
             disp('Invalid entry, please try again.')
         end
+
+        if researcher == 5
+          researcher_specify = input(['\n\n' ...
+            'You chose Other. Please type the first name of the researcher conducting the study?' '\n' ...
+            'Make sure to capitalize your name (e.g. Alex not alex)' '\n' ...
+            'Name: ' ], 's');
+        end
+
     end
 
     % Enter the condition that the subject is in
@@ -331,7 +339,13 @@ if start_where <= 1;
     initialization_struct.sub = sub; % save the subject number into the structure
     initialization_struct.data_file_path = data_file_path; % save the data file path as well
     initialization_struct.rng_seed = init_rng_seed; % save the rng seed for the initialization_structure
-    initialization_struct.researcher = researchers{researcher}; % save the name of the researcher who conducted the study
+
+    if researcher == 5
+        initialization_struct.researcher = researcher_specify
+    else
+        initialization_struct.researcher = researchers{researcher}; % save the name of the researcher who conducted the study
+    end
+
     if condition == 1
         initialization_struct.condition = 'food'; % save the condition that the subject was randomized into
 
@@ -393,7 +407,7 @@ if start_where <= 1;
     initialization_struct.payoff_prob = walks.payoff_prob(:,:,walk_idx);
     initialization_struct.walk_seed = walks.seed(walk_idx);
 
-    save([data_file_path sl 'initialization_structure'], 'initialization_struct', '-v6')
+    save([data_file_path sl 'initialization_structure'], 'initialization_struct', '-v6');
 
 
     % --- Double check everything
@@ -424,25 +438,25 @@ if start_where <= 1;
 
 end
 
-% if start_where <= 2
-% % ---- 1: Tutorial
-%     exit_flag = tutorial_part1(initialization_struct);
-%
-%     if exit_flag == 1
-%         disp('The script was exited because ESCAPE was pressed')
-%         sca; return
-%     end
-% end
-
-if start_where <= 3
-% ---- 2: practice trials (Block 0 in code)
-    exit_flag = practice_trials(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
+if start_where <= 2
+% ---- 1: Tutorial
+    exit_flag = tutorial_part1(initialization_struct);
 
     if exit_flag == 1
         disp('The script was exited because ESCAPE was pressed')
         sca; return
     end
 end
+
+% if start_where <= 3
+% % ---- 2: practice trials (Block 0 in code)
+%     exit_flag = practice_trials(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
+%
+%     if exit_flag == 1
+%         disp('The script was exited because ESCAPE was pressed')
+%         sca; return
+%     end
+% end
 
 % if start_where <= 4
 % % ---- 1: Tutorial
@@ -454,53 +468,53 @@ end
 %     end
 % end
 
-if start_where <= 5
-% ---- 3: main experiment trials
-% ---- space prepped?
-    reward_bowl_prep = 99;
-    while ~ismember(reward_bowl_prep, [0 1])
-        if strcmp(initialization_struct.condition, 'food')
-          reward_bowl_prep = input(['\n\n' ...
-            'Left Food = ' initialization_struct.left_item '\n'...
-            'Right Food = ' initialization_struct.right_item '\n\n' ...
-            '**Left and right is from the participant''s perspective**' '\n\n' ...
-            '1 = Food is set up/participant has water; continue.' '\n' ...
-            '0 = I need to fix something; exit the script.' '\n' ...
-            'Response: ' ]);
-        else
-          reward_bowl_prep = input(['\n\n' ...
-            'Left Bowl = ' initialization_struct.left_item '\n'...
-            'Right Bowl = ' initialization_struct.right_item '\n\n' ...
-            '**Left and right is from the participant''s perspective**' '\n\n' ...
-            '1 = Bowls are set up; continue.' '\n' ...
-            '0 = I need to fix something; exit the script.' '\n' ...
-            'Response: ' ]);
-        end
-
-        if ~ismember(reward_bowl_prep, [0 1])
-            disp('Invalid entry, please try again.')
-        end
-    end
-
-    if reward_bowl_prep == 0
-        disp([fprintf('\n') ...
-        'OK, you should restart the function to try again'])
-        sca;
-        return
-    end
-
-% --- run the task
-    exit_flag = main_task(initialization_struct, initialization_struct.num_trials(2), initialization_struct.block(2));
-
-    if exit_flag == 1
-        disp('The script was exited because ESCAPE was pressed')
-        sca; return
-    end
-end
+% if start_where <= 5
+% % ---- 3: main experiment trials
+% % ---- space prepped?
+%     reward_bowl_prep = 99;
+%     while ~ismember(reward_bowl_prep, [0 1])
+%         if strcmp(initialization_struct.condition, 'food')
+%           reward_bowl_prep = input(['\n\n' ...
+%             'Left Food = ' initialization_struct.left_item '\n'...
+%             'Right Food = ' initialization_struct.right_item '\n\n' ...
+%             '**Left and right is from the participant''s perspective**' '\n\n' ...
+%             '1 = Food is set up/participant has water; continue.' '\n' ...
+%             '0 = I need to fix something; exit the script.' '\n' ...
+%             'Response: ' ]);
+%         else
+%           reward_bowl_prep = input(['\n\n' ...
+%             'Left Bowl = ' initialization_struct.left_item '\n'...
+%             'Right Bowl = ' initialization_struct.right_item '\n\n' ...
+%             '**Left and right is from the participant''s perspective**' '\n\n' ...
+%             '1 = Bowls are set up; continue.' '\n' ...
+%             '0 = I need to fix something; exit the script.' '\n' ...
+%             'Response: ' ]);
+%         end
 %
-% --- display winnings
-load([data_file_path sl 'task.mat']);
-disp([fprintf('\n\n\n\n') ...
-'The participant earned ' num2str(task_struct.ticket_sum) ' tickets'])
+%         if ~ismember(reward_bowl_prep, [0 1])
+%             disp('Invalid entry, please try again.')
+%         end
+%     end
+%
+%     if reward_bowl_prep == 0
+%         disp([fprintf('\n') ...
+%         'OK, you should restart the function to try again'])
+%         sca;
+%         return
+%     end
+%
+% % --- run the task
+%     exit_flag = main_task(initialization_struct, initialization_struct.num_trials(2), initialization_struct.block(2));
+%
+%     if exit_flag == 1
+%         disp('The script was exited because ESCAPE was pressed')
+%         sca; return
+%     end
+% end
+% %
+% % --- display winnings
+% load([data_file_path sl 'task.mat']);
+% disp([fprintf('\n\n\n\n') ...
+% 'The participant earned ' num2str(task_struct.ticket_sum) ' tickets'])
 
 end
