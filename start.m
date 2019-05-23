@@ -1,7 +1,3 @@
-% The code that this is based on was initially written for Konovalov (2016) Nature Communications.
-% The original code was shared with me and I have maintained some of the basic structure
-% and notation; however, I have substantially altered the code for my own purposes.
-
 % Please do not share or use this code without my written permission.
 % Author: Alex Breslav
 
@@ -82,7 +78,7 @@ end
 
 
 % ---- Text formatting specifications
-textsize = 30; %30
+textsize = 40;
 textsize_feedback = 50;
 textsize_tickets = 140;
 
@@ -341,7 +337,7 @@ if start_where <= 1;
     initialization_struct.rng_seed = init_rng_seed; % save the rng seed for the initialization_structure
 
     if researcher == 5
-        initialization_struct.researcher = researcher_specify
+        initialization_struct.researcher = researcher_specify;
     else
         initialization_struct.researcher = researchers{researcher}; % save the name of the researcher who conducted the study
     end
@@ -438,16 +434,16 @@ if start_where <= 1;
 
 end
 
-if start_where <= 2
-% ---- 1: Tutorial
-    exit_flag = tutorial_part1(initialization_struct);
-
-    if exit_flag == 1
-        disp('The script was exited because ESCAPE was pressed')
-        sca; return
-    end
-end
-
+% if start_where <= 2
+% % ---- 1: Tutorial
+%     exit_flag = tutorial_part1(initialization_struct);
+%
+%     if exit_flag == 1
+%         disp('The script was exited because ESCAPE was pressed')
+%         sca; return
+%     end
+% end
+%
 % if start_where <= 3
 % % ---- 2: practice trials (Block 0 in code)
 %     exit_flag = practice_trials(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
@@ -458,15 +454,15 @@ end
 %     end
 % end
 
-% if start_where <= 4
-% % ---- 1: Tutorial
-%     exit_flag = tutorial_part2(initialization_struct);
-%
-%     if exit_flag == 1
-%         disp('The script was exited because ESCAPE was pressed')
-%         sca; return
-%     end
-% end
+if start_where <= 4
+% ---- 1: Tutorial
+    exit_flag = tutorial_part2(initialization_struct);
+
+    if exit_flag == 1
+        disp('The script was exited because ESCAPE was pressed')
+        sca; return
+    end
+end
 
 % if start_where <= 5
 % % ---- 3: main experiment trials

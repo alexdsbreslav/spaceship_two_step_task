@@ -1,7 +1,3 @@
-% The code that this is based on was initially written for Konovalov (2016) Nature Communications.
-% The original code was shared with me and I have maintained some of the basic structure
-% and notation; however, I have substantially altered the code for my own purposes.
-
 % Please do not share or use this code without my written permission.
 % Author: Alex Breslav
 
@@ -76,6 +72,7 @@ alien_lose = CenterRectOnPoint(r_small, rect(3)*.5, rect(4)*0.5);
 treasure_trade = CenterRectOnPoint(r_small, rect(3)*.25, rect(4)*0.55);
 reward_top_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.25);
 reward_bot_point = CenterRectOnPoint(r_small, rect(3)*.75, rect(4)*0.75);
+reward_text = CenterRectOnPoint([0,0,200,75], rect(3)*.25, rect(4)*0.35);
 tick_text_top = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.25);
 tick_text_bot = CenterRectOnPoint(r_tick_text, rect(3)*.75, rect(4)*0.75);
 
@@ -487,7 +484,7 @@ for trial = 1:trials
         % ---- Draw trial screen
               % draw treasure to trade
               Screen('DrawTexture', w, treasure, [], treasure_trade);
-              DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
+              DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
               % draw rewards
               Screen('DrawTexture', w, reward_top, [], reward_top_point);
               Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -565,7 +562,7 @@ for trial = 1:trials
                   % draw treasure to trade
                   Screen('TextSize', w, textsize_feedback);
                   Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
-                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
+                  DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                   % draw original stimuli
                   Screen('DrawTexture', w, reward_top, [], reward_top_point);
                   Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -587,7 +584,7 @@ for trial = 1:trials
                  % draw treasure to trade
                  Screen('TextSize', w, textsize_feedback);
                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
-                 DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
+                 DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                  % draw original stimuli
                  Screen('DrawTexture', w, reward_top, [], reward_top_point);
                  Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -669,7 +666,7 @@ for trial = 1:trials
 
         % variable text that will change on the last trial of the game
         Screen('TextSize', w, textsize);
-        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,1), action(trial,4));
+        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,1), action(trial,4), tick(trial,3));
         iti_start(trial) = GetSecs - t0;
 
         % countdown to next trial
@@ -814,7 +811,7 @@ for trial = 1:trials
         % ---- Draw trial screen
               % draw treasure to trade
               Screen('DrawTexture', w, treasure, [], treasure_trade);
-              DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
+              DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
               % draw original stimuli
               Screen('DrawTexture', w, reward_top, [], reward_top_point);
               Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -895,7 +892,7 @@ for trial = 1:trials
                   % draw treasure to trade
                   Screen('TextSize', w, textsize_feedback);
                   Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
-                  DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
+                  DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                   % draw original stimuli
                   Screen('DrawTexture', w, reward_top, [], reward_top_point);
                   Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -917,7 +914,7 @@ for trial = 1:trials
                  % draw treasure to trade
                  Screen('TextSize', w, textsize_feedback);
                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
-                 DrawFormattedText(w, 'Trade your space treasure', rect(3)*0.1, rect(4)*0.35, white);
+                 DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                  % draw original stimuli
                  Screen('DrawTexture', w, reward_top, [], reward_top_point);
                  Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
@@ -998,7 +995,7 @@ for trial = 1:trials
 
         % variable text that will change based on their reward choice and trial
         Screen('TextSize', w, textsize);
-        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,2), action(trial,4));
+        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,2), action(trial,4), tick(trial,3));
         iti_start(trial) = GetSecs - t0;
         % countdown to next trial
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)

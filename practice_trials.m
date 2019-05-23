@@ -1,7 +1,3 @@
-% The code that this is based on was initially written for Konovalov (2016) Nature Communications.
-% The original code was shared with me and I have maintained some of the basic structure
-% and notation; however, I have substantially altered the code for my own purposes.
-
 % Please do not share or use this code without my written permission.
 % Author: Alex Breslav
 
@@ -627,7 +623,7 @@ save([initialization_struct.data_file_path sl 'practice'], 'practice_struct', '-
 Screen('TextSize', w, textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
-    'You finished the practice game - good job!' ...
+    'Congratulations Space Captain, you have completed training camp!' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
 WaitSecs(1);;

@@ -1,13 +1,7 @@
-function exit_flag = tutorial_part1(initialization_struct)
-
-% The tutorial for this task was initially developed for Daw et al. (2011) Neuron and
-% used for other implementations of the task such as Konovalov (2016) Nature Communications.
-% The original code was shared with me and I have maintained some of the basic structure
-% and notation; however, I have substantially altered the tutorial and underlying code
-% for my own purposes.
-
 % Please do not share or use this code without my written permission.
 % Author: Alex Breslav
+
+function exit_flag = tutorial_part1(initialization_struct)
 
 % ---- Initial set up
 % capture screenshots
@@ -80,7 +74,7 @@ else
 end
 
 % --- font sizes
-textsize = 40;
+textsize = initialization_struct.textsize;
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------

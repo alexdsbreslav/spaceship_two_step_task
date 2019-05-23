@@ -81,7 +81,7 @@ classdef task_func
             end
         end
 
-        function countdown_text = rewards_text(condition, block, trial, trials, win, action)
+        function countdown_text = rewards_text(condition, block, trial, trials, win, action, ticks)
             if block == 1
                 if strcmp(condition, 'food')
                     if win == 1
@@ -99,13 +99,13 @@ classdef task_func
                         else
                             if trial == trials
                                 countdown_text = ['The game will end shortly...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                                 countdown_text = ['A break will begin shortly...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             end
                         end
                     else
@@ -133,13 +133,13 @@ classdef task_func
                         else
                             if trial == trials
                                 countdown_text = ['The game will end shortly...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                                 countdown_text = ['A break will begin shortly...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             end
                         end
                     else
@@ -166,10 +166,10 @@ classdef task_func
                         else
                             if trial == trials
                                 countdown_text = ['The game will end shortly...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             end
                         end
                     else
@@ -192,10 +192,10 @@ classdef task_func
                         else
                             if trial == trials
                                 countdown_text = ['The game will end shortly...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
-                                'Adding tickets to your total!'];
+                                'Adding ' num2str(ticks) ' tickets to your total!'];
                             end
                         end
                     else
