@@ -8,15 +8,10 @@ format shortg
 exit_flag = 0;
 
 % capture screenshots
-img_collect_on = init.img_collect_on;
 img_idx = 200;
 
 % ---- file set up; enables flexibility between OSX and Windows
 sl = init.slash_convention;
-
-% ---- test or not?
-test = init.test;
-input_source = init.input_source;
 
 % ---- use the rng seed from the initalization; this ensures that every practice round starts the same
 rng(init.rng_seed);
@@ -27,7 +22,7 @@ rng_seed = rng_seed.Seed;
 Screen('Preference', 'SkipSyncTests', 1);
 Screen('Preference', 'VisualDebugLevel', 1);% change psych toolbox screen check to black
 FlushEvents;
-if test == 0
+if init.test == 0
     HideCursor;
 end
 PsychDefaultSetup(1);
@@ -35,17 +30,12 @@ PsychDefaultSetup(1);
 % ---- Screen selection
 screens = Screen('Screens'); %count the screen
 whichScreen = max(screens); %select the screen; ALTERED THIS BECAUSE IT KEPT SHOWING UP ON MY LAPTOP INSTEAD OF THE ATTACHED MONITOR
-if test == 0
+if init.test == 0
     [w, rect] = Screen('OpenWindow', whichScreen);
 else
     % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
     [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
 end
-
-% --- font sizes
-textsize = init.textsize;
-textsize_feedback = init.textsize_feedback;
-textsize_tickets = init.textsize_tickets;
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -187,7 +177,7 @@ condition = init.condition;
 
 % ---- Waiting screen
 Screen('FillRect', w, black);
-Screen('TextSize', w, textsize);
+Screen('TextSize', w, init.textsize);
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -200,8 +190,8 @@ DrawFormattedText(w,[
     'When you are ready, the experimenter will start the training quest.' '\n' ...
     'You will have 10 days to explore this galaxy.'....
     ], 'center','center', white, [], [], [], 1.6);
-Screen('Flip',w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-task_func.advance_screen(input_source)
+Screen('Flip',w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source)
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -218,7 +208,7 @@ for trial = 1:trials
 % ---- Signal a short break every 50 trials on blocks 1,2
     % ---- Drawimage indicators
     Screen(w, 'FillRect', black);
-    Screen('TextSize', w, textsize_feedback);
+    Screen('TextSize', w, init.init.textsize_feedback);
     position(trial,1) = round(rand); %randomizing images positions
     type = position(trial,1);
 
@@ -242,7 +232,7 @@ for trial = 1:trials
     choice_on_datetime{trial,1} = clock;
 
     % ---- capture key press
-    [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
+    [selection, x, y] = task_func.selection(init.input_source, [L,R], w, rects);
     click_coord(trial, 1) = x;
     click_coord(trial, 2) = y;
 
@@ -279,14 +269,14 @@ for trial = 1:trials
     end
 
     % ---- wait 1 second on the feedback screen
-    WaitSecs(feedback_time);
+    WaitSecs(init.feedback_time);
 
     % ---- space exploration page
     Screen('DrawTexture', w, space, [], space_bg);
     ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out');
     Screen('DrawTexture', w, ship, [], spaceship_out);
     Screen('Flip', w);
-    WaitSecs(explore_time);
+    WaitSecs(init.explore_time);
 
 
     % ---- Determine the state for the second state
@@ -343,7 +333,7 @@ for trial = 1:trials
         choice_on_datetime{trial,2} = clock;
 
     % ---- capture key press
-        [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
+        [selection, x, y] = task_func.selection(init.input_source, [L,R], w, rects);
         click_coord(trial, 3) = x;
         click_coord(trial, 4) = y;
 
@@ -380,7 +370,7 @@ for trial = 1:trials
           Screen('FrameRect',w,white,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(feedback_time);
+          WaitSecs(init.feedback_time);
 
        elseif choice_loc == R
           % draw background
@@ -393,7 +383,7 @@ for trial = 1:trials
           Screen('FrameRect',w,chosen_color,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(feedback_time);
+          WaitSecs(init.feedback_time);
         end
 
         % ---- payoff screen
@@ -408,10 +398,10 @@ for trial = 1:trials
             DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
         end
         Screen('Flip', w);
-        WaitSecs(feedback_time);
+        WaitSecs(init.feedback_time);
 
         % variable text that will change on the last trial of the game
-        Screen('TextSize', w, textsize);
+        Screen('TextSize', w, init.textsize);
         iti_start(trial) = GetSecs - t0;
 
         % countdown to next trial
@@ -478,7 +468,7 @@ for trial = 1:trials
         choice_on_datetime{trial,3} = clock;
 
     % ---- capture key press
-        [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
+        [selection, x, y] = task_func.selection(init.input_source, [L,R], w, rects);
         click_coord(trial, 5) = x;
         click_coord(trial, 6) = y;
 
@@ -515,7 +505,7 @@ for trial = 1:trials
           Screen('FrameRect',w,white,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(feedback_time);
+          WaitSecs(init.feedback_time);
 
         elseif choice_loc == R
           % draw background
@@ -528,7 +518,7 @@ for trial = 1:trials
           Screen('FrameRect',w,chosen_color,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(feedback_time);
+          WaitSecs(init.feedback_time);
         end
 
     % ---- payoff screen
@@ -543,10 +533,10 @@ for trial = 1:trials
             DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
         end
         Screen('Flip', w);
-        WaitSecs(feedback_time);
+        WaitSecs(init.feedback_time);
 
         % variable text that will change based on their reward choice and trial
-        Screen('TextSize', w, textsize);
+        Screen('TextSize', w, init.textsize);
         iti_start(trial) = GetSecs - t0;
         % countdown to next trial
         for i = 1:init.iti_init(trial, payoff(trial,2)+3)
@@ -622,32 +612,32 @@ save([init.data_file_path sl 'practice'], 'practice', '-v6');
 % -----------------------------------------------------------------------------
 % 9 - Payoff screens
 % ---- Practice block end screens
-Screen('TextSize', w, textsize);
+Screen('TextSize', w, init.textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'Congratulations Space Captain, you are done the training quest!' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-WaitSecs(pause_to_read);;
-task_func.advance_screen(input_source);
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+WaitSecs(init.pause_to_read);;
+task_func.advance_screen(init.input_source);
 
-Screen('TextSize', w, textsize);
+Screen('TextSize', w, init.textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'You have finished training camp and are ready to win prizes on your big quest.' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-WaitSecs(pause_to_read);;
-task_func.advance_screen(input_source);
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+WaitSecs(init.pause_to_read);;
+task_func.advance_screen(init.input_source);
 
-Screen('TextSize', w, textsize);
+Screen('TextSize', w, init.textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'When you are ready, ' init.researcher ' will load the directions for winning prizes.' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-WaitSecs(pause_to_read);
-task_func.advance_screen(input_source);
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+WaitSecs(init.pause_to_read);
+task_func.advance_screen(init.input_source);
 
 ShowCursor;
 Screen('CloseAll');

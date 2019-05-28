@@ -4,23 +4,13 @@
 function exit_flag = tutorial_v4(init)
 % ---- Initial set up
 % capture screenshots
-img_collect_on = init.img_collect_on;
 img_idx = 300;
-
-% ---- how long to wait before allowing key press
-pause_to_read = init.pause_to_read;
-explore_time = init.explore_time;
-feedback_time = init.feedback_time;
 
 % sets the exit flag default to 0; throws a flag if you exit the function to leave the start function
 exit_flag = 0;
 
 % file set up; enables flexibility between OSX and Windows
 sl = init.slash_convention;
-input_source = init.input_source;
-
-%set the rng seed so everyone sees the same probability changing video
-rng(66);
 
 % ---- psychtoolbox set up
 Screen('Preference', 'VisualDebugLevel', 1);% change psych toolbox screen check to black
@@ -37,11 +27,6 @@ else
     % [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1440 810]); % for opening into a small rectangle instead
     [w, rect] = Screen('OpenWindow', whichScreen, [], [0 0 1920 1080]); % for opening into a small rectangle instead
 end
-
-% --- font sizes
-textsize = init.textsize;
-textsize_feedback = init.textsize_feedback;
-textsize_tickets = init.textsize_tickets;
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -200,7 +185,7 @@ action = NaN(3,4);
 
 % ---- Waiting screen
 Screen('FillRect', w, black);
-Screen('TextSize', w, textsize);
+Screen('Textsize', w, init.textsize);
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -212,28 +197,28 @@ DrawFormattedText(w,[
     'it is time to go on your big quest for space treasure.' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
-WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-task_func.advance_screen(input_source);
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
 
 DrawFormattedText(w,[
     'Each time you find space treasure on during your big quest,' '\n' ...
     'you will be able to trade it with ' init.researcher ' for prizes!' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
-WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-task_func.advance_screen(input_source);
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
 
 Screen('DrawTexture', w, im_reward_drawn, [], left_above_text);
 Screen('DrawTexture', w, tickets_drawn, [], right_above_text);
-Screen('TextSize', w, textsize_tickets);
+Screen('TextSize', w, init.textsize_tickets);
 DrawFormattedText(w, '10', 'center', 'center', white, [],[],[],[],[], right_above_text);
-Screen('TextSize', w, textsize);
+Screen('Textsize', w, init.textsize);
 DrawFormattedText(w,[
     'You can trade you space treasure for ' im_reward_txt ' or for tickets.' ...
     ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
-WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-task_func.advance_screen(input_source);
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
 
 if condition == 1
     Screen('DrawTexture', w, im_reward_drawn, [], center_above_text);
@@ -249,27 +234,28 @@ else
       ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 end
 Screen('Flip',w);
-WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-task_func.advance_screen(input_source);
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
 
 Screen('DrawTexture', w, tickets_drawn, [], center_above_text);
-Screen('TextSize', w, textsize_tickets);
+Screen('TextSize', w, init.textsize_tickets);
 DrawFormattedText(w, '10', 'center', 'center', white, [],[],[],[],[], center_above_text);
-Screen('TextSize', w, textsize);DrawFormattedText(w,[
+Screen('Textsize', w, init.textsize);
+DrawFormattedText(w,[
     'If you choose the tickets, the number of tickets shown will get added to your total.' '\n' ...
     'At the end of the game, you will be able to use your tickets to buy a prize.' ...
     ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
-WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-task_func.advance_screen(input_source);
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
 
 DrawFormattedText(w,[
     'Let''s practice exploring for space treasure three more times.' '\n'
     'This time, we will trade your space treasure for prizes!' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
-WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-task_func.advance_screen(input_source);
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -295,10 +281,10 @@ for trial = 1:trials
   % draw frames around original stimuli
   Screen('FrameRect',w,frame_color,alien_Lframe,10);
   Screen('FrameRect',w,frame_color,alien_Rframe,10);
-  Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+  Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
   % ---- capture key press
-  [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
+  [selection, x, y] = task_func.selection(init.input_source, [L,R], w, rects);
   % ---- capture selection
   [action(trial,1), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
 
@@ -312,7 +298,7 @@ for trial = 1:trials
       % draw frames around original stimuli
       Screen('FrameRect',w,chosen_color,alien_Lframe,10);
       Screen('FrameRect',w,frame_color,alien_Rframe,10);
-      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
   elseif choice_loc == R
      % draw background
@@ -323,7 +309,7 @@ for trial = 1:trials
      % draw frames around original stimuli
      Screen('FrameRect',w,frame_color,alien_Lframe,10);
      Screen('FrameRect',w,chosen_color,alien_Rframe,10);
-     Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+     Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
   end
 
@@ -335,7 +321,7 @@ for trial = 1:trials
   ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out');
   Screen('DrawTexture', w, ship, [], spaceship_out);
   Screen('Flip', w);
-  WaitSecs(1); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+  WaitSecs(1); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -362,10 +348,10 @@ for trial = 1:trials
       Screen('FrameRect',w,white,alien_Lframe,10);
       Screen('FrameRect',w,white,alien_Rframe,10);
 
-      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
   % ---- capture key press
-      [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
+      [selection, x, y] = task_func.selection(init.input_source, [L,R], w, rects);
 
   % ---- capture selection and determine payoff
       [action(trial,2), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
@@ -380,7 +366,7 @@ for trial = 1:trials
         % draw frames around original stimuli
         Screen('FrameRect',w,chosen_color,alien_Lframe,10);
         Screen('FrameRect',w,white,alien_Rframe,10);
-        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
         % wait 1 second
         WaitSecs(1);
 
@@ -393,7 +379,7 @@ for trial = 1:trials
         % draw frames around original stimuli
         Screen('FrameRect',w,white,alien_Lframe,10);
         Screen('FrameRect',w,chosen_color,alien_Rframe,10);
-        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
         % wait 1 second
         WaitSecs(1);
       end
@@ -401,7 +387,7 @@ for trial = 1:trials
       % ---- payoff screen
       % ---- show feedback
       picD = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,2),2);
-      Screen('TextSize', w, textsize_feedback);
+      Screen('TextSize', w, init.textsize_feedback);
       if payoff(trial,1) == 1
           Screen('DrawTexture', w, picD, [], alien_win);
           Screen('DrawTexture', w, treasure, [], treasure_win);
@@ -410,7 +396,7 @@ for trial = 1:trials
           Screen('DrawTexture', w, picD, [], alien_lose);
           DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
       end
-      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
       WaitSecs(1);
 
     % ---- reward trade screen
@@ -421,7 +407,7 @@ for trial = 1:trials
       if payoff(trial, 1) == 1
       % ---- Draw trial screen
             % draw treasure to trade
-            Screen('TextSize', w, textsize_feedback);
+            Screen('TextSize', w, init.textsize_feedback);
             Screen('DrawTexture', w, treasure, [], treasure_trade);
             DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
             % draw rewards
@@ -431,13 +417,13 @@ for trial = 1:trials
             Screen('FrameRect',w,frame_color,reward_top_frame,10);
             Screen('FrameRect',w,frame_color,reward_bot_frame,10);
             % draw number of tickets
-            Screen('TextSize', w, textsize_tickets);
+            Screen('TextSize', w, init.textsize_tickets);
             if type == 0
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
             else
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
             end
-            Screen('TextSize', w, textsize);
+            Screen('Textsize', w, init.textsize);
             Screen('FillRect', w, black, txt_bg);
             if condition == 1
                 DrawFormattedText(w,[
@@ -448,11 +434,11 @@ for trial = 1:trials
                     'Look! You can trade your space treasure for stickers and tattoos or ' num2str(tick(trial)) ' tickets.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             end
-            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-            task_func.advance_screen(input_source);
+            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+            task_func.advance_screen(init.input_source);
 
             % draw treasure to trade
-            Screen('TextSize', w, textsize_feedback);
+            Screen('TextSize', w, init.textsize_feedback);
             Screen('DrawTexture', w, treasure, [], treasure_trade);
             DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
             % draw rewards
@@ -462,13 +448,13 @@ for trial = 1:trials
             Screen('FrameRect',w,frame_color,reward_top_frame,10);
             Screen('FrameRect',w,frame_color,reward_bot_frame,10);
             % draw number of tickets
-            Screen('TextSize', w, textsize_tickets);
+            Screen('TextSize', w, init.textsize_tickets);
             if type == 0
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
             else
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
             end
-            Screen('TextSize', w, textsize);
+            Screen('Textsize', w, init.textsize);
             Screen('FillRect', w, black, txt_bg);
             if condition == 1
                 DrawFormattedText(w,[
@@ -479,17 +465,17 @@ for trial = 1:trials
                     'Let''s trade your space treasure for a sticker or tattoo.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             end
-            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
       % ---- capture key press
-            [selection, x, y] = task_func.selection(input_source, [U], w, rects);
+            [selection, x, y] = task_func.selection(init.input_source, [U], w, rects);
       % ---- capture selection
             [action(trial,4), choice_loc] = task_func.choice(type, [U], selection, x, y);
 
       % ---- feedback screen
             if choice_loc == U
                 % draw treasure to trade
-                Screen('TextSize', w, textsize_feedback);
+                Screen('TextSize', w, init.textsize_feedback);
                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                 DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                 % draw original stimuli
@@ -499,7 +485,7 @@ for trial = 1:trials
                 Screen('FrameRect',w,chosen_color,reward_top_frame,10);
                 Screen('FrameRect',w,frame_color,reward_bot_frame,10);
                 % draw number of tickets
-                Screen('TextSize', w, textsize_tickets);
+                Screen('TextSize', w, init.textsize_tickets);
                 if type == 0
                     DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                 else
@@ -507,11 +493,11 @@ for trial = 1:trials
                 end
                 Screen('Flip', w);
                 % wait 1 second
-                WaitSecs(1); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+                WaitSecs(1); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
            elseif choice_loc == D
                % draw treasure to trade
-               Screen('TextSize', w, textsize_feedback);
+               Screen('TextSize', w, init.textsize_feedback);
                Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                % draw original stimuli
@@ -521,7 +507,7 @@ for trial = 1:trials
                Screen('FrameRect',w,frame_color,reward_top_frame,10);
                Screen('FrameRect',w,chosen_color,reward_bot_frame,10);
                % draw number of tickets
-               Screen('TextSize', w, textsize_tickets);
+               Screen('TextSize', w, init.textsize_tickets);
                if type == 0
                    DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                else
@@ -529,14 +515,14 @@ for trial = 1:trials
                end
                Screen('Flip', w);
                % wait 1 second
-               WaitSecs(1); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+               WaitSecs(1); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
             end
 
             Screen('DrawTexture', w, return_home, [], space_bg);
             ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
             Screen('DrawTexture', w, ship, [], spaceship_return);
             Screen('FillRect', w, black, txt_bg);
-            Screen('TextSize', w, textsize);
+            Screen('Textsize', w, init.textsize);
             if condition == 1
                 DrawFormattedText(w,[
                     'Make sure to eat your snack before your spaceship returns home!' ...
@@ -548,7 +534,7 @@ for trial = 1:trials
             end
 
             Screen('Flip', w);
-            WaitSecs(3); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+            WaitSecs(3); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
       else
           if type == 0
               earth_loc = reward_top_point;
@@ -562,15 +548,15 @@ for trial = 1:trials
 
           % ---- Draw trial screen
           % draw original stimuli
-          Screen('TextSize', w, textsize_feedback);
+          Screen('TextSize', w, init.textsize_feedback);
           DrawFormattedText(w, 'Select Earth to return home', rect(3)*0.125, 'center', white);
           Screen('DrawTexture', w, earth, [], earth_loc);
           % draw frames around original stimuli
           Screen('FrameRect',w,frame_color,earth_frame,10);
-          Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+          Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
           % ---- capture key press
-          [selection, x, y] = task_func.selection(input_source, [U,D], w, rects);
+          [selection, x, y] = task_func.selection(init.input_source, [U,D], w, rects);
 
           % ---- capture selection
           [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
@@ -584,7 +570,7 @@ for trial = 1:trials
               Screen('FrameRect',w,chosen_color,earth_frame,10);
               Screen('Flip', w);
               % wait 1 second
-              WaitSecs(1); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+              WaitSecs(1); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
          elseif choice_loc == D
              % draw original stimuli
@@ -594,12 +580,12 @@ for trial = 1:trials
              Screen('FrameRect',w,chosen_color,earth_frame,10);
              Screen('Flip', w);
              % wait 1 second
-             WaitSecs(1); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+             WaitSecs(1); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
          end
      end
 
       % variable text that will change on the last trial of the game
-      Screen('TextSize', w, textsize);
+      Screen('Textsize', w, init.textsize);
       countdown_text = task_func.rewards_text(init.condition, 0, trial, trials, payoff(trial,1), action(trial,4), tick(trial));
       % countdown to next trial
       for i = 1:init.iti_init(trial, payoff(trial,1)+3)
@@ -626,7 +612,7 @@ for trial = 1:trials
 
          Screen(w, 'Flip');
          if i == 15
-             img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+             img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
          end
          waitfor(rate_obj);
       end
@@ -655,10 +641,10 @@ for trial = 1:trials
       Screen('FrameRect',w,white,alien_Lframe,10);
       Screen('FrameRect',w,white,alien_Rframe,10);
 
-      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
   % ---- capture key press
-      [selection, x, y] = task_func.selection(input_source, [L,R], w, rects);
+      [selection, x, y] = task_func.selection(init.input_source, [L,R], w, rects);
 
   % ---- capture selection and determine payoff
       [action(trial,3), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
@@ -673,7 +659,7 @@ for trial = 1:trials
         % draw frames around original stimuli
         Screen('FrameRect',w,chosen_color,alien_Lframe,10);
         Screen('FrameRect',w,white,alien_Rframe,10);
-        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
         % wait 1 second
         WaitSecs(1);
 
@@ -686,7 +672,7 @@ for trial = 1:trials
         % draw frames around original stimuli
         Screen('FrameRect',w,white,alien_Lframe,10);
         Screen('FrameRect',w,chosen_color,alien_Rframe,10);
-        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+        Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
         % wait 1 second
         WaitSecs(1);
       end
@@ -694,7 +680,7 @@ for trial = 1:trials
   % ---- payoff screen
   % ---- determine second step choice
       picD = task_func.drawimage(w, A1, B1, A2, B2, A3, B3, action(trial,3),3);
-      Screen('TextSize', w, textsize_feedback);
+      Screen('TextSize', w, init.textsize_feedback);
       if payoff(trial,2) == 1
           Screen('DrawTexture', w, picD, [], alien_win);
           Screen('DrawTexture', w, treasure, [], treasure_win);
@@ -703,7 +689,7 @@ for trial = 1:trials
           Screen('DrawTexture', w, picD, [], alien_lose);
           DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
       end
-      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+      Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
       WaitSecs(1);
 
       % ---- reward trade screen
@@ -714,7 +700,7 @@ for trial = 1:trials
       if payoff(trial, 2) == 1
       % ---- Draw trial screen
             % draw treasure to trade
-            Screen('TextSize', w, textsize_feedback);
+            Screen('TextSize', w, init.textsize_feedback);
             Screen('DrawTexture', w, treasure, [], treasure_trade);
             DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
             % draw rewards
@@ -724,13 +710,13 @@ for trial = 1:trials
             Screen('FrameRect',w,frame_color,reward_top_frame,10);
             Screen('FrameRect',w,frame_color,reward_bot_frame,10);
             % draw number of tickets
-            Screen('TextSize', w, textsize_tickets);
+            Screen('TextSize', w, init.textsize_tickets);
             if type == 0
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
             else
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
             end
-            Screen('TextSize', w, textsize);
+            Screen('Textsize', w, init.textsize);
             Screen('FillRect', w, black, txt_bg);
             if condition == 1
                 DrawFormattedText(w,[
@@ -741,12 +727,12 @@ for trial = 1:trials
                     'Look! You can trade your space treasure for stickers and tattoos or ' num2str(tick(trial)) ' tickets.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             end
-            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
-            task_func.advance_screen(input_source);
+            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+            task_func.advance_screen(init.input_source);
 
 
             % draw treasure to trade
-            Screen('TextSize', w, textsize_feedback);
+            Screen('TextSize', w, init.textsize_feedback);
             Screen('DrawTexture', w, treasure, [], treasure_trade);
             DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
             % draw original stimuli
@@ -756,29 +742,29 @@ for trial = 1:trials
             Screen('FrameRect',w,frame_color,reward_top_frame,10);
             Screen('FrameRect',w,frame_color,reward_bot_frame,10);
             % draw number of tickets
-            Screen('TextSize', w, textsize_tickets);
+            Screen('TextSize', w, init.textsize_tickets);
             if type == 0
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
             else
                 DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
             end
 
-            Screen('TextSize', w, textsize);
+            Screen('Textsize', w, init.textsize);
             Screen('FillRect', w, black, txt_bg);
             DrawFormattedText(w,[
                 'Now let''s trade your space treasure for tickets.' ...
                 ],'center','center', white, [], [], [], 1.6, [], txt_bg);
-            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+            Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
       % ---- capture key press
-            [selection, x, y] = task_func.selection(input_source, [D], w, rects);
+            [selection, x, y] = task_func.selection(init.input_source, [D], w, rects);
       % ---- capture selection
             [action(trial,4), choice_loc] = task_func.choice(type, [D], selection, x, y);
 
       % ---- feedback screen
             if choice_loc == U
                 % draw treasure to trade
-                Screen('TextSize', w, textsize_feedback);
+                Screen('TextSize', w, init.textsize_feedback);
                 Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                 DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                 % draw original stimuli
@@ -788,19 +774,19 @@ for trial = 1:trials
                 Screen('FrameRect',w,chosen_color,reward_top_frame,10);
                 Screen('FrameRect',w,frame_color,reward_bot_frame,10);
                 % draw number of tickets
-                Screen('TextSize', w, textsize_tickets);
+                Screen('TextSize', w, init.textsize_tickets);
                 if type == 0
                     DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                 else
                     DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                 end
-                Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+                Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
                 % wait 1 second
                 WaitSecs(1);
 
            elseif choice_loc == D
                % draw treasure to trade
-               Screen('TextSize', w, textsize_feedback);
+               Screen('TextSize', w, init.textsize_feedback);
                Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
                DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
                % draw original stimuli
@@ -810,13 +796,13 @@ for trial = 1:trials
                Screen('FrameRect',w,frame_color,reward_top_frame,10);
                Screen('FrameRect',w,chosen_color,reward_bot_frame,10);
                % draw number of tickets
-               Screen('TextSize', w, textsize_tickets);
+               Screen('TextSize', w, init.textsize_tickets);
                if type == 0
                    DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
                else
                    DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
                end
-               Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+               Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
                % wait 1 second
                WaitSecs(1);
             end
@@ -837,10 +823,10 @@ for trial = 1:trials
           Screen('DrawTexture', w, earth, [], earth_loc);
           % draw frames around original stimuli
           Screen('FrameRect',w,frame_color,earth_frame,10);
-          Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+          Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
           % ---- capture key press
-          [selection, x, y] = task_func.selection(input_source, [U,D], w, rects);
+          [selection, x, y] = task_func.selection(init.input_source, [U,D], w, rects);
           % ---- capture selection
           [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
@@ -851,7 +837,7 @@ for trial = 1:trials
               Screen('DrawTexture', w, earth, [], earth_loc);
               % draw frames around original stimuli
               Screen('FrameRect',w,chosen_color,earth_frame,10);
-              Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+              Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
               % wait 1 second
               WaitSecs(1);
 
@@ -861,14 +847,14 @@ for trial = 1:trials
              Screen('DrawTexture', w, earth, [], earth_loc);
              % draw frames around original stimuli
              Screen('FrameRect',w,chosen_color,earth_frame,10);
-             Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+             Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
              % wait 1 second
              WaitSecs(1);
          end
      end
 
       % variable text that will change based on their reward choice and trial
-      Screen('TextSize', w, textsize);
+      Screen('Textsize', w, init.textsize);
       countdown_text = task_func.rewards_text(init.condition, 0, trial, trials, payoff(trial,2), 1, tick(trial));
       % countdown to next trial
       for i = 1:init.iti_init(trial, payoff(trial,2)+3)
@@ -895,30 +881,30 @@ for trial = 1:trials
 
          Screen(w, 'Flip');
          if i == 15
-             img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+             img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
          end
          waitfor(rate_obj);
       end
   end % close the if/else for state
 end % close the entire for loop
 
-Screen('TextSize', w, textsize);
+Screen('Textsize', w, init.textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'Let''s start the big quest!' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
 WaitSecs(1);;
-task_func.advance_screen(input_source);
+task_func.advance_screen(init.input_source);
 
-Screen('TextSize', w, textsize);
+Screen('Textsize', w, init.textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'When you are ready, ' init.researcher ' will load the big quest.' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
 WaitSecs(1);;
-task_func.advance_screen(input_source);
+task_func.advance_screen(init.input_source);
 
 ShowCursor;
 Screen('CloseAll');

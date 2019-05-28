@@ -6,11 +6,10 @@
 % Author: Alex Breslav
 
 function output_for_food_choice(init)
-    data_file_path = init.data_file_path;
     sl = init.slash_convention;
 
     % load all of the necessary structures
-    load([data_file_path sl 'task.mat']);
+    load([init.data_file_path sl 'task.mat']);
 
     % number of trials/size of the array
     trials = init.num_trials(2);
@@ -29,5 +28,5 @@ function output_for_food_choice(init)
     'VariableNames', {'subject', 'researcher', 'condition', 'left_item', 'right_item', 'trial', 'win', 'choose_snack_stick', 'choose_left'});
 
     % print table to excel
-    writetable(T, [data_file_path sl 'food_choice.xlsx']);
+    writetable(T, [init.data_file_path sl 'food_choice.xlsx']);
 end
