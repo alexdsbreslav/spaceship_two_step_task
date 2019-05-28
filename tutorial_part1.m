@@ -5,13 +5,13 @@ function exit_flag = tutorial_part1(initialization_struct)
 
 % ---- Initial set up
 % capture screenshots
-img_collect_on = 0;
-img_idx = 1;
+img_collect_on = initialization_struct.img_collect_on;
+img_idx = 100;
 
 % ---- how long to wait before allowing key press
-pause_to_read = 0.5;
-explore_time = 1;
-feedback_time = 1;
+pause_to_read = initialization_struct.pause_to_read;
+explore_time = initialization_struct.explore_time;
+feedback_time = initialization_struct.feedback_time;
 
 % sets the exit flag default to 0; throws a flag if you exit the function to leave the start function
 exit_flag = 0;

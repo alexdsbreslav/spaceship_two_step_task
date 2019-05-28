@@ -5,6 +5,8 @@ function start
 
 % -----------------------------------Settings-----------------------------------
 % ------------------------------------------------------------------------------
+% ONLY SET = 1 DURING TESTING; collects screenshots
+img_collect_on = 0;
 
 % this is the file path for the raw data directory
 pc_file_path = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
@@ -429,6 +431,10 @@ if start_where <= 1;
     initialization_struct.walk_idx = walk_idx;
     initialization_struct.payoff_prob = walks.payoff_prob(:,:,walk_idx);
     initialization_struct.walk_seed = walks.seed(walk_idx);
+    initialization_struct.img_collect_on = img_collect_on;
+    initialization_struct.pause_to_read = 0.5;
+    initialization_struct.explore_time = 1;
+    initialization_struct.feedback_time = 1;
 
     save([data_file_path sl 'initialization_structure'], 'initialization_struct', '-v6');
 

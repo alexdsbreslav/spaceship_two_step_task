@@ -7,6 +7,10 @@ function exit_flag = practice_trials(initialization_struct, trials, block)
 format shortg
 exit_flag = 0;
 
+% capture screenshots
+img_collect_on = initialization_struct.img_collect_on;
+img_idx = 200;
+
 % ---- file set up; enables flexibility between OSX and Windows
 sl = initialization_struct.slash_convention;
 
@@ -196,7 +200,7 @@ DrawFormattedText(w,[
     'When you are ready, the experimenter will start the training quest.' '\n' ...
     'You will have 10 days to explore this galaxy.'....
     ], 'center','center', white, [], [], [], 1.6);
-Screen('Flip',w);
+Screen('Flip',w); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
 task_func.advance_screen(input_source)
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -623,7 +627,7 @@ Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'Congratulations Space Captain, you are done the training quest!' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip');
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
 WaitSecs(1);;
 task_func.advance_screen(input_source);
 
@@ -632,7 +636,7 @@ Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'You have finished training camp and are ready to win prizes on your big quest.' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip');
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
 WaitSecs(1);;
 task_func.advance_screen(input_source);
 
@@ -641,8 +645,8 @@ Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'When you are ready, ' initialization_struct.researcher ' will load the directions for winning prizes.' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip');
-WaitSecs(1);;
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+WaitSecs(1);
 task_func.advance_screen(input_source);
 
 ShowCursor;

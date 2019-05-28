@@ -7,6 +7,10 @@ function exit_flag = main_task(initialization_struct, trials, block)
 format shortg
 exit_flag = 0;
 
+% capture screenshots
+img_collect_on = initialization_struct.img_collect_on;
+img_idx = 400;
+
 % ---- file set up; enables flexibility between OSX and Windows
 sl = initialization_struct.slash_convention;
 
@@ -44,9 +48,9 @@ textsize_feedback = initialization_struct.textsize_feedback;
 textsize_tickets = initialization_struct.textsize_tickets;
 
 % ---- how long to wait before allowing key press
-pause_to_read = 0.5;
-explore_time = 1;
-feedback_time = 1;
+pause_to_read = initialization_struct.pause_to_read;
+explore_time = initialization_struct.explore_time;
+feedback_time = initialization_struct.feedback_time;
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -336,8 +340,8 @@ Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'When you are ready, ' initialization_struct.researcher ' will start the big quest.' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip');
-WaitSecs(1);
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+WaitSecs(pause_to_read);
 task_func.advance_screen(input_source);
 
 % -----------------------------------------------------------------------------
@@ -445,7 +449,7 @@ for trial = 1:trials
     end
 
     % ---- wait 1 second on the feedback screen
-    WaitSecs(1);
+    WaitSecs(feedback_time);
 
     % ---- space exploration page
     Screen('DrawTexture', w, space, [], space_bg);
