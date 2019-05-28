@@ -1222,12 +1222,21 @@ WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_str
 task_func.advance_screen(input_source);
 
 DrawFormattedText(w,[
-    'Now it is time for your practice flights.' '\n' ...
+    'Now it is time for your training quest.' '\n' ...
     'We are going to explore this galaxy for 10 days.' '\n' ...
     'At the end of those 10 days, you will have completed training camp!' ...
     ], 'center','center', [], [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+task_func.advance_screen(input_source);
+
+Screen('TextSize', w, textsize);
+Screen(w, 'FillRect', black);
+DrawFormattedText(w,[
+    'When you are ready, ' initialization_struct.researcher ' will load the training quest.' ...
+    ],'center','center', white, [], [], [], 1.6);
+Screen(w, 'Flip');
+WaitSecs(1);;
 task_func.advance_screen(input_source);
 
 ShowCursor;

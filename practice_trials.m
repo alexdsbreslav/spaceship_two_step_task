@@ -193,8 +193,8 @@ Screen('TextSize', w, textsize);
 % ---- Intro screen for practice block
 DrawFormattedText(w,[
     'Let''s practice!' '\n\n' ...
-    'When you are ready, the experimenter will start the practice flights.' '\n' ...
-    'You will have 15 days to explore this galaxy.'....
+    'When you are ready, the experimenter will start the training quest.' '\n' ...
+    'You will have 10 days to explore this galaxy.'....
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
 task_func.advance_screen(input_source)
@@ -621,7 +621,25 @@ save([initialization_struct.data_file_path sl 'practice'], 'practice_struct', '-
 Screen('TextSize', w, textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
-    'Congratulations Space Captain, you have completed training camp!' ...
+    'Congratulations Space Captain, you are done the training quest!' ...
+    ],'center','center', white, [], [], [], 1.6);
+Screen(w, 'Flip');
+WaitSecs(1);;
+task_func.advance_screen(input_source);
+
+Screen('TextSize', w, textsize);
+Screen(w, 'FillRect', black);
+DrawFormattedText(w,[
+    'You have finished training camp and are ready for to win prizes on your big quest.' ...
+    ],'center','center', white, [], [], [], 1.6);
+Screen(w, 'Flip');
+WaitSecs(1);;
+task_func.advance_screen(input_source);
+
+Screen('TextSize', w, textsize);
+Screen(w, 'FillRect', black);
+DrawFormattedText(w,[
+    'When you are ready, ' initialization_struct.researcher ' will load the directions for winning prizes.' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
 WaitSecs(1);;

@@ -209,14 +209,14 @@ Screen('TextSize', w, textsize);
 % 1 - Intro
 DrawFormattedText(w,[
     'Now that you are an experienced Space Captain,' '\n' ...
-    'it is time to go on a quest for space treasure.' ...
+    'it is time to go on your big quest for space treasure.' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
 task_func.advance_screen(input_source);
 
 DrawFormattedText(w,[
-    'Each time you find space treasure on your quest,' '\n' ...
+    'Each time you find space treasure on during your big quest,' '\n' ...
     'you will be able to trade it with ' initialization_struct.researcher ' for prizes!' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
@@ -900,6 +900,24 @@ for trial = 1:trials
       end
   end % close the if/else for state
 end % close the entire for loop
+
+Screen('TextSize', w, textsize);
+Screen(w, 'FillRect', black);
+DrawFormattedText(w,[
+    'Let''s start the big quest!' ...
+    ],'center','center', white, [], [], [], 1.6);
+Screen(w, 'Flip');
+WaitSecs(1);;
+task_func.advance_screen(input_source);
+
+Screen('TextSize', w, textsize);
+Screen(w, 'FillRect', black);
+DrawFormattedText(w,[
+    'When you are ready, ' initialization_struct.researcher ' will load the big quest.' ...
+    ],'center','center', white, [], [], [], 1.6);
+Screen(w, 'Flip');
+WaitSecs(1);;
+task_func.advance_screen(input_source);
 
 ShowCursor;
 Screen('CloseAll');
