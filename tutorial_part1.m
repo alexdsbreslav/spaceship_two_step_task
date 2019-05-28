@@ -5,7 +5,7 @@ function exit_flag = tutorial_part1(initialization_struct)
 
 % ---- Initial set up
 % capture screenshots
-img_collect_on = 1;
+img_collect_on = 0;
 img_idx = 1;
 
 % ---- how long to wait before allowing key press
@@ -465,6 +465,17 @@ Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
 task_func.advance_screen(input_source);
 
+Screen('DrawTexture', w, B2, [], alien_win);
+Screen('DrawTexture', w, treasure, [], treasure_win);
+DrawFormattedText(w, 'Win!', 'center', rect(4)*0.8, white);
+Screen('FillRect', w, black, txt_bg);
+DrawFormattedText(w,[
+    'Let''s return home so we can try again!' ...
+    ],'center','center', white, [], [], [], 1.6, [], txt_bg);
+Screen('Flip',w);
+WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+task_func.advance_screen(input_source);
+
 % countdown to next trial
 for i = 1:50
     % ---- space exploration page
@@ -653,7 +664,7 @@ Screen('FrameRect',w,frame_color,alien_Lframe,10);
 Screen('FrameRect',w,frame_color,alien_Rframe,10);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Now you choose which spceship you want to explore the galaxy.'
+    'Now you choose which spaceship you want to explore the galaxy.'
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -768,6 +779,11 @@ Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
 task_func.advance_screen(input_source);
 
+if choice_loc == L
+    Screen('DrawTexture', w, A2, [], alien_win);
+elseif choice_loc == R
+    Screen('DrawTexture', w, B2, [], alien_win);
+end
 Screen('DrawTexture', w, treasure, [], treasure_win);
 DrawFormattedText(w, 'Win!', 'center', rect(4)*0.8, white);
 Screen('FillRect', w, black, txt_bg);

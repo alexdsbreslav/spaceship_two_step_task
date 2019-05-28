@@ -4,7 +4,7 @@
 function exit_flag = tutorial_v4(initialization_struct)
 % ---- Initial set up
 % capture screenshots
-img_collect_on = 1;
+img_collect_on = 0;
 img_idx = 100;
 
 % ---- how long to wait before allowing key press

@@ -3,6 +3,55 @@
 
 function start
 
+% -----------------------------------Settings-----------------------------------
+% ------------------------------------------------------------------------------
+
+% this is the file path for the raw data directory
+pc_file_path = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
+mac_file_path = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % this is set up to use on Alex's personal computer
+
+% this is where you define your input - touchscreen, USB keyboard, bluetooth keyboard etc.
+input_to_use_during_experiment = 6; % 0 = the internal keyboard;  1 = touchscreen; 6 = a USB attached keyboard
+
+% define the names of the foods; 5 salty foods followed by 5 sweet foods
+foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'};
+
+% define the names of the stickers and tattoos; 5 sticker names followed by five tattoo names
+stickers_tattoos = {'s1', 's2', 's3', 's4', 's5', 't1', 't2', 't3', 't4', 't5'};
+
+% define the names of the researchers
+researchers = {'Alesha', 'Julie', 'Logan', 'Tatyana', 'Other'}; % list the names of the researchers; do not remove 'other' option
+researchers_idx = [1 2 3 4 5]; % there should be a number for each option
+researchers_text = ['\n\n' ...
+  'What is the name of the researcher conducting the study?' '\n' ...
+  '1 = Alesha' '\n' ...
+  '2 = Julie' '\n' ...
+  '3 = Logan' '\n' ...
+  '4 = Tatyana' '\n' ...
+  '5 = Other' '\n' ...
+  'Response: ' ]); % the list and index numbers above need to match the text here perfectly!
+
+% define the number of trials
+test_practice_trials = 2;
+test_main_task_trials = 2;
+
+experiment_practice_trials = 10;
+experiment_main_task_trials = 150;
+
+% Text formatting specifications
+textsize = 40;
+textsize_feedback = 50;
+textsize_tickets = 140;
+
+% loading bar formatting
+load_bar_dimensions = [400, 15];
+
+% iti distributions N~(mean, sd)
+win_iti = [5, 0.5];
+loss_iti = [3, 0.5];
+
+% ------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 test = 99;
 while ~ismember(test, [0 1])
     test = input(['\n\n' ...
@@ -25,8 +74,8 @@ if test == 1
     % ------------------------------------------------------------------------------
     % ---- Flexible parameters that need to be checked
     % ---- Task specificiations
-    num_trials_practice = 5;
-    num_trials_main_task = 5;
+    num_trials_practice = test_practice_trials;
+    num_trials_main_task = test_main_task_trials;
 
     % --- File specifications
     % --- get input from user on comptuer system
@@ -44,10 +93,10 @@ if test == 1
     end
 
     if comp_os == 1
-      file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % for Alex's computer
+      file_root = mac_file_path; % for Alex's computer
       sl = '/'; % for OSX
     else
-      file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % for the eye-tracker
+      file_root = pc_file_path; % for the eye-tracker
       sl = '\'; % for Windows
     end
 
@@ -56,38 +105,26 @@ if test == 1
           input_source = 6;
       else
           input_source = 99;
-          while ~ismember(input_source, [0 1])
+          while ~ismember(input_source, [0 1 6])
               input_source = input(['\n\n' ...
                 'Are you using a keyboard or touchscreen?' '\n' ...
                 '0 = Keyboard' '\n' ...
+                '6 = External Keyboard' '\n' ...
                 '1 = Touchscreen' '\n' ...
                 'Response: ' ]);
 
-                if ~ismember(input_source, [0 1])
+                if ~ismember(input_source, [0 1 6])
                     disp('Invalid entry, please try again.')
                 end
           end
       end
 else
-    num_trials_practice = 10;
-    num_trials_main_task = 150;
-    file_root = '\Users\ads48\Documents\MDT project files\run1\raw data\matlab'; % for the eye-tracker
+    num_trials_practice = experiment_practice_trials;
+    num_trials_main_task = experiment_main_task_trials;
+    file_root = pc_file_path; % for the eye-tracker
     sl = '\'; % for Windows
-    input_source = 1;
+    input_source = input_to_use_during_experiment;
 end
-
-
-% ---- Text formatting specifications
-textsize = 40;
-textsize_feedback = 50;
-textsize_tickets = 140;
-
-% ---- loading bar formatting
-load_bar_dimensions = [400, 15];
-
-% ---- iti distributions N~(mean, sd)
-win_iti = [5, 0.5];
-loss_iti = [3, 0.5];
 
 % ------------------------------------------------------------------------------
 % ------------------------------------------------------------------------------
@@ -162,19 +199,11 @@ if start_where <= 1;
     initialization_struct = struct;
 
     % Identify the researcher
-    researchers = {'Alesha', 'Julie', 'Logan', 'Tatyana', 'Other'};
     researcher = 99;
-    while ~ismember(researcher, [1 2 3 4 5])
-        researcher = input(['\n\n' ...
-          'What is the name of the researcher conducting the study?' '\n' ...
-          '1 = Alesha' '\n' ...
-          '2 = Julie' '\n' ...
-          '3 = Logan' '\n' ...
-          '4 = Tatyana' '\n' ...
-          '5 = Other' '\n' ...
-          'Response: ' ]);
+    while ~ismember(researcher, researchers_idx)
+        researcher = input(researchers_text);
 
-        if ~ismember(researcher, [1 2 3 4 5])
+        if ~ismember(researcher, researchers_idx)
             disp('Invalid entry, please try again.')
         end
 
@@ -203,7 +232,6 @@ if start_where <= 1;
 
     if condition == 1
         % pick salty food
-        foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'};
         food_salt = 99;
         while ~ismember(food_salt, [1 2 3 4 5])
             food_salt = input(['Select the salty food for this participant.' '\n' ...
@@ -255,7 +283,6 @@ if start_where <= 1;
         end
     else
         % pick sticker
-        stickers_tattoos = {'s1', 's2', 's3', 's4', 's5', 't1', 't2', 't3', 't4', 't5'};
         sticker = 99;
         while ~ismember(sticker, [1 2 3 4 5])
             sticker = input(['Select the stickers for this participant.' '\n' ...

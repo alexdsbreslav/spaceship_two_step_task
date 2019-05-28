@@ -630,7 +630,7 @@ task_func.advance_screen(input_source);
 Screen('TextSize', w, textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
-    'You have finished training camp and are ready for to win prizes on your big quest.' ...
+    'You have finished training camp and are ready to win prizes on your big quest.' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
 WaitSecs(1);;
