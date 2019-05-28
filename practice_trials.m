@@ -408,7 +408,6 @@ for trial = 1:trials
 
         % variable text that will change on the last trial of the game
         Screen('TextSize', w, textsize);
-        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,1), action(trial,4));
         iti_start(trial) = GetSecs - t0;
 
         % countdown to next trial
@@ -544,7 +543,6 @@ for trial = 1:trials
 
         % variable text that will change based on their reward choice and trial
         Screen('TextSize', w, textsize);
-        countdown_text = task_func.rewards_text(condition, block, trial, trials, payoff(trial,2), action(trial,4));
         iti_start(trial) = GetSecs - t0;
         % countdown to next trial
         for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)

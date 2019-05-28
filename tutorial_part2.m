@@ -5,7 +5,7 @@ function exit_flag = tutorial_v4(initialization_struct)
 % ---- Initial set up
 % capture screenshots
 img_collect_on = 1;
-img_idx = 1;
+img_idx = 100;
 
 % ---- how long to wait before allowing key press
 pause_to_read = 0.5;
@@ -257,7 +257,7 @@ Screen('TextSize', w, textsize_tickets);
 DrawFormattedText(w, '10', 'center', 'center', white, [],[],[],[],[], center_above_text);
 Screen('TextSize', w, textsize);DrawFormattedText(w,[
     'If you choose the tickets, the number of tickets shown will get added to your total.' '\n' ...
-    'At the end of the experiment, you will be able to use your tickets to buy a prize.' ...
+    'At the end of the game, you will be able to use your tickets to buy a prize.' ...
     ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -441,11 +441,42 @@ for trial = 1:trials
             Screen('FillRect', w, black, txt_bg);
             if condition == 1
                 DrawFormattedText(w,[
-                    'Let''s try trading your space treasure for a bite of the snacks.' ...
+                    'Look! You can trade your space treasure for snacks or ' num2str(tick(trial)) ' tickets.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             else
                 DrawFormattedText(w,[
-                    'Let''s try trading your space treasure for a sticker or tattoo.' ...
+                    'Look! You can trade your space treasure for stickers and tattoos or ' num2str(tick(trial)) ' tickets.' ...
+                    ],'center','center', white, [], [], [], 1.6, [], txt_bg);
+            end
+            Screen('Flip', w); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+            task_func.advance_screen(input_source);
+
+            % draw treasure to trade
+            Screen('TextSize', w, textsize_feedback);
+            Screen('DrawTexture', w, treasure, [], treasure_trade);
+            DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
+            % draw rewards
+            Screen('DrawTexture', w, reward_top, [], reward_top_point);
+            Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
+            % draw frames around rewards
+            Screen('FrameRect',w,frame_color,reward_top_frame,10);
+            Screen('FrameRect',w,frame_color,reward_bot_frame,10);
+            % draw number of tickets
+            Screen('TextSize', w, textsize_tickets);
+            if type == 0
+                DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
+            else
+                DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
+            end
+            Screen('TextSize', w, textsize);
+            Screen('FillRect', w, black, txt_bg);
+            if condition == 1
+                DrawFormattedText(w,[
+                    'Let''s trade your space treasure for a bite of the snacks.' ...
+                    ],'center','center', white, [], [], [], 1.6, [], txt_bg);
+            else
+                DrawFormattedText(w,[
+                    'Let''s trade your space treasure for a sticker or tattoo.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             end
             Screen('Flip', w); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -508,12 +539,12 @@ for trial = 1:trials
             Screen('TextSize', w, textsize);
             if condition == 1
                 DrawFormattedText(w,[
-                    'Make sure to eat your snack before your ship returns home!' ...
+                    'Make sure to eat your snack before your spaceship returns home!' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             else
-              DrawFormattedText(w,[
-                  'Make sure to collect your sticker or tattoo before your ship returns home!' ...
-                  ],'center','center', white, [], [], [], 1.6, [], txt_bg);
+                DrawFormattedText(w,[
+                    'Make sure to collect your sticker or tattoo before your spaceship returns home!' ...
+                    ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             end
 
             Screen('Flip', w);
@@ -683,6 +714,38 @@ for trial = 1:trials
       if payoff(trial, 2) == 1
       % ---- Draw trial screen
             % draw treasure to trade
+            Screen('TextSize', w, textsize_feedback);
+            Screen('DrawTexture', w, treasure, [], treasure_trade);
+            DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
+            % draw rewards
+            Screen('DrawTexture', w, reward_top, [], reward_top_point);
+            Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
+            % draw frames around rewards
+            Screen('FrameRect',w,frame_color,reward_top_frame,10);
+            Screen('FrameRect',w,frame_color,reward_bot_frame,10);
+            % draw number of tickets
+            Screen('TextSize', w, textsize_tickets);
+            if type == 0
+                DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
+            else
+                DrawFormattedText(w, num2str(tick(trial)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
+            end
+            Screen('TextSize', w, textsize);
+            Screen('FillRect', w, black, txt_bg);
+            if condition == 1
+                DrawFormattedText(w,[
+                    'Look! You can trade your space treasure for snacks or ' num2str(tick(trial)) ' tickets.' ...
+                    ],'center','center', white, [], [], [], 1.6, [], txt_bg);
+            else
+                DrawFormattedText(w,[
+                    'Look! You can trade your space treasure for stickers and tattoos or ' num2str(tick(trial)) ' tickets.' ...
+                    ],'center','center', white, [], [], [], 1.6, [], txt_bg);
+            end
+            Screen('Flip', w); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+            task_func.advance_screen(input_source);
+
+
+            % draw treasure to trade
             Screen('DrawTexture', w, treasure, [], treasure_trade);
             DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
             % draw original stimuli
@@ -702,7 +765,7 @@ for trial = 1:trials
             Screen('TextSize', w, textsize);
             Screen('FillRect', w, black, txt_bg);
             DrawFormattedText(w,[
-                'Now let''s try trading your space treasure for tickets.' ...
+                'Now let''s trade your space treasure for tickets.' ...
                 ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             Screen('Flip', w); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
 

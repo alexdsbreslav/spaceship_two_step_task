@@ -69,7 +69,7 @@ if test == 1
           end
       end
 else
-    num_trials_practice = 15;
+    num_trials_practice = 10;
     num_trials_main_task = 150;
     file_root = '\Users\ads48\Documents\MDT project files\run1\raw data\matlab'; % for the eye-tracker
     sl = '\'; % for Windows
@@ -434,35 +434,35 @@ if start_where <= 1;
 
 end
 
-% if start_where <= 2
-% % ---- 1: Tutorial
-%     exit_flag = tutorial_part1(initialization_struct);
-%
-%     if exit_flag == 1
-%         disp('The script was exited because ESCAPE was pressed')
-%         sca; return
-%     end
-% end
-%
-% if start_where <= 3
-% % ---- 2: practice trials (Block 0 in code)
-%     exit_flag = practice_trials(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
-%
-%     if exit_flag == 1
-%         disp('The script was exited because ESCAPE was pressed')
-%         sca; return
-%     end
-% end
+if start_where <= 2
+% ---- 1: Tutorial
+    exit_flag = tutorial_part1(initialization_struct);
 
-% if start_where <= 4
-% % ---- 1: Tutorial
-%     exit_flag = tutorial_part2(initialization_struct);
-%
-%     if exit_flag == 1
-%         disp('The script was exited because ESCAPE was pressed')
-%         sca; return
-%     end
-% end
+    if exit_flag == 1
+        disp('The script was exited because ESCAPE was pressed')
+        sca; return
+    end
+end
+
+if start_where <= 3
+% ---- 2: practice trials (Block 0 in code)
+    exit_flag = practice_trials(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
+
+    if exit_flag == 1
+        disp('The script was exited because ESCAPE was pressed')
+        sca; return
+    end
+end
+
+if start_where <= 4
+% ---- 1: Tutorial
+    exit_flag = tutorial_part2(initialization_struct);
+
+    if exit_flag == 1
+        disp('The script was exited because ESCAPE was pressed')
+        sca; return
+    end
+end
 
 if start_where <= 5
 % ---- 3: main experiment trials

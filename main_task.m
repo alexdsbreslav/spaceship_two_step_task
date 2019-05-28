@@ -30,7 +30,7 @@ PsychDefaultSetup(1);
 
 % ---- Screen selection
 screens = Screen('Screens'); %count the screen
-whichScreen = max(screens); %select the screen; ALTERED THIS BECAUSE IT KEPT SHOWING UP ON MY LAPTOP INSTEAD OF THE ATTACHED MONITOR
+whichScreen = max(screens); %select the screen;
 if test == 0
     [w, rect] = Screen('OpenWindow', whichScreen);
 else
@@ -267,13 +267,18 @@ for trial = 1:trials
                 'When you are ready, ' initialization_struct.researcher ' will unpause the game.' ...
                 ],'center', 'center', white, [], [], [], 1.6);
         else
-          DrawFormattedText(w, [
-              'Let''s pause the game and take a short break!' '\n' ...
-              'You''ve earned ' num2str(sum(tick(trial-trials/5:trial-1,7))) ' more tickets. Nice job!' '\n\n' ...
-              'This is a good time to take a drink of water.' '\n\n' ...
-              'When you are ready, ' initialization_struct.researcher ' will unpause the game.' ...
-              ],'center', 'center', white, [], [], [], 1.6);
+            DrawFormattedText(w, [
+                'Let''s pause the game and take a short break!' '\n' ...
+                'You''ve earned ' num2str(sum(tick(trial-trials/5:trial-1,7))) ' more tickets. Nice job!' '\n\n' ...
+                'This is a good time to take a drink of water.' '\n\n' ...
+                'When you are ready, ' initialization_struct.researcher ' will unpause the game.' ...
+                ],'center', 'center', white, [], [], [], 1.6);
         end
+
+        DrawFormattedText(w, [
+            trial/(trials/5) ' of 5' ...
+            ],rect(3)*.95, rect(4)*.95, white, [], [], [], 1.6);
+
         Screen(w, 'Flip');
         task_func.advance_screen(input_source)
     end
