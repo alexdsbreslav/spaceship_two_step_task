@@ -264,8 +264,8 @@ WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_str
 task_func.advance_screen(input_source);
 
 DrawFormattedText(w,[
-    'Let''s do three quick rounds to get the hang' '\n' ...
-    'of trading your space treasure for prizes!' ...
+    'Let''s practice exploring for space treasure three more times.' '\n'
+    'This time, we will trade your space treasure for prizes!' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -746,6 +746,7 @@ for trial = 1:trials
 
 
             % draw treasure to trade
+            Screen('TextSize', w, textsize_feedback);
             Screen('DrawTexture', w, treasure, [], treasure_trade);
             DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
             % draw original stimuli

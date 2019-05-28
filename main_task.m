@@ -43,6 +43,11 @@ textsize = initialization_struct.textsize;
 textsize_feedback = initialization_struct.textsize_feedback;
 textsize_tickets = initialization_struct.textsize_tickets;
 
+% ---- how long to wait before allowing key press
+pause_to_read = 0.5;
+explore_time = 1;
+feedback_time = 1;
+
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------

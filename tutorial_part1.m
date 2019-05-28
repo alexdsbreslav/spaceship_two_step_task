@@ -51,7 +51,7 @@ else
         state2_color = 'purple';
         state2_name = 'Pentarus';
         state3_color = 'red';
-        state3_name = 'Rigel'
+        state3_name = 'Rigel';
     else
         state2_color = 'green';
         state2_name = 'Gaspar';
@@ -270,7 +270,7 @@ Screen('DrawTexture', w, B2, [], four_aliens{2});
 Screen('DrawTexture', w, A3, [], four_aliens{3});
 Screen('DrawTexture', w, B3, [], four_aliens{4});
 DrawFormattedText(w,[
-    'These aliens each have their own have cave where they dig for space treasure.' ...
+    'These aliens each have their own cave where they dig for space treasure.' ...
     ],'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -413,7 +413,7 @@ Screen('FrameRect',w,white,alien_Lframe,10);
 Screen('FrameRect',w,white,alien_Rframe,10);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Now we can ask one alien if they have any space treasure to share from their cave.' ...
+    'Now we will ask one alien if they have space treasure to share.' ...
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -517,7 +517,7 @@ Screen('FrameRect',w,frame_color,alien_Lframe,10);
 Screen('FrameRect',w,frame_color,alien_Rframe,10);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Now let''s choose the spaceship on the right'
+    'Now let''s choose the spaceship on the right.'
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -563,7 +563,7 @@ Screen('FrameRect',w,white,alien_Lframe,10);
 Screen('FrameRect',w,white,alien_Rframe,10);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Now we can ask one alien if they have any space treasure to share from their cave.' ...
+    'Now we will ask one alien if they have space treasure to share.' ...
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -618,7 +618,7 @@ Screen('DrawTexture', w, B3, [], alien_lose);
 DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Let''s keep exploring to see if we can find more.' ...
+    'Let''s keep exploring to see if we can find more space treasure.' ...
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -732,7 +732,7 @@ Screen('FrameRect',w,white,alien_Lframe,10);
 Screen('FrameRect',w,white,alien_Rframe,10);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Choose an alien to see if they have any space treasure to share.' ...
+    'Now you ask one alien if they have space treasure to share.' ...
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -788,7 +788,7 @@ Screen('DrawTexture', w, treasure, [], treasure_win);
 DrawFormattedText(w, 'Win!', 'center', rect(4)*0.8, white);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Let''s return home so we can try one more time!' ...
+    'Let''s return home so we can try one more time.' ...
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -890,7 +890,7 @@ Screen('FrameRect',w,white,alien_Lframe,10);
 Screen('FrameRect',w,white,alien_Rframe,10);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'Choose an alien to see if they have any space treasure to share.' ...
+    'Now you ask one alien if they have space treasure to share.' ...
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -989,8 +989,7 @@ Screen('DrawTexture', w, B2, [], four_aliens{2});
 Screen('DrawTexture', w, A3, [], four_aliens{3});
 Screen('DrawTexture', w, B3, [], four_aliens{4});
 DrawFormattedText(w,[
-    'Each day the aliens go into their caves,' '\n' ...
-    'they may or may not be able to find space treasure to share with you.' ...
+    'Each day the aliens may or may not find space treasure to share with you.' ...
     ],'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -1014,8 +1013,16 @@ task_func.advance_screen(input_source);
 Screen('DrawTexture', w, A2, [], alien_miner);
 Screen('DrawTexture', w, mines_rich, [], mines);
 DrawFormattedText(w,[
-    'If an alien finds lots of space treasure at the top of' '\n' ...
-    'their cave, they will be able to share space treasure on most days.' ...
+    'If an alien finds lots of space treasure at the top of their cave...' '\n' ...
+    ],'center',rect(4)*0.8, white, [], [], [], 1.6);
+Screen('Flip',w);
+WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+task_func.advance_screen(input_source);
+
+Screen('DrawTexture', w, A2, [], alien_miner);
+Screen('DrawTexture', w, mines_rich, [], mines);
+DrawFormattedText(w,[
+    'they will be able to share space treasure on most days.' ...
     ],'center',rect(4)*0.8, white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
@@ -1024,7 +1031,15 @@ task_func.advance_screen(input_source);
 Screen('DrawTexture', w, B3, [], alien_miner);
 Screen('DrawTexture', w, mines_poor, [], mines);
 DrawFormattedText(w,[
-    'If an alien has to dig through lots of rock to find space treasure,' '\n' ...
+    'If an alien has to dig through lots of rock to find space treasure...' '\n' ...
+    ],'center',rect(4)*0.8, white, [], [], [], 1.6);
+Screen('Flip',w);
+WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+task_func.advance_screen(input_source);
+
+Screen('DrawTexture', w, B3, [], alien_miner);
+Screen('DrawTexture', w, mines_poor, [], mines);
+DrawFormattedText(w,[
     'they will not be able to share space treasure on most days.' ...
     ],'center',rect(4)*0.8, white, [], [], [], 1.6);
 Screen('Flip',w);
@@ -1238,8 +1253,8 @@ WaitSecs(pause_to_read); img_idx = task_func.get_img(img_idx, initialization_str
 task_func.advance_screen(input_source);
 
 DrawFormattedText(w,[
-    'Now it is time for your training quest.' '\n' ...
-    'We are going to explore this galaxy for 10 days.' '\n' ...
+    'Now it is time for your training quest.' '\n\n' ...
+    'We are going to explore this galaxy for 10 days.' '\n\n' ...
     'At the end of those 10 days, you will have completed training camp!' ...
     ], 'center','center', [], [], [], [], 1.6);
 Screen('Flip',w);
