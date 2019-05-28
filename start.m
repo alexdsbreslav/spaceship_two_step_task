@@ -3,17 +3,17 @@
 
 function start
 
+  % clear everything from the workspace; everything is saved in the init
+  Screen('CloseAll');
+  FlushEvents;
+
 % -----------------------------------Settings-----------------------------------
 % ------------------------------------------------------------------------------
+% testing or running the experiment?
+test = 1; % set to 1 for testing
+
 % ONLY SET = 1 DURING TESTING; collects screenshots
 img_collect_on = 0;
-
-% this is the file path for the raw data directory
-pc_file_path = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
-mac_file_path = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % this is set up to use on Alex's personal computer
-
-% this is where you define your input - touchscreen, USB keyboard, bluetooth keyboard etc.
-input_to_use_during_experiment = 6; % 0 = the internal keyboard;  1 = touchscreen; 6 = a USB attached keyboard
 
 % define the names of the foods; 5 salty foods followed by 5 sweet foods
 foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'};
@@ -52,82 +52,55 @@ load_bar_dimensions = [400, 15];
 win_iti = [5, 0.5];
 loss_iti = [3, 0.5];
 
+% ----------------------------defaults for testing------------------------------
 % ------------------------------------------------------------------------------
-% ------------------------------------------------------------------------------
-test = 99;
-while ~ismember(test, [0 1])
-    test = input(['\n\n' ...
-      'Is this a test?' '\n' ...
-      '1 = Yes' '\n' ...
-      '0 = No' '\n' ...
-      'Response: ' ]);
-
-    if ~ismember(test, [0 1])
-        disp('Invalid entry, please try again.')
-    end
-end
-
-% clear everything from the workspace; everything is saved in the initialization_struct
-Screen('CloseAll');
-FlushEvents;
-
 if test == 1
-    % ------------------------------------------------------------------------------
-    % ------------------------------------------------------------------------------
-    % ---- Flexible parameters that need to be checked
-    % ---- Task specificiations
-    num_trials_practice = test_practice_trials;
-    num_trials_main_task = test_main_task_trials;
+    testing_on_mac = 0; % testing on the PC, not mac (testing_on_mac = 1 for mac)
+    num_trials_practice = 2;
+    num_trials_main_task = 2;
 
-    % --- File specifications
-    % --- get input from user on comptuer system
-    comp_os = 99;
-    while ~ismember(comp_os, [0 1])
-        comp_os = input(['\n\n' ...
-          'Are you on a Mac or a PC?' '\n' ...
-          '1 = Mac' '\n' ...
-          '0 = PC' '\n' ...
-          'Response: ' ]);
-
-        if ~ismember(comp_os, [0 1])
-            disp('Invalid entry, please try again.')
-        end
-    end
-
-    if comp_os == 1
-      file_root = mac_file_path; % for Alex's computer
-      sl = '/'; % for OSX
+    if testing_on_mac == 1
+      file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % this is set up to use on Alex's personal computer
+      sl = '/'; % Mac convention for the slashes
+      input_source = 6; % external keyboard
     else
-      file_root = pc_file_path; % for the eye-tracker
-      sl = '\'; % for Windows
+      file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
+      sl = '\'; % PC convention for slashes
+      input_source = 0; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
     end
 
-    % using a touchscreen or keyboard?
-      if comp_os == 1
-          input_source = 6;
-      else
-          input_source = 99;
-          while ~ismember(input_source, [0 1 6])
-              input_source = input(['\n\n' ...
-                'Are you using a keyboard or touchscreen?' '\n' ...
-                '0 = Keyboard' '\n' ...
-                '6 = External Keyboard' '\n' ...
-                '1 = Touchscreen' '\n' ...
-                'Response: ' ]);
+    confirm = 99;
+    while ~ismember(confirm, [0 1])
+       confirm = input(['\n\n' ...
+       'You are running in test mode. Here are the options currently selected:' '\n\n' ...
+        num2str(testing_on_mac) '| 1 = Mac (OSX), 2 = PC (Windows)'  '\n' ...
+        num2str(input_source) '| 0 = Internal Keyboard, 1 = Touchscreen, 6 = External Keyboard'  '\n' ...
+        'Practice trials: ' num2str(num_trials_practice) '\n' ...
+        'Task trials: ' num2str(num_trials_main_task) '\n\n' ...
+        'Do these settings look good?' '\n'...
+         '0 = No, I need to fix something in settings.' '\n' ...
+         '1 = Yes, continue.' '\n' ...
+         'Response: ' ]);
 
-                if ~ismember(input_source, [0 1 6])
-                    disp('Invalid entry, please try again.')
-                end
-          end
-      end
+       if ~ismember(confirm, [0 1])
+         disp('Invalid entry, please try again.')
+       end
+    end
+
 else
-    num_trials_practice = experiment_practice_trials;
-    num_trials_main_task = experiment_main_task_trials;
-    file_root = pc_file_path; % for the eye-tracker
-    sl = '\'; % for Windows
-    input_source = input_to_use_during_experiment;
+% ----------------------------defaults for experiment---------------------------
+% ------------------------------------------------------------------------------
+    num_trials_practice = 10; % number of trials in the practice round
+    num_trials_main_task = 150; % number of trials in the main task
+    file_root = '\Users\THRIVING_Study\Documents\mdt_thriving\raw_data'; % file root to use during the main experimental testing
+    sl = '\'; % PC convention for slashes
+    input_source = 6; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
 end
 
+% ------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 % ------------------------------------------------------------------------------
 % ------------------------------------------------------------------------------
 
@@ -165,7 +138,7 @@ if sub_exists == 1
    return
 
 elseif sub_exists == 0
-    load([data_file_path sl 'initialization_structure.mat']);
+    load([data_file_path sl 'initure.mat']);
 
     start_where = 99;
     while ~ismember(start_where, [0 1 2 3 4 5])
@@ -198,7 +171,7 @@ else
 end
 
 if start_where <= 1;
-    initialization_struct = struct;
+    init = struct;
 
     % Identify the researcher
     researcher = 99;
@@ -250,8 +223,8 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.food_salt = foods{food_salt};
-        initialization_struct.sticker = NaN;
+        init.food_salt = foods{food_salt};
+        init.sticker = NaN;
 
         % pick sweet food
         food_sweet = 99;
@@ -270,18 +243,18 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.food_sweet = foods{food_sweet};
-        initialization_struct.tattoo = NaN;
+        init.food_sweet = foods{food_sweet};
+        init.tattoo = NaN;
         % sweet left when equal zero
-        initialization_struct.left_item = randi([0,1]);
+        init.left_item = randi([0,1]);
 
         % identify which food is left or right
-        if initialization_struct.left_item == 1
-            initialization_struct.left_item = initialization_struct.food_sweet;
-            initialization_struct.right_item = initialization_struct.food_salt;
+        if init.left_item == 1
+            init.left_item = init.food_sweet;
+            init.right_item = init.food_salt;
         else
-            initialization_struct.right_item = initialization_struct.food_sweet;
-            initialization_struct.left_item = initialization_struct.food_salt;
+            init.right_item = init.food_sweet;
+            init.left_item = init.food_salt;
         end
     else
         % pick sticker
@@ -301,8 +274,8 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.sticker = stickers_tattoos{sticker};
-        initialization_struct.food_salt = NaN;
+        init.sticker = stickers_tattoos{sticker};
+        init.food_salt = NaN;
 
         % pick tattoo
         tattoo = 99;
@@ -321,18 +294,18 @@ if start_where <= 1;
             end
         end
 
-        initialization_struct.tattoo = stickers_tattoos{tattoo};
-        initialization_struct.food_sweet = NaN;
+        init.tattoo = stickers_tattoos{tattoo};
+        init.food_sweet = NaN;
         % sweet left when equal zero
-        initialization_struct.left_item = randi([0,1]);
+        init.left_item = randi([0,1]);
 
         % identify which food is left or right
-        if initialization_struct.left_item == 1
-            initialization_struct.left_item = initialization_struct.sticker;
-            initialization_struct.right_item = initialization_struct.tattoo;
+        if init.left_item == 1
+            init.left_item = init.sticker;
+            init.right_item = init.tattoo;
         else
-            initialization_struct.right_item = initialization_struct.tattoo;
-            initialization_struct.left_item = initialization_struct.sticker;
+            init.right_item = init.tattoo;
+            init.left_item = init.sticker;
         end
     end
 
@@ -352,8 +325,8 @@ if start_where <= 1;
     end
 
     % save whether this is a test or not
-    initialization_struct.test = test;
-    initialization_struct.input_source = input_source;
+    init.test = test;
+    init.input_source = input_source;
 
     % shuffle the rng and save the seed
     rng('shuffle');
@@ -361,24 +334,24 @@ if start_where <= 1;
     init_rng_seed = init_rng_seed.Seed;
 
     % create stimuli structure
-    initialization_struct.sub = sub; % save the subject number into the structure
-    initialization_struct.data_file_path = data_file_path; % save the data file path as well
-    initialization_struct.rng_seed = init_rng_seed; % save the rng seed for the initialization_structure
+    init.sub = sub; % save the subject number into the structure
+    init.data_file_path = data_file_path; % save the data file path as well
+    init.rng_seed = init_rng_seed; % save the rng seed for the initure
 
     if researcher == 5
-        initialization_struct.researcher = researcher_specify;
+        init.researcher = researcher_specify;
     else
-        initialization_struct.researcher = researchers{researcher}; % save the name of the researcher who conducted the study
+        init.researcher = researchers{researcher}; % save the name of the researcher who conducted the study
     end
 
     if condition == 1
-        initialization_struct.condition = 'food'; % save the condition that the subject was randomized into
+        init.condition = 'food'; % save the condition that the subject was randomized into
 
     else
-        initialization_struct.condition = 'sticker';
+        init.condition = 'sticker';
     end
     % bought snacks before task?
-    initialization_struct.purchase_early = purchase_early;
+    init.purchase_early = purchase_early;
 
     % stimuli sets
     spaceships = {'cornhusk', 'stingray', 'triangle', 'tripod'};
@@ -388,30 +361,30 @@ if start_where <= 1;
     step2_color = {'warm', 'cool'};
 
     % create shuffled arrays of each of the symbols and colors
-    initialization_struct.stim_color_step1 = step1_colors(randperm(numel(step1_colors)));
-    initialization_struct.stim_colors_step2 = step2_color_pairs(randperm(numel(step2_color_pairs)));
-    initialization_struct.stim_step2_color_select = step2_color(randperm(numel(step2_color)));
-    initialization_struct.spaceships = spaceships(randperm(numel(spaceships)));
-    initialization_struct.aliens = aliens(randperm(numel(aliens)));
+    init.stim_color_step1 = step1_colors(randperm(numel(step1_colors)));
+    init.stim_colors_step2 = step2_color_pairs(randperm(numel(step2_color_pairs)));
+    init.stim_step2_color_select = step2_color(randperm(numel(step2_color)));
+    init.spaceships = spaceships(randperm(numel(spaceships)));
+    init.aliens = aliens(randperm(numel(aliens)));
 
     % This was randomized when there was more than 1 block
     % however the code still uses this to differentiate between practice and main experiment
-    initialization_struct.block = [0 1];
+    init.block = [0 1];
 
     % input the number of trials per block; 1 = practice trials, 2 = experimental blocks
-    initialization_struct.num_trials = [num_trials_practice num_trials_main_task];
+    init.num_trials = [num_trials_practice num_trials_main_task];
 
     % set the file root and backslash vs. forwardslash convention
-    initialization_struct.file_root = file_root;
-    initialization_struct.slash_convention = sl;
+    init.file_root = file_root;
+    init.slash_convention = sl;
 
     % set the text formatting specs
-    initialization_struct.textsize = textsize;
-    initialization_struct.textsize_feedback = textsize_feedback;
-    initialization_struct.textsize_tickets = textsize_tickets;
+    init.textsize = textsize;
+    init.textsize_feedback = textsize_feedback;
+    init.textsize_tickets = textsize_tickets;
 
     % set the load bar formaating
-    initialization_struct.load_bar_dimensions = load_bar_dimensions;
+    init.load_bar_dimensions = load_bar_dimensions;
 
     % create the ITIs
     iti_init = zeros(150,6);
@@ -423,32 +396,32 @@ if start_where <= 1;
     iti_init(:,3:4) = floor(iti_init(:,1:2)*24) - 24;
     %number of pixels per frame
     iti_init(:,5:6) = (ones(150,2)*load_bar_dimensions(1))./iti_init(:,3:4);
-    initialization_struct.iti_init = iti_init;
+    init.iti_init = iti_init;
 
     % load the walk
     load(['walks.mat']);
     walk_idx = randi(length(walks.payoff_prob));
-    initialization_struct.walk_idx = walk_idx;
-    initialization_struct.payoff_prob = walks.payoff_prob(:,:,walk_idx);
-    initialization_struct.walk_seed = walks.seed(walk_idx);
-    initialization_struct.img_collect_on = img_collect_on;
-    initialization_struct.pause_to_read = 0.5;
-    initialization_struct.explore_time = 1;
-    initialization_struct.feedback_time = 1;
+    init.walk_idx = walk_idx;
+    init.payoff_prob = walks.payoff_prob(:,:,walk_idx);
+    init.walk_seed = walks.seed(walk_idx);
+    init.img_collect_on = img_collect_on;
+    init.pause_to_read = 0.5;
+    init.explore_time = 1;
+    init.feedback_time = 1;
 
-    save([data_file_path sl 'initialization_structure'], 'initialization_struct', '-v6');
+    save([data_file_path sl 'initure'], 'init', '-v6');
 
 
     % --- Double check everything
     double_check = 99;
     while ~ismember(double_check, [0 1])
         double_check = input(['\n\n' ...
-          'Researcher = ' initialization_struct.researcher '\n' ...
-          'Subject ID = ' num2str(initialization_struct.sub) '\n' ...
-          'Condition = ' initialization_struct.condition '\n' ...
-          'Left item = ' initialization_struct.left_item '\n' ...
-          'Right item = ' initialization_struct.right_item '\n' ...
-          'Number of bites/stickers purchased = ' num2str(initialization_struct.purchase_early) '\n\n' ...'
+          'Researcher = ' init.researcher '\n' ...
+          'Subject ID = ' num2str(init.sub) '\n' ...
+          'Condition = ' init.condition '\n' ...
+          'Left item = ' init.left_item '\n' ...
+          'Right item = ' init.right_item '\n' ...
+          'Number of bites/stickers purchased = ' num2str(init.purchase_early) '\n\n' ...'
           '0 = I need to fix something; restart the function.' '\n' ...
           '1 = This is correct; continue.' '\n' ...
           'Response: ' ]);
@@ -469,7 +442,7 @@ end
 
 if start_where <= 2
 % ---- 1: Tutorial
-    exit_flag = tutorial_part1(initialization_struct);
+    exit_flag = tutorial_part1(init);
 
     if exit_flag == 1
         disp('The script was exited because ESCAPE was pressed')
@@ -479,7 +452,7 @@ end
 
 if start_where <= 3
 % ---- 2: practice trials (Block 0 in code)
-    exit_flag = practice_trials(initialization_struct, initialization_struct.num_trials(1), initialization_struct.block(1));
+    exit_flag = practice_trials(init, init.num_trials(1), init.block(1));
 
     if exit_flag == 1
         disp('The script was exited because ESCAPE was pressed')
@@ -489,7 +462,7 @@ end
 
 if start_where <= 4
 % ---- 1: Tutorial
-    exit_flag = tutorial_part2(initialization_struct);
+    exit_flag = tutorial_part2(init);
 
     if exit_flag == 1
         disp('The script was exited because ESCAPE was pressed')
@@ -502,18 +475,18 @@ if start_where <= 5
 % ---- space prepped?
     reward_bowl_prep = 99;
     while ~ismember(reward_bowl_prep, [0 1])
-        if strcmp(initialization_struct.condition, 'food')
+        if strcmp(init.condition, 'food')
           reward_bowl_prep = input(['\n\n' ...
-            'Left Food = ' initialization_struct.left_item '\n'...
-            'Right Food = ' initialization_struct.right_item '\n\n' ...
+            'Left Food = ' init.left_item '\n'...
+            'Right Food = ' init.right_item '\n\n' ...
             '**Left and right is from the participant''s perspective**' '\n\n' ...
             '1 = Food is set up/participant has water; continue.' '\n' ...
             '0 = I need to fix something; exit the script.' '\n' ...
             'Response: ' ]);
         else
           reward_bowl_prep = input(['\n\n' ...
-            'Left Bowl = ' initialization_struct.left_item '\n'...
-            'Right Bowl = ' initialization_struct.right_item '\n\n' ...
+            'Left Bowl = ' init.left_item '\n'...
+            'Right Bowl = ' init.right_item '\n\n' ...
             '**Left and right is from the participant''s perspective**' '\n\n' ...
             '1 = Bowls are set up; continue.' '\n' ...
             '0 = I need to fix something; exit the script.' '\n' ...
@@ -533,7 +506,7 @@ if start_where <= 5
     end
 
 % --- run the task
-    exit_flag = main_task(initialization_struct, initialization_struct.num_trials(2), initialization_struct.block(2));
+    exit_flag = main_task(init, init.num_trials(2), init.block(2));
 
     if exit_flag == 1
         disp('The script was exited because ESCAPE was pressed')
@@ -543,8 +516,8 @@ end
 %
 % --- display winnings
 load([data_file_path sl 'task.mat']);
-task_func.output_for_food_choice(initialization_struct);
+task_func.output_for_food_choice(init);
 disp([fprintf('\n\n\n') ...
-'The participant earned ' num2str(task_struct.ticket_sum) ' tickets'])
+'The participant earned ' num2str(task.ticket_sum) ' tickets'])
 
 end

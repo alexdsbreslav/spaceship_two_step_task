@@ -1,25 +1,25 @@
 % Please do not share or use this code without my written permission.
 % Author: Alex Breslav
 
-function exit_flag = practice_trials(initialization_struct, trials, block)
+function exit_flag = practice_trials(init, trials, block)
 
 % 1 - Initial setup
 format shortg
 exit_flag = 0;
 
 % capture screenshots
-img_collect_on = initialization_struct.img_collect_on;
+img_collect_on = init.img_collect_on;
 img_idx = 200;
 
 % ---- file set up; enables flexibility between OSX and Windows
-sl = initialization_struct.slash_convention;
+sl = init.slash_convention;
 
 % ---- test or not?
-test = initialization_struct.test;
-input_source = initialization_struct.input_source;
+test = init.test;
+input_source = init.input_source;
 
-% ---- shuffle the rng and save the seed
-rng('shuffle');
+% ---- use the rng seed from the initalization; this ensures that every practice round starts the same
+rng(init.rng_seed);
 rng_seed = rng;
 rng_seed = rng_seed.Seed;
 
@@ -43,9 +43,9 @@ else
 end
 
 % --- font sizes
-textsize = initialization_struct.textsize;
-textsize_feedback = initialization_struct.textsize_feedback;
-textsize_tickets = initialization_struct.textsize_tickets;
+textsize = init.textsize;
+textsize_feedback = init.textsize_feedback;
+textsize_tickets = init.textsize_tickets;
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -104,37 +104,37 @@ return_home = Screen('MakeTexture', w, return_home);
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % --- spaceships
-A1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-   char(initialization_struct.spaceships(1)) sl 'docked.png'],'png');
-B1 = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-   char(initialization_struct.spaceships(2)) sl 'docked.png'],'png');
+A1 = imread(['stimuli' sl 'spaceships' sl char(init.stim_color_step1(1)) sl ...
+   char(init.spaceships(1)) sl 'docked.png'],'png');
+B1 = imread(['stimuli' sl 'spaceships' sl char(init.stim_color_step1(1)) sl ...
+   char(init.spaceships(2)) sl 'docked.png'],'png');
 
-A1_out = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-   char(initialization_struct.spaceships(1)) sl 'out.png'],'png');
-A1_return = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-   char(initialization_struct.spaceships(1)) sl 'return.png'],'png');
+A1_out = imread(['stimuli' sl 'spaceships' sl char(init.stim_color_step1(1)) sl ...
+   char(init.spaceships(1)) sl 'out.png'],'png');
+A1_return = imread(['stimuli' sl 'spaceships' sl char(init.stim_color_step1(1)) sl ...
+   char(init.spaceships(1)) sl 'return.png'],'png');
 
-B1_out = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-   char(initialization_struct.spaceships(2)) sl 'out.png'],'png');
-B1_return = imread(['stimuli' sl 'spaceships' sl char(initialization_struct.stim_color_step1(1)) sl ...
-   char(initialization_struct.spaceships(2)) sl 'return.png'],'png');
+B1_out = imread(['stimuli' sl 'spaceships' sl char(init.stim_color_step1(1)) sl ...
+   char(init.spaceships(2)) sl 'out.png'],'png');
+B1_return = imread(['stimuli' sl 'spaceships' sl char(init.stim_color_step1(1)) sl ...
+   char(init.spaceships(2)) sl 'return.png'],'png');
 
 % ---- aliens
-A2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-  char(initialization_struct.aliens(1)) '.png'],'png');
-B2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl ...
-  char(initialization_struct.aliens(2)) '.png'],'png');
+A2 = imread(['stimuli' sl 'aliens' sl char(init.stim_colors_step2(1)) sl char(init.stim_step2_color_select(1)) sl ...
+  char(init.aliens(1)) '.png'],'png');
+B2 = imread(['stimuli' sl 'aliens' sl char(init.stim_colors_step2(1)) sl char(init.stim_step2_color_select(1)) sl ...
+  char(init.aliens(2)) '.png'],'png');
 
-A3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-  char(initialization_struct.aliens(3)) '.png'],'png');
-B3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl ...
-  char(initialization_struct.aliens(4)) '.png'],'png');
+A3 = imread(['stimuli' sl 'aliens' sl char(init.stim_colors_step2(1)) sl char(init.stim_step2_color_select(2)) sl ...
+  char(init.aliens(3)) '.png'],'png');
+B3 = imread(['stimuli' sl 'aliens' sl char(init.stim_colors_step2(1)) sl char(init.stim_step2_color_select(2)) sl ...
+  char(init.aliens(4)) '.png'],'png');
 
   % read and draw background stimuli
-  space = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl 'space.png'],'png');
+  space = imread(['stimuli' sl 'aliens' sl char(init.stim_colors_step2(1)) sl 'space.png'],'png');
   planet_home = imread(['stimuli' sl 'home_planet.png'],'png');
-  planet_2 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(1)) sl 'planet.png'],'png');
-  planet_3 = imread(['stimuli' sl 'aliens' sl char(initialization_struct.stim_colors_step2(1)) sl char(initialization_struct.stim_step2_color_select(2)) sl 'planet.png'],'png');
+  planet_2 = imread(['stimuli' sl 'aliens' sl char(init.stim_colors_step2(1)) sl char(init.stim_step2_color_select(1)) sl 'planet.png'],'png');
+  planet_3 = imread(['stimuli' sl 'aliens' sl char(init.stim_colors_step2(1)) sl char(init.stim_step2_color_select(2)) sl 'planet.png'],'png');
 
   space = Screen('MakeTexture', w, space);
   planet_home = Screen('MakeTexture', w, planet_home);
@@ -183,7 +183,7 @@ payoff = NaN(trials,2);
 
 iti_selected = zeros(trials, 1);
 iti_actual = zeros(trials, 1);
-condition = initialization_struct.condition;
+condition = init.condition;
 
 % ---- Waiting screen
 Screen('FillRect', w, black);
@@ -200,7 +200,7 @@ DrawFormattedText(w,[
     'When you are ready, the experimenter will start the training quest.' '\n' ...
     'You will have 10 days to explore this galaxy.'....
     ], 'center','center', white, [], [], [], 1.6);
-Screen('Flip',w); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
+Screen('Flip',w); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
 task_func.advance_screen(input_source)
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -279,14 +279,14 @@ for trial = 1:trials
     end
 
     % ---- wait 1 second on the feedback screen
-    WaitSecs(1);
+    WaitSecs(feedback_time);
 
     % ---- space exploration page
     Screen('DrawTexture', w, space, [], space_bg);
     ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'out');
     Screen('DrawTexture', w, ship, [], spaceship_out);
     Screen('Flip', w);
-    WaitSecs(1);
+    WaitSecs(explore_time);
 
 
     % ---- Determine the state for the second state
@@ -355,13 +355,13 @@ for trial = 1:trials
         [action(trial,2), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
 
         if action(trial,2) == 0
-            if payoff_det(trial, 1) <  initialization_struct.payoff_prob(trial,1)
+            if payoff_det(trial, 1) <  init.payoff_prob(trial,1)
                 payoff(trial,1) = 1;
             else
                 payoff(trial,1) = 0;
             end
         elseif action(trial,2) == 1
-            if payoff_det(trial, 2) <  initialization_struct.payoff_prob(trial,2)
+            if payoff_det(trial, 2) <  init.payoff_prob(trial,2)
                 payoff(trial,1) = 1;
             else
                 payoff(trial,1) = 0;
@@ -380,7 +380,7 @@ for trial = 1:trials
           Screen('FrameRect',w,white,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(1);
+          WaitSecs(feedback_time);
 
        elseif choice_loc == R
           % draw background
@@ -393,7 +393,7 @@ for trial = 1:trials
           Screen('FrameRect',w,chosen_color,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(1);
+          WaitSecs(feedback_time);
         end
 
         % ---- payoff screen
@@ -408,14 +408,14 @@ for trial = 1:trials
             DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
         end
         Screen('Flip', w);
-        WaitSecs(1);
+        WaitSecs(feedback_time);
 
         % variable text that will change on the last trial of the game
         Screen('TextSize', w, textsize);
         iti_start(trial) = GetSecs - t0;
 
         % countdown to next trial
-        for i = 1:initialization_struct.iti_init(trial, payoff(trial,1)+3)
+        for i = 1:init.iti_init(trial, payoff(trial,1)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
             ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
@@ -427,22 +427,22 @@ for trial = 1:trials
                 ], 'center', 'center', white, [], [], [], 1.6);
 
             % load bar fill calculation
-            fill_width = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+5) * i;
+            fill_width = init.iti_init(trial, nansum(payoff(trial,:))+5) * i;
 
             % fill for the load bar
             Screen('FillRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,fill_width, initialization_struct.load_bar_dimensions(2)], hor_align - initialization_struct.load_bar_dimensions(1)/2 + fill_width/2, ver_align));
+            CenterRectOnPoint([0,0,fill_width, init.load_bar_dimensions(2)], hor_align - init.load_bar_dimensions(1)/2 + fill_width/2, ver_align));
 
            % outline for the load bar
             Screen('FrameRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,initialization_struct.load_bar_dimensions(1),initialization_struct.load_bar_dimensions(2)], hor_align, ver_align), 3);
+            CenterRectOnPoint([0,0,init.load_bar_dimensions(1),init.load_bar_dimensions(2)], hor_align, ver_align), 3);
 
            Screen(w, 'Flip');
            waitfor(rate_obj);
         end
 
         iti_actual(trial) = GetSecs - t0 - iti_start(trial);
-        iti_selected(trial) = initialization_struct.iti_init(trial, payoff(trial,1)+1);
+        iti_selected(trial) = init.iti_init(trial, payoff(trial,1)+1);
 
 
     % -----------------------------------------------------------------------------
@@ -490,13 +490,13 @@ for trial = 1:trials
         [action(trial,3), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
 
         if action(trial,3) == 0
-            if payoff_det(trial, 3) <  initialization_struct.payoff_prob(trial,3)
+            if payoff_det(trial, 3) <  init.payoff_prob(trial,3)
                 payoff(trial,2) = 1;
             else
                 payoff(trial,2) = 0;
             end
         elseif action(trial,3) == 1
-            if payoff_det(trial, 4) <  initialization_struct.payoff_prob(trial,4)
+            if payoff_det(trial, 4) <  init.payoff_prob(trial,4)
                 payoff(trial,2) = 1;
             else
                 payoff(trial,2) = 0;
@@ -515,7 +515,7 @@ for trial = 1:trials
           Screen('FrameRect',w,white,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(1);
+          WaitSecs(feedback_time);
 
         elseif choice_loc == R
           % draw background
@@ -528,7 +528,7 @@ for trial = 1:trials
           Screen('FrameRect',w,chosen_color,alien_Rframe,10);
           Screen('Flip', w);
           % wait 1 second
-          WaitSecs(1);
+          WaitSecs(feedback_time);
         end
 
     % ---- payoff screen
@@ -543,13 +543,13 @@ for trial = 1:trials
             DrawFormattedText(w, 'Lose', 'center', rect(4)*0.8, white);
         end
         Screen('Flip', w);
-        WaitSecs(1);
+        WaitSecs(feedback_time);
 
         % variable text that will change based on their reward choice and trial
         Screen('TextSize', w, textsize);
         iti_start(trial) = GetSecs - t0;
         % countdown to next trial
-        for i = 1:initialization_struct.iti_init(trial, payoff(trial,2)+3)
+        for i = 1:init.iti_init(trial, payoff(trial,2)+3)
             % ---- space exploration page
             Screen('DrawTexture', w, return_home, [], space_bg);
             ship = task_func.drawspaceship(w, A1_out, A1_return, B1_out, B1_return, action(trial,1), 'return');
@@ -561,22 +561,22 @@ for trial = 1:trials
                 ], 'center', 'center', white, [], [], [], 1.6);
 
             % load bar fill calculation
-            fill_width = initialization_struct.iti_init(trial, nansum(payoff(trial,:))+5) * i;
+            fill_width = init.iti_init(trial, nansum(payoff(trial,:))+5) * i;
 
             % fill for the load bar
             Screen('FillRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,fill_width, initialization_struct.load_bar_dimensions(2)], hor_align - initialization_struct.load_bar_dimensions(1)/2 + fill_width/2, ver_align));
+            CenterRectOnPoint([0,0,fill_width, init.load_bar_dimensions(2)], hor_align - init.load_bar_dimensions(1)/2 + fill_width/2, ver_align));
 
            % outline for the load bar
             Screen('FrameRect',w, [255 255 255], ...
-            CenterRectOnPoint([0,0,initialization_struct.load_bar_dimensions(1),initialization_struct.load_bar_dimensions(2)], hor_align, ver_align), 3);
+            CenterRectOnPoint([0,0,init.load_bar_dimensions(1),init.load_bar_dimensions(2)], hor_align, ver_align), 3);
 
            Screen(w, 'Flip');
            waitfor(rate_obj);
         end
 
         iti_actual(trial) = GetSecs - t0 - iti_start(trial);
-        iti_selected(trial) = initialization_struct.iti_init(trial, payoff(trial,2)+1);
+        iti_selected(trial) = init.iti_init(trial, payoff(trial,2)+1);
     end % close the if/else for state
 end % close the entire for loop
 RestrictKeysForKbCheck([]);
@@ -586,35 +586,35 @@ RestrictKeysForKbCheck([]);
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % 9 - Saving data
-practice_struct = struct;
-practice_struct.rng_seed = rng_seed; % save the rng seed set at the top of the script
-practice_struct.subject = initialization_struct.sub;
-practice_struct.stim_color_step1 = initialization_struct.stim_color_step1(block+1); % stimuli are always selected where 1st item in array goes to practice, then money, then food
-practice_struct.stim_colors_step2 = initialization_struct.stim_colors_step2(block+1);
-practice_struct.position = position;
-practice_struct.action = action;
-practice_struct.click_coord = click_coord;
-practice_struct.on = choice_on_time;
-practice_struct.off = choice_off_time;
+practice = struct;
+practice.rng_seed = rng_seed; % save the rng seed set at the top of the script
+practice.subject = init.sub;
+practice.stim_color_step1 = init.stim_color_step1(block+1); % stimuli are always selected where 1st item in array goes to practice, then money, then food
+practice.stim_colors_step2 = init.stim_colors_step2(block+1);
+practice.position = position;
+practice.action = action;
+practice.click_coord = click_coord;
+practice.on = choice_on_time;
+practice.off = choice_off_time;
 
-practice_struct.on_datetime = choice_on_datetime;
-practice_struct.off_datetime = choice_off_datetime;
+practice.on_datetime = choice_on_datetime;
+practice.off_datetime = choice_off_datetime;
 
-practice_struct.rt = choice_off_time-choice_on_time;
-practice_struct.iti_start = iti_start;
-practice_struct.iti_actual = iti_actual;
-practice_struct.iti_selected = iti_selected;
-practice_struct.transition_prob = a;
-practice_struct.transition_det = r;
-practice_struct.payoff_det = payoff_det;
-practice_struct.payoff = payoff;
-practice_struct.state = state;
+practice.rt = choice_off_time-choice_on_time;
+practice.iti_start = iti_start;
+practice.iti_actual = iti_actual;
+practice.iti_selected = iti_selected;
+practice.transition_prob = a;
+practice.transition_det = r;
+practice.payoff_det = payoff_det;
+practice.payoff = payoff;
+practice.state = state;
 
 % ---- unique to this block
-practice_struct.block = find(initialization_struct.block == 0);
-practice_struct.spaceships = initialization_struct.spaceships(1:2);
-practice_struct.aliens = initialization_struct.aliens(1:4);
-save([initialization_struct.data_file_path sl 'practice'], 'practice_struct', '-v6');
+practice.block = find(init.block == 0);
+practice.spaceships = init.spaceships(1:2);
+practice.aliens = init.aliens(1:4);
+save([init.data_file_path sl 'practice'], 'practice', '-v6');
 
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
@@ -627,8 +627,8 @@ Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'Congratulations Space Captain, you are done the training quest!' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
-WaitSecs(1);;
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+WaitSecs(pause_to_read);;
 task_func.advance_screen(input_source);
 
 Screen('TextSize', w, textsize);
@@ -636,17 +636,17 @@ Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'You have finished training camp and are ready to win prizes on your big quest.' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
-WaitSecs(1);;
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+WaitSecs(pause_to_read);;
 task_func.advance_screen(input_source);
 
 Screen('TextSize', w, textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
-    'When you are ready, ' initialization_struct.researcher ' will load the directions for winning prizes.' ...
+    'When you are ready, ' init.researcher ' will load the directions for winning prizes.' ...
     ],'center','center', white, [], [], [], 1.6);
-Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, initialization_struct, img_collect_on, w);
-WaitSecs(1);
+Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, img_collect_on, w);
+WaitSecs(pause_to_read);
 task_func.advance_screen(input_source);
 
 ShowCursor;

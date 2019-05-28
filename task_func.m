@@ -314,10 +314,10 @@ classdef task_func
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
-        function img_idx = get_img(img_idx, initialization_struct, img_collect_on, w)
+        function img_idx = get_img(img_idx, init, img_collect_on, w)
             if img_collect_on == 1
                 imageArray = Screen('GetImage', w);
-                imwrite(imageArray, [initialization_struct.file_root '/tutorial_screen_' num2str(img_idx) '.jpg'], 'Quality', 50);
+                imwrite(imageArray, [init.file_root '/tutorial_screen_' num2str(img_idx) '.jpg'], 'Quality', 50);
                 img_idx = img_idx + 1;
             end
         end
@@ -326,21 +326,21 @@ classdef task_func
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
-        function output_for_food_choice(initialization_struct)
-            data_file_path = initialization_struct.data_file_path;
-            sl = initialization_struct.slash_convention;
+        function output_for_food_choice(init)
+            data_file_path = init.data_file_path;
+            sl = init.slash_convention;
 
             % load all of the necessary structures
             load([data_file_path sl 'task.mat']);
 
             % number of trials/size of the array
-            trials = initialization_struct.num_trials(2);
+            trials = init.num_trials(2);
             df = cell(trials, 9);
-            df(:, 1) = num2cell(initialization_struct.sub);
-            df(:, 2) = cellstr(initialization_struct.researcher);
-            df(:, 3) = cellstr(initialization_struct.condition);
-            df(:, 4) = cellstr(initialization_struct.left_item);
-            df(:, 5) = cellstr(initialization_struct.right_item);
+            df(:, 1) = num2cell(init.sub);
+            df(:, 2) = cellstr(init.researcher);
+            df(:, 3) = cellstr(init.condition);
+            df(:, 4) = cellstr(init.left_item);
+            df(:, 5) = cellstr(init.right_item);
             df(:, 6) = num2cell(1:trials);
             df(:, 7) = num2cell(nansum(task_struct.payoff, 2));
             df(:, 8) = num2cell((task_struct.action(:,4) - 1)*-1);
