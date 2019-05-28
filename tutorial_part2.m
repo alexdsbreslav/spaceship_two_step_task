@@ -201,7 +201,7 @@ WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.im
 task_func.advance_screen(init.input_source);
 
 DrawFormattedText(w,[
-    'Each time you find space treasure on during your big quest,' '\n' ...
+    'Each time you find space treasure during your big quest,' '\n' ...
     'you will be able to trade it with ' init.researcher ' for prizes!' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
@@ -229,8 +229,7 @@ if condition == 1
 else
   Screen('DrawTexture', w, im_reward_drawn, [], center_above_text);
   DrawFormattedText(w,[
-      'If you choose the stickers and tattoos, you will get to pick one' '\n' ...
-      'to add to your collection to take home.' ...
+      'If you choose the stickers and tattoos, you will get to pick one.'...
       ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 end
 Screen('Flip',w);
@@ -242,15 +241,26 @@ Screen('TextSize', w, init.textsize_tickets);
 DrawFormattedText(w, '10', 'center', 'center', white, [],[],[],[],[], center_above_text);
 Screen('Textsize', w, init.textsize);
 DrawFormattedText(w,[
-    'If you choose the tickets, the number of tickets shown will get added to your total.' '\n' ...
-    'At the end of the game, you will be able to use your tickets to buy a prize.' ...
+    'If you choose the tickets, you will get the number of tickets it says.' '\n' ...
+    'Right now, that is 10 tickets!' ...
+    ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
+Screen('Flip',w);
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
+
+Screen('DrawTexture', w, tickets_drawn, [], center_above_text);
+Screen('TextSize', w, init.textsize_tickets);
+DrawFormattedText(w, '10', 'center', 'center', white, [],[],[],[],[], center_above_text);
+Screen('Textsize', w, init.textsize);
+DrawFormattedText(w,[
+    'At the end of the game, you will be able to use all your tickets to buy a prize.' ...
     ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 task_func.advance_screen(init.input_source);
 
 DrawFormattedText(w,[
-    'Let''s practice exploring for space treasure three more times.' '\n'
+    'Let''s practice exploring for space treasure three more times.' '\n' ...
     'This time, we will trade your space treasure for prizes!' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
@@ -891,7 +901,7 @@ end % close the entire for loop
 Screen('Textsize', w, init.textsize);
 Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
-    'Let''s start the big quest!' ...
+    'Good job - you are ready to start the big quest!' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
 WaitSecs(1);;

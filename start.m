@@ -60,13 +60,13 @@ if test == 1
     num_trials_main_task = 2;
 
     if testing_on_mac == 1
-      file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % this is set up to use on Alex's personal computer
-      sl = '/'; % Mac convention for the slashes
-      input_source = 6; % external keyboard
+        file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % this is set up to use on Alex's personal computer
+        sl = '/'; % Mac convention for the slashes
+        input_source = 6; % external keyboard
     else
-      file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
-      sl = '\'; % PC convention for slashes
-      input_source = 0; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
+        file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
+        sl = '\'; % PC convention for slashes
+        input_source = 0; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
     end
 
     confirm = 99;
@@ -92,6 +92,7 @@ if test == 1
        'OK, you should restart the function to try again'])
        sca;
        return
+    end
 
 else
 % ----------------------------defaults for experiment---------------------------
@@ -144,7 +145,7 @@ if sub_exists == 1
    return
 
 elseif sub_exists == 0
-    load([data_file_path sl 'initure.mat']);
+    load([data_file_path sl 'init.mat']);
 
     start_where = 99;
     while ~ismember(start_where, [0 1 2 3 4 5])
@@ -342,7 +343,7 @@ if start_where <= 1;
     % create stimuli structure
     init.sub = sub; % save the subject number into the structure
     init.data_file_path = data_file_path; % save the data file path as well
-    init.rng_seed = init_rng_seed; % save the rng seed for the initure
+    init.rng_seed = init_rng_seed; % save the rng seed for the init
 
     if researcher == 5
         init.researcher = researcher_specify;
@@ -415,7 +416,7 @@ if start_where <= 1;
     init.explore_time = 1;
     init.feedback_time = 1;
 
-    save([data_file_path sl 'initure'], 'init', '-v6');
+    save([data_file_path sl 'init'], 'init', '-v6');
 
 
     % --- Double check everything

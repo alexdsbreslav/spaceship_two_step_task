@@ -1189,7 +1189,7 @@ Screen('FrameRect',w,frame_color,alien_Lframe,10);
 Screen('FrameRect',w,frame_color,alien_Rframe,10);
 Screen('FillRect', w, black, txt_bg);
 DrawFormattedText(w,[
-    'What questions for ' init.researcher ' do you have about the spaceships?' ...
+    'What questions do you have for ' init.researcher ' about the spaceships?' ...
     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
 WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);

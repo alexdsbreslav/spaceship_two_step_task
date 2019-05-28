@@ -208,7 +208,7 @@ for trial = 1:trials
 % ---- Signal a short break every 50 trials on blocks 1,2
     % ---- Drawimage indicators
     Screen(w, 'FillRect', black);
-    Screen('TextSize', w, init.init.textsize_feedback);
+    Screen('TextSize', w, init.textsize_feedback);
     position(trial,1) = round(rand); %randomizing images positions
     type = position(trial,1);
 
