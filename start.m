@@ -13,7 +13,7 @@ function start
 test = 1; % set to 1 for testing
 
 % ONLY SET = 1 DURING TESTING; collects screenshots
-img_collect_on = 0;
+img_collect_on = 1;
 
 % define the names of the foods; 5 salty foods followed by 5 sweet foods
 foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'};
@@ -55,7 +55,7 @@ loss_iti = [3, 0.5];
 % ----------------------------defaults for testing------------------------------
 % ------------------------------------------------------------------------------
 if test == 1
-    testing_on_mac = 0; % testing on the PC, not mac (testing_on_mac = 1 for mac)
+    testing_on_mac = 1; % testing on the PC, not mac (testing_on_mac = 1 for mac)
     num_trials_practice = 2;
     num_trials_main_task = 2;
 
@@ -77,6 +77,7 @@ if test == 1
         num2str(input_source) ' | 0 = Internal Keyboard, 1 = Touchscreen, 6 = External Keyboard'  '\n' ...
         'Practice trials: ' num2str(num_trials_practice) '\n' ...
         'Task trials: ' num2str(num_trials_main_task) '\n\n' ...
+        'Collecting screenshots on? ' num2str(img_collect_on) '\n\n' ...
         'Do these settings look good?' '\n'...
          '0 = No, I need to fix something in settings.' '\n' ...
          '1 = Yes, continue.' '\n' ...

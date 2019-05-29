@@ -1,4 +1,4 @@
-Collect a sticker or tattoo!classdef task_func
+classdef task_func
     methods(Static)
         function f = drawimage(w, A1, B1, A2, B2, A3, B3, type, state)
             if state == 1
@@ -352,7 +352,6 @@ Collect a sticker or tattoo!classdef task_func
             % print table to excel
             writetable(T, [data_file_path sl 'food_choice.xlsx']);
         end
-
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------

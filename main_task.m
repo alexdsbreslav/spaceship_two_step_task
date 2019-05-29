@@ -287,7 +287,7 @@ task_func.advance_screen(init.input_source);
 Screen('DrawTexture', w, space, [], space_bg);
 Screen('FillRect', w, black, txt_bg_center);
 DrawFormattedText(w,[
-    'This galaxy is home to Planet ' state2_name ' and Planet ' state3_name ...
+    'This galaxy is home to Planet ' state2_name ' and Planet ' state3_name '.' ...
     ], 'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
@@ -328,13 +328,11 @@ task_func.advance_screen(init.input_source);
 DrawFormattedText(w,[
     'Remember your training, Space Captain!' '\n' ...
     'All of the rules from the training quest are the same in this quest.' ...
-    ],'center','center', white, [], [], [], 1.6, [], txt_bg);
+    ],'center','center', white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 task_func.advance_screen(init.input_source);
 
-Screen('TextSize', w, init.textsize);
-Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'Before you start your quest, what questions do you have for ' init.researcher '?' ...
     ],'center','center', white, [], [], [], 1.6);
@@ -342,8 +340,6 @@ Screen(w, 'Flip'); img_idx = task_func.get_img(img_idx, init, init.img_collect_o
 WaitSecs(init.pause_to_read);
 task_func.advance_screen(init.input_source);
 
-Screen('TextSize', w, init.textsize);
-Screen(w, 'FillRect', black);
 DrawFormattedText(w,[
     'When you are ready, ' init.researcher ' will start the big quest.' ...
     ],'center','center', white, [], [], [], 1.6);

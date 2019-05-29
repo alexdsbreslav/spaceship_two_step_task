@@ -904,7 +904,7 @@ DrawFormattedText(w,[
     'Good job - you are ready to start the big quest!' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
-WaitSecs(1);;
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 task_func.advance_screen(init.input_source);
 
 Screen('Textsize', w, init.textsize);
@@ -913,7 +913,7 @@ DrawFormattedText(w,[
     'When you are ready, ' init.researcher ' will load the big quest.' ...
     ],'center','center', white, [], [], [], 1.6);
 Screen(w, 'Flip');
-WaitSecs(1);;
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 task_func.advance_screen(init.input_source);
 
 ShowCursor;
