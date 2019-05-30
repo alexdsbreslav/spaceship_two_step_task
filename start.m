@@ -64,20 +64,20 @@ if test == 1
     end
 
     confirm = 99;
-    while ~ismember(confirm, [0 1])
+    while isempty(confirm) || ~ismember(confirm, [0 1])
        confirm = input(['\n\n' ...
        'You are running in test mode. Here are the options currently selected:' '\n\n' ...
         num2str(testing_on_mac) ' | 1 = Mac (OSX), 0 = PC (Windows)'  '\n' ...
-        num2str(input_source) ' | 0 = Internal Keyboard, 1 = Touchscreen, 6 = External Keyboard'  '\n' ...
+        num2str(input_source) ' | 0 = Internal (or USB) Keyboard, 1 = Touchscreen, 6 = Bluetooth Keyboard'  '\n' ...
         'Practice trials: ' num2str(num_trials_practice) '\n' ...
-        'Task trials: ' num2str(num_trials_main_task) '\n\n' ...
+        'Task trials: ' num2str(num_trials_main_task) '\n' ...
         'Collecting screenshots on? ' num2str(img_collect_on) '\n\n' ...
         'Do these settings look good?' '\n'...
          '0 = No, I need to fix something in settings.' '\n' ...
          '1 = Yes, continue.' '\n' ...
          'Response: ' ]);
 
-       if ~ismember(confirm, [0 1])
+       if isempty(confirm) || ~ismember(confirm, [0 1])
          disp('Invalid entry, please try again.')
        end
     end
@@ -117,14 +117,14 @@ folder_already_exists = strcmp(msg, 'Directory already exists.');
 
 if folder_already_exists
   sub_exists = 99;
-  while ~ismember(sub_exists, [0 1])
+  while isempty(sub_exists) || ~ismember(sub_exists, [0 1])
      sub_exists = input(['\n\n' ...
      'Subject' filename_subnum ' already exists. Do you want to enter a new subject number?' '\n\n' ...
        '0 = No, I need to alter this subject''s data' '\n' ...
        '1 = Yes, I''ll restart and enter a new subject number.' '\n' ...
        'Response: ' ]);
 
-     if ~ismember(sub_exists, [0 1])
+     if isempty(sub_exists) || ~ismember(sub_exists, [0 1])
        disp('Invalid entry, please try again.')
      end
   end
@@ -143,7 +143,7 @@ elseif sub_exists == 0
     load([data_file_path sl 'init.mat']);
 
     start_where = 99;
-    while ~ismember(start_where, [0 1 2 3 4 5])
+    while isempty(start_where) || ~ismember(start_where, [0 1 2 3 4 5])
         start_where = input(['Where do you want to start?' '\n' ...
         'You will overwrite any existing data on and after the place you choose.' '\n\n' ...
         '0 = CANCEL and restart the function' '\n' ...
@@ -154,7 +154,7 @@ elseif sub_exists == 0
         '5 = Main Game' '\n' ...
         'Response: ']);
 
-        if ~ismember(start_where, [0 1 2 3 4 5])
+        if isempty(start_where) || ~ismember(start_where, [0 1 2 3 4 5])
           disp('Invalid entry, please try again.')
         end
     end
@@ -177,10 +177,10 @@ if start_where <= 1;
 
     % Identify the researcher
     researcher = 99;
-    while ~ismember(researcher, researchers_idx)
+    while isempty(researcher) || ~ismember(researcher, researchers_idx)
         researcher = input(researchers_text);
 
-        if ~ismember(researcher, researchers_idx)
+        if isempty(researcher) || ~ismember(researcher, researchers_idx)
             disp('Invalid entry, please try again.')
         end
 
@@ -195,14 +195,14 @@ if start_where <= 1;
 
     % Enter the condition that the subject is in
     condition = 99;
-    while ~ismember(condition, [1 2])
+    while isempty(condition) || ~ismember(condition, [1 2])
         condition = input(['\n\n' ...
           'What condition is this subject in?' '\n' ...
           '1 = Food Condition' '\n' ...
           '2 = Sticker Condition' '\n' ...
           'Response: ' ]);
 
-        if ~ismember(condition, [1 2])
+        if isempty(condition) || ~ismember(condition, [1 2])
             disp('Invalid entry, please try again.')
         end
     end
@@ -210,7 +210,7 @@ if start_where <= 1;
     if condition == 1
         % pick salty food
         food_salt = 99;
-        while ~ismember(food_salt, [1 2 3 4 5])
+        while isempty(food_salt) || ~ismember(food_salt, [1 2 3 4 5])
             food_salt = input(['Select the salty food for this participant.' '\n' ...
             'Please select one of the following foods.' '\n\n' ...
             '1 = ' foods{1} '\n' ...
@@ -220,7 +220,7 @@ if start_where <= 1;
             '5 = ' foods{5} '\n' ...
             'Response: ']);
 
-            if ~ismember(food_salt, [1 2 3 4 5])
+            if isempty(food_salt) || ~ismember(food_salt, [1 2 3 4 5])
                 disp('Invalid entry, please try again.')
             end
         end
@@ -230,7 +230,7 @@ if start_where <= 1;
 
         % pick sweet food
         food_sweet = 99;
-        while ~ismember(food_sweet, [6 7 8 9 10])
+        while isempty(food_sweet) || ~ismember(food_sweet, [6 7 8 9 10])
             food_sweet = input(['Select the sweet food for this participant.' '\n' ...
             'Please select one of the following foods.' '\n\n' ...
             '6 = ' foods{6} '\n' ...
@@ -240,7 +240,7 @@ if start_where <= 1;
             '10 = ' foods{10} '\n' ...
             'Response: ']);
 
-            if ~ismember(food_sweet, [6 7 8 9 10])
+            if isempty(food_sweet) || ~ismember(food_sweet, [6 7 8 9 10])
                 disp('Invalid entry, please try again.')
             end
         end
@@ -261,7 +261,7 @@ if start_where <= 1;
     else
         % pick sticker
         sticker = 99;
-        while ~ismember(sticker, [1 2 3 4 5])
+        while isempty(sticker) || ~ismember(sticker, [1 2 3 4 5])
             sticker = input(['Select the stickers for this participant.' '\n' ...
             'Please select one of the following stickers.' '\n\n' ...
             '1 = ' stickers_tattoos{1} '\n' ...
@@ -271,7 +271,7 @@ if start_where <= 1;
             '5 = ' stickers_tattoos{5} '\n' ...
             'Response: ']);
 
-            if ~ismember(sticker, [1 2 3 4 5])
+            if isempty(sticker) || ~ismember(sticker, [1 2 3 4 5])
                 disp('Invalid entry, please try again.')
             end
         end
@@ -281,7 +281,7 @@ if start_where <= 1;
 
         % pick tattoo
         tattoo = 99;
-        while ~ismember(tattoo, [6 7 8 9 10])
+        while isempty(tattoo) || ~ismember(tattoo, [6 7 8 9 10])
             tattoo = input(['Select the tattoos for this participant.' '\n' ...
             'Please select one of the following tattoos.' '\n\n' ...
             '6 = ' stickers_tattoos{6} '\n' ...
@@ -291,7 +291,7 @@ if start_where <= 1;
             '10 = ' stickers_tattoos{10} '\n' ...
             'Response: ']);
 
-            if ~ismember(tattoo, [6 7 8 9 10])
+            if isempty(tattoo) || ~ismember(tattoo, [6 7 8 9 10])
                 disp('Invalid entry, please try again.')
             end
         end
@@ -313,7 +313,7 @@ if start_where <= 1;
 
     % Input initial WTP for snack food or stickers
     purchase_early = 99;
-    while ~ismember(purchase_early, [0 1 2])
+    while isempty(purchase_early) || ~ismember(purchase_early, [0 1 2])
         purchase_early = input(['\n\n' ...
           'How many snacks did the subject buy?' '\n' ...
           '0 = Bought 0 bites/stickers, kept all 20 tickets' '\n' ...
@@ -321,7 +321,7 @@ if start_where <= 1;
           '2 = Bought 2 bites/stickers, kept 0 tickets' '\n' ...
           'Response: ' ]);
 
-        if ~ismember(purchase_early, [0 1 2])
+        if isempty(purchase_early) || ~ismember(purchase_early, [0 1 2])
             disp('Invalid entry, please try again.')
         end
     end
@@ -416,7 +416,7 @@ if start_where <= 1;
 
     % --- Double check everything
     double_check = 99;
-    while ~ismember(double_check, [0 1])
+    while isempty(double_check) || ~ismember(double_check, [0 1])
         double_check = input(['\n\n' ...
           'Researcher = ' init.researcher '\n' ...
           'NestID = ' num2str(init.sub) '\n' ...
@@ -428,7 +428,7 @@ if start_where <= 1;
           '1 = This is correct; continue.' '\n' ...
           'Response: ' ]);
 
-        if ~ismember(double_check, [0 1])
+        if isempty(double_check) || ~ismember(double_check, [0 1])
           disp('Invalid entry, please try again.')
         end
     end
@@ -466,7 +466,7 @@ if start_where <= 4
 % ---- 1: Tutorial
 % ---- space prepped?
     reward_bowl_prep = 99;
-    while ~ismember(reward_bowl_prep, [0 1])
+    while isempty(reward_bowl_prep) || ~ismember(reward_bowl_prep, [0 1])
         if strcmp(init.condition, 'food')
           reward_bowl_prep = input(['\n\n' ...
             'Left Food = ' init.left_item '\n'...
@@ -485,7 +485,7 @@ if start_where <= 4
             'Response: ' ]);
         end
 
-        if ~ismember(reward_bowl_prep, [0 1])
+        if isempty(reward_bowl_prep) || ~ismember(reward_bowl_prep, [0 1])
             disp('Invalid entry, please try again.')
         end
     end
