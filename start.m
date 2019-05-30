@@ -66,7 +66,7 @@ if test == 1
     else
         file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
         sl = '\'; % PC convention for slashes
-        input_source = 0; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
+        input_source = 6; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
     end
 
     confirm = 99;
