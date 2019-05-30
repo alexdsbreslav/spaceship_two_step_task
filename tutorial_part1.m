@@ -530,8 +530,8 @@ DrawFormattedText(w,[
     'Your spaceship is navigating the galaxy and will land shortly...'
     ],'center', 'center', white, [], [], [], 1.6, [], txt_bg);
 Screen('Flip',w);
-WaitSecs(3); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
-
+WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
+task_func.advance_screen(init.input_source);
 
 Screen('DrawTexture', w, planet_3, [], space_bg);
 Screen('DrawTexture', w, A3, [], alien_Lpoint);

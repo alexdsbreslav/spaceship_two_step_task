@@ -214,7 +214,7 @@ Screen('TextSize', w, init.textsize_tickets);
 DrawFormattedText(w, '10', 'center', 'center', white, [],[],[],[],[], right_above_text);
 Screen('Textsize', w, init.textsize);
 DrawFormattedText(w,[
-    'You can trade you space treasure for ' im_reward_txt ' or for tickets.' ...
+    'You can trade your space treasure for ' im_reward_txt ' or for tickets.' ...
     ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
@@ -468,11 +468,11 @@ for trial = 1:trials
             Screen('FillRect', w, black, txt_bg);
             if condition == 1
                 DrawFormattedText(w,[
-                    'Let''s trade your space treasure for a bite of the snacks.' ...
+                    'Let''s trade your space treasure for a bite of the snacks. Press the UP arrow.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             else
                 DrawFormattedText(w,[
-                    'Let''s trade your space treasure for a sticker or tattoo.' ...
+                    'Let''s trade your space treasure for a sticker or tattoo. Press the DOWN arrow.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             end
             Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
@@ -762,7 +762,7 @@ for trial = 1:trials
             Screen('Textsize', w, init.textsize);
             Screen('FillRect', w, black, txt_bg);
             DrawFormattedText(w,[
-                'Now let''s trade your space treasure for tickets.' ...
+                'Now let''s trade your space treasure for tickets. Press the DOWN arrow.' ...
                 ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 

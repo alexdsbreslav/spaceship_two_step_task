@@ -13,13 +13,14 @@ function start
 test = 1; % set to 1 for testing
 
 % ONLY SET = 1 DURING TESTING; collects screenshots
-img_collect_on = 1;
+img_collect_on = 0;
 
 % define the names of the foods; 5 salty foods followed by 5 sweet foods
 foods = {'CheezIts', 'Fritos', 'Goldfish', 'Popcorn', 'Poppables', 'Jellybeans', 'M&Ms', 'Reeses Pieces', 'Skittles', 'SweeTarts'};
 
 % define the names of the stickers and tattoos; 5 sticker names followed by five tattoo names
-stickers_tattoos = {'s1', 's2', 's3', 's4', 's5', 't1', 't2', 't3', 't4', 't5'};
+stickers_tattoos = {'Emoji Stickers', 'Animal Stickers', 'Monster Stickers', 'Flower Stickers', 'Dinosaur Stickers', ...
+'Animal Tattoos', 'Rose Tattoos', 'Foxjoy Tattoos', 'Alien Tattos', 'Konsait Tattoos'};
 
 % define the names of the researchers
 researchers = {'Alesha', 'Julie', 'Logan', 'Tatyana', 'Other'}; % list the names of the researchers; do not remove 'other' option
@@ -32,13 +33,6 @@ researchers_text = ['\n\n' ...
   '4 = Tatyana' '\n' ...
   '5 = Other' '\n' ...
   'Response: ' ]; % the list and index numbers above need to match the text here perfectly!
-
-% define the number of trials
-test_practice_trials = 2;
-test_main_task_trials = 2;
-
-experiment_practice_trials = 10;
-experiment_main_task_trials = 150;
 
 % Text formatting specifications
 textsize = 40;
@@ -55,7 +49,7 @@ loss_iti = [3, 0.5];
 % ----------------------------defaults for testing------------------------------
 % ------------------------------------------------------------------------------
 if test == 1
-    testing_on_mac = 1; % testing on the PC, not mac (testing_on_mac = 1 for mac)
+    testing_on_mac = 0; % testing on the PC, not mac (testing_on_mac = 1 for mac)
     num_trials_practice = 2;
     num_trials_main_task = 2;
 
@@ -66,7 +60,7 @@ if test == 1
     else
         file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
         sl = '\'; % PC convention for slashes
-        input_source = 6; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
+        input_source = 0; % keyboard (input_source = 1 for touchscreen)
     end
 
     confirm = 99;
@@ -102,7 +96,7 @@ else
     num_trials_main_task = 150; % number of trials in the main task
     file_root = '\Users\THRIVING_Study\Documents\mdt_thriving\raw_data'; % file root to use during the main experimental testing
     sl = '\'; % PC convention for slashes
-    input_source = 6; % internal keyboard (input_source = 6 for external keyboard; input_source = 1 for touchscreen)
+    input_source = 0; % keyboard (input_source = 1 for touchscreen)
 end
 
 % ------------------------------------------------------------------------------
@@ -112,7 +106,7 @@ end
 % ------------------------------------------------------------------------------
 % ------------------------------------------------------------------------------
 
-sub = input('Subject ID: '); %keep sub number as a string so we can validate easily below
+sub = input('NestID: '); %keep sub number as a string so we can validate easily below
 
 % create subject folder in the raw data folder
 filename_subnum = pad(num2str(sub), 4, 'left', '0');
@@ -425,7 +419,7 @@ if start_where <= 1;
     while ~ismember(double_check, [0 1])
         double_check = input(['\n\n' ...
           'Researcher = ' init.researcher '\n' ...
-          'Subject ID = ' num2str(init.sub) '\n' ...
+          'NestID = ' num2str(init.sub) '\n' ...
           'Condition = ' init.condition '\n' ...
           'Left item = ' init.left_item '\n' ...
           'Right item = ' init.right_item '\n' ...
@@ -470,16 +464,6 @@ end
 
 if start_where <= 4
 % ---- 1: Tutorial
-    exit_flag = tutorial_part2(init);
-
-    if exit_flag == 1
-        disp('The script was exited because ESCAPE was pressed')
-        sca; return
-    end
-end
-
-if start_where <= 5
-% ---- 3: main experiment trials
 % ---- space prepped?
     reward_bowl_prep = 99;
     while ~ismember(reward_bowl_prep, [0 1])
@@ -513,7 +497,16 @@ if start_where <= 5
         return
     end
 
-% --- run the task
+    exit_flag = tutorial_part2(init);
+
+    if exit_flag == 1
+        disp('The script was exited because ESCAPE was pressed')
+        sca; return
+    end
+end
+
+if start_where <= 5
+% ---- 3: main experiment trials
     exit_flag = main_task(init, init.num_trials(2), init.block(2));
 
     if exit_flag == 1
