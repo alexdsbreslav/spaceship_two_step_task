@@ -12,7 +12,7 @@ function start
 % testing or running the experiment?
 test = 1; % set to 1 for testing
 
-% ONLY SET = 1 DURING TESTING; collects screenshots
+% ONLY SET = 1 DURING TESTING; collects screenshots of all of the instructions
 img_collect_on = 0;
 
 % define the names of the foods; 5 salty foods followed by 5 sweet foods
@@ -92,8 +92,8 @@ if test == 1
 else
 % ----------------------------defaults for experiment---------------------------
 % ------------------------------------------------------------------------------
-    num_trials_practice = 10; % number of trials in the practice round
-    num_trials_main_task = 150; % number of trials in the main task
+    num_trials_practice = 2; % number of trials in the practice round
+    num_trials_main_task = 2; % number of trials in the main task
     file_root = '\Users\THRIVING_Study\Documents\mdt_thriving\raw_data'; % file root to use during the main experimental testing
     sl = '\'; % PC convention for slashes
     input_source = 0; % keyboard (input_source = 1 for touchscreen)
