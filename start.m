@@ -92,8 +92,8 @@ if test == 1
 else
 % ----------------------------defaults for experiment---------------------------
 % ------------------------------------------------------------------------------
-    num_trials_practice = 2; % number of trials in the practice round
-    num_trials_main_task = 2; % number of trials in the main task
+    num_trials_practice = 10; % number of trials in the practice round
+    num_trials_main_task = 150; % number of trials in the main task
     file_root = '\Users\THRIVING_Study\Documents\spaceship_task\raw_data'; % file root to use during the main experimental testing
     sl = '\'; % PC convention for slashes
     input_source = 0; % keyboard (input_source = 1 for touchscreen)
