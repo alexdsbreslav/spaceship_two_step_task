@@ -101,7 +101,7 @@ classdef task_func
                     if win == 1
                         if action == 0
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Collect your snack!'];
                             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                                 countdown_text = ['A break will begin shortly...' '\n' ...
@@ -112,7 +112,7 @@ classdef task_func
                             end
                         else
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Adding ' num2str(ticks) ' tickets to your total!'];
                             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                                 countdown_text = ['A break will begin shortly...' '\n' ...
@@ -124,7 +124,7 @@ classdef task_func
                         end
                     else
                         if trial == trials
-                            countdown_text = 'The game will end shortly...';
+                            countdown_text = 'The quest will end shortly...';
                         elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                             countdown_text = 'A break will begin shortly...';
                         else
@@ -135,7 +135,7 @@ classdef task_func
                     if win == 1
                         if action == 0
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Collect a sticker or tattoo!'];
                             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                                 countdown_text = ['A break will begin shortly...' '\n' ...
@@ -146,7 +146,7 @@ classdef task_func
                             end
                         else
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Adding ' num2str(ticks) ' tickets to your total!'];
                             elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                                 countdown_text = ['A break will begin shortly...' '\n' ...
@@ -158,7 +158,7 @@ classdef task_func
                         end
                     else
                         if trial == trials
-                            countdown_text = 'The game will end shortly...';
+                            countdown_text = 'The quest will end shortly...';
                         elseif trial == (trials/5) || trial == (2*trials/5) || trial == (3*trials/5) || trial == (4*trials/5)
                             countdown_text = 'A break will begin shortly...';
                         else
@@ -171,7 +171,7 @@ classdef task_func
                     if win == 1
                         if action == 0
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Collect your snack!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
@@ -179,7 +179,7 @@ classdef task_func
                             end
                         else
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Adding ' num2str(ticks) ' tickets to your total!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
@@ -188,7 +188,7 @@ classdef task_func
                         end
                     else
                         if trial == trials
-                            countdown_text = 'The game will end shortly...';
+                            countdown_text = 'The quest will end shortly...';
                         else
                             countdown_text = 'Returning Home...';
                         end
@@ -197,7 +197,7 @@ classdef task_func
                     if win == 1
                         if action == 0
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Collect a sticker or tattoo!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
@@ -205,7 +205,7 @@ classdef task_func
                             end
                         else
                             if trial == trials
-                                countdown_text = ['The game will end shortly...' '\n' ...
+                                countdown_text = ['The quest will end shortly...' '\n' ...
                                 'Adding ' num2str(ticks) ' tickets to your total!'];
                             else
                                 countdown_text = ['Returning Home...' '\n' ...
@@ -214,7 +214,7 @@ classdef task_func
                         end
                     else
                         if trial == trials
-                            countdown_text = 'The game will end shortly...';
+                            countdown_text = 'The quest will end shortly...';
                         else
                             countdown_text = 'Returning Home...';
                         end

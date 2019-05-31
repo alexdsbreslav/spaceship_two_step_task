@@ -253,7 +253,7 @@ Screen('TextSize', w, init.textsize_tickets);
 DrawFormattedText(w, '10', 'center', 'center', white, [],[],[],[],[], center_above_text);
 Screen('Textsize', w, init.textsize);
 DrawFormattedText(w,[
-    'At the end of the game, you will be able to use all your tickets to buy a prize.' ...
+    'At the end of the quest, you will be able to use all your tickets to buy a prize.' ...
     ], 'center',rect(4)*0.75, white, [], [], [], 1.6);
 Screen('Flip',w);
 WaitSecs(init.pause_to_read); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
@@ -472,7 +472,7 @@ for trial = 1:trials
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             else
                 DrawFormattedText(w,[
-                    'Let''s trade your space treasure for a sticker or tattoo. Press the DOWN arrow.' ...
+                    'Let''s trade your space treasure for a sticker or tattoo. Press the UP arrow.' ...
                     ],'center','center', white, [], [], [], 1.6, [], txt_bg);
             end
             Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);

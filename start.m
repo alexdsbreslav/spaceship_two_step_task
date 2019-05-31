@@ -94,7 +94,7 @@ else
 % ------------------------------------------------------------------------------
     num_trials_practice = 2; % number of trials in the practice round
     num_trials_main_task = 2; % number of trials in the main task
-    file_root = '\Users\THRIVING_Study\Documents\mdt_thriving\raw_data'; % file root to use during the main experimental testing
+    file_root = '\Users\THRIVING_Study\Documents\spaceship_task\raw_data'; % file root to use during the main experimental testing
     sl = '\'; % PC convention for slashes
     input_source = 0; % keyboard (input_source = 1 for touchscreen)
 end
