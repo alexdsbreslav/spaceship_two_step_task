@@ -84,8 +84,30 @@ classdef task_func
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
-        function pull = pull_ticket(mean, sd)
-            pull = round(normrnd(mean, sd));
+        function [pull, check_trial]  = pull_ticket(m, r, trial, checks)
+
+            if (nnz(checks) < 2) || ...
+               (trial >= 30 && trial < 60 && nnz(checks) < 4) || ...
+               (trial >= 60 && trial < 90 && nnz(checks) < 6) || ...
+               (trial >= 90 && trial < 120 && nnz(checks) < 8) || ...
+               (trial >= 120 && nnz(checks) < 10)
+
+                if checks(trial) ~= 0
+                    check_trial = checks(trial)*-1;
+                    pull = round(m + check_trial*15);
+                else
+                    check_trial = randi([-1 1]);
+                    if check_trial == 0
+                        pull = randi([round(m - r), round(m + r)]);
+                    else
+                        pull = round(m + check_trial*15);
+                    end
+                end
+            else
+                pull = randi([round(m - r), round(m + r)]);
+                check_trial = 0;
+            end
+
             if pull < 1
                 pull = 1;
             end

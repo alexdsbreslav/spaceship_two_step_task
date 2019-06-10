@@ -223,11 +223,11 @@ payoff = NaN(trials,2);
 iti_selected = zeros(trials, 1);
 iti_actual = zeros(trials, 1);
 
-tick = zeros(trials, 7);
+tick = zeros(trials, 8);
 
 % set initial values for distribution
 tick_mean = 10 + (init.purchase_early - 1)*5;
-tick_sd = 3;
+tick_window = 7;
 
 % set parameters for mf estimator of ticket value
 tick_alpha = 0.5;
@@ -237,7 +237,7 @@ tick(:,5) = tick_beta;
 
 % set initial values for tickets
 tick(1,1) = tick_mean;
-tick(1,2) = tick_sd;
+tick(1,2) = tick_window;
 tick(1,3) = tick_mean;
 % prob choose tickets given
 % if the value of snacks equals the mean of the dist for tickets
@@ -258,9 +258,6 @@ Screen('TextSize', w, init.textsize);
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % 7 - Task intro screens
-type = 0;
-picL = task_func.drawimage(w, A1, B1, A2, B2, A3, B3,type,1);
-picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3,1-type,1);
 
 DrawFormattedText(w,[
     'Welcome Space Captain,' '\n\n' ...
@@ -631,65 +628,74 @@ for trial = 1:trials
               [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
               if action(trial,4) == 0
-                  % chose snack/wrong --> increase value of snack, increase sd of dist
+                  % chose snack/wrong --> increase value of snack, increase range of dist
                   if tick(trial, 3) > tick(trial, 1)
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                      % range of dist
+                      if tick(trial,8) == -1
+                          tick(trial+1,2) = tick_window;
+                      else
+                          tick(trial+1,2) = tick(trial,2) + 1;
+                      end
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
-                  % chose snack/right --> decrease sd of dist
-                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
-                  else tick(trial, 3) <= tick(trial, 1)
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                  % chose snack/right --> decrease range of dist
+                  % if values =, then chose snack but prediction = 50% --> keep range of dist
+                  elseif tick(trial, 3) < tick(trial, 1)
+                      % range of dist
+                      if tick(trial,2) > 2
+                          tick(trial+1,2) = tick(trial,2) - 1;
+                      else
+                          tick(trial+1,2) = tick(trial,2);
+                      end
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1);
+                  else
+                      % range of dist
+                      tick(trial+1,2) = tick(trial,2);
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1);
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  [tick(trial+1,3), tick(trial+1,8)] = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2), trial, tick(1:trial, 8));
               elseif action(trial,4) == 1
                   % add tickets offered to tickets won!
                   tick(trial,7) = tick(trial,3);
-                  % chose ticket/right --> decrease sd of dist
+                  % chose ticket/right --> decrease range of dist
                   if tick(trial, 3) > tick(trial, 1)
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                      % range of dist
+                      if tick(trial,2) > 2
+                          tick(trial+1,2) = tick(trial,2) - 1;
+                      else
+                          tick(trial+1,2) = tick(trial,2);
+                      end
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1);
-                  % chose ticket/wrong --> increase sd of dist
-                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
-                  else tick(trial, 3) <= tick(trial, 1)
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                  % chose ticket/wrong --> increase range of dist
+                  % if values =, then chose snack but prediction = 50% --> keep range of dist
+                  elseif tick(trial, 3) < tick(trial, 1)
+                      % range of dist
+                      if tick(trial,8) == -1
+                          tick(trial+1,2) = tick_window;
+                      else
+                          tick(trial+1,2) = tick(trial,2) + 1;
+                      end
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
+                  else
+                      % range of dist
+                      tick(trial+1,2) = tick(trial,2);
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  [tick(trial+1,3), tick(trial+1,8)] = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2), trial, tick(1:trial, 8));
               end
 
-        % ---- feedback screen
-              if choice_loc == U
-                  % draw treasure to trade
-                  Screen('TextSize', w, init.textsize_feedback);
-                  Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
-                  DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
-                  % draw original stimuli
-                  Screen('DrawTexture', w, reward_top, [], reward_top_point);
-                  Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
-                  % draw frames around original stimuli
-                  Screen('FrameRect',w,chosen_color,reward_top_frame,10);
-                  Screen('FrameRect',w,frame_color,reward_bot_frame,10);
-                  % draw number of tickets
-                  Screen('TextSize', w, init.textsize_tickets);
-                  if type == 0
-                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
-                  else
-                      DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
-                  end
-                  Screen('Flip', w);
-                  % wait 1 second
-                  WaitSecs(init.feedback_time);
+              if (type == 0 && action(trial,4) == 0) || (type == 1 && action(trial,4) == 1)
+                  choice_loc = U;
+              else
+                  choice_loc = D;
+              end
 
              elseif choice_loc == D
                  % draw treasure to trade
@@ -726,6 +732,8 @@ for trial = 1:trials
 
             % carry the ticket total values from the last trial
             tick(trial+1,:) = tick(trial,:);
+            tick(trial, 1:7) = NaN;
+            tick(trial, 8) = 0;
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -910,43 +918,69 @@ for trial = 1:trials
               [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
               if action(trial,4) == 0
-                  % chose snack/wrong --> increase sd of dist
+                  % chose snack/wrong --> increase range of dist
                   if tick(trial, 3) > tick(trial, 1);
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                      % range of dist
+                      if tick(trial,8) == -1
+                          tick(trial+1,2) = tick_window;
+                      else
+                          tick(trial+1,2) = tick(trial,2) + 1;
+                      end
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
-                  % chose snack/right --> decrease sd of dist
-                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
-                  else tick(trial, 3) <= tick(trial, 1)
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                  % chose snack/right --> decrease range of dist
+                  % if values =, then chose snack but prediction = 50% --> keep range of dist
+                  elseif tick(trial, 3) < tick(trial, 1)
+                      % range of dist
+                      if tick(trial,2) > 2
+                          tick(trial+1,2) = tick(trial,2) - 1;
+                      else
+                          tick(trial+1,2) = tick(trial,2);
+                      end
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1);
+                  else
+                      % range of dist
+                      tick(trial+1,2) = tick(trial,2);
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1);
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  [tick(trial+1,3), tick(trial+1,8)] = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2), trial, tick(1:trial, 8));
               elseif action(trial,4) == 1
                   % add tickets offered to tickets won!
                   tick(trial,7) = tick(trial,3);
                   % mean of dist
                   tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3)-tick(trial,1));
-                  % chose ticket/right --> decrease sd of dist
+                  % chose ticket/right --> decrease range of dist
                   if tick(trial, 3) > tick(trial, 1)
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) - abs(0.5 - tick(trial,6));
+                      % range of dist
+                      if tick(trial,2) > 2
+                          tick(trial+1,2) = tick(trial,2) - 1;
+                      else
+                          tick(trial+1,2) = tick(trial,2);
+                      end
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1);
-                  % chose ticket/wrong --> increase sd of dist
-                  % if values =, then chose snack but prediction = 50% --> keep sd of dist
-                  else tick(trial, 3) <= tick(trial, 1)
-                      % sd of dist
-                      tick(trial+1,2) = tick(trial,2) + abs(0.5 - tick(trial,6));
+                  % chose ticket/wrong --> increase range of dist
+                  % if values =, then chose snack but prediction = 50% --> keep range of dist
+                  elseif tick(trial, 3) < tick(trial, 1)
+                      % range of dist
+                      if tick(trial,8) == -1
+                          tick(trial+1,2) = tick_window;
+                      else
+                          tick(trial+1,2) = tick(trial,2) + 1;
+                      end
+                      % mean of dist
+                      tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
+                  else
+                      % range of dist
+                      tick(trial+1,2) = tick(trial,2);
                       % mean of dist
                       tick(trial+1,1) = tick(trial,1) + tick_alpha*(tick(trial,3) - tick(trial,1));
                   end
                   % selected amount from normal dist
-                  tick(trial+1,3) = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2));
+                  [tick(trial+1,3), tick(trial+1,8)] = task_func.pull_ticket(tick(trial+1, 1), tick(trial+1,2), trial, tick(1:trial, 8));
               end
 
         % ---- feedback screen
@@ -1007,6 +1041,8 @@ for trial = 1:trials
 
             % carry the ticket total values from the last trial
             tick(trial+1,:) = tick(trial,:);
+            tick(trial, 1:7) = NaN;
+            tick(trial, 8) = 0;
 
             % ---- Draw trial screen
             % draw original stimuli
@@ -1116,7 +1152,7 @@ task.tick = tick;
 task.block = find(init.block == 1);
 task.spaceships = init.spaceships(3:4);
 task.aliens = init.aliens(5:8);
-task.ticket_sum = sum(task.tick(1:trials, 7));
+task.ticket_sum = nansum(task.tick(1:trials, 7));
 save([init.data_file_path sl 'task'], 'task', '-v6');
 
 % -----------------------------------------------------------------------------
