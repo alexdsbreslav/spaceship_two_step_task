@@ -48,7 +48,7 @@ loss_iti = [3, 0.5];
 
 % ----------------------------defaults for testing------------------------------
 % ------------------------------------------------------------------------------
-if test == 1
+if test == 0
     testing_on_mac = 1; % testing on the PC, not mac (testing_on_mac = 1 for mac)
     num_trials_practice = 10;
     num_trials_main_task = 10;
@@ -94,7 +94,7 @@ else
 % ------------------------------------------------------------------------------
     num_trials_practice = 10; % number of trials in the practice round
     num_trials_main_task = 150; % number of trials in the main task
-    file_root = '\Users\THRIVING_Study\Documents\spaceship_task\raw_data'; % file root to use during the main experimental testing
+    file_root = '\Users\thriving\Documents\spaceship_task\raw_data'; % file root to use during the main experimental testing
     sl = '\'; % PC convention for slashes
     input_source = 0; % keyboard (input_source = 1 for touchscreen)
 end
