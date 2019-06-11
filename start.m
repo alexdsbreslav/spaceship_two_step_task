@@ -10,7 +10,7 @@ function start
 % -----------------------------------Settings-----------------------------------
 % ------------------------------------------------------------------------------
 % testing or running the experiment?
-test = 1; % set to 1 for testing
+test = 0; % set to 1 for testing
 
 % ONLY SET = 1 DURING TESTING; collects screenshots of all of the instructions
 img_collect_on = 0;
@@ -48,8 +48,8 @@ loss_iti = [3, 0.5];
 
 % ----------------------------defaults for testing------------------------------
 % ------------------------------------------------------------------------------
-if test == 0
-    testing_on_mac = 1; % testing on the PC, not mac (testing_on_mac = 1 for mac)
+if test == 1
+    testing_on_mac = 0; % testing on the PC, not mac (testing_on_mac = 1 for mac)
     num_trials_practice = 10;
     num_trials_main_task = 10;
 
@@ -58,7 +58,8 @@ if test == 0
         sl = '/'; % Mac convention for the slashes
         input_source = 5; % internal keyboard
     else
-        file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
+        % file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; this is set up for Alex's profile on the test computer
+        file_root = '\Users\thriving\Documents\spaceship_task\raw_data'; % this is set up to run on the PC thriving account
         sl = '\'; % PC convention for slashes
         input_source = 0; % keyboard (input_source = 1 for touchscreen)
     end
