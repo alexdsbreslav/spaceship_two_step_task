@@ -49,14 +49,14 @@ loss_iti = [3, 0.5];
 % ----------------------------defaults for testing------------------------------
 % ------------------------------------------------------------------------------
 if test == 1
-    testing_on_mac = 0; % testing on the PC, not mac (testing_on_mac = 1 for mac)
-    num_trials_practice = 2;
-    num_trials_main_task = 2;
+    testing_on_mac = 1; % testing on the PC, not mac (testing_on_mac = 1 for mac)
+    num_trials_practice = 10;
+    num_trials_main_task = 10;
 
     if testing_on_mac == 1
         file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % this is set up to use on Alex's personal computer
         sl = '/'; % Mac convention for the slashes
-        input_source = 6; % external keyboard
+        input_source = 5; % internal keyboard
     else
         file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; % this is set up for Alex's profile on the test computer
         sl = '\'; % PC convention for slashes
@@ -442,68 +442,68 @@ if start_where <= 1;
 
 end
 
-if start_where <= 2
-% ---- 1: Tutorial
-    exit_flag = tutorial_part1(init);
-
-    if exit_flag == 1
-        disp('The script was exited because ESCAPE was pressed')
-        sca; return
-    end
-end
-
-if start_where <= 3
-% ---- 2: practice trials (Block 0 in code)
-    exit_flag = practice_trials(init, init.num_trials(1), init.block(1));
-
-    if exit_flag == 1
-        disp('The script was exited because ESCAPE was pressed')
-        sca; return
-    end
-end
-
-if start_where <= 4
-% ---- 1: Tutorial
-% ---- space prepped?
-    reward_bowl_prep = 99;
-    while isempty(reward_bowl_prep) || ~ismember(reward_bowl_prep, [0 1])
-        if strcmp(init.condition, 'food')
-          reward_bowl_prep = input(['\n\n' ...
-            'Left Food = ' init.left_item '\n'...
-            'Right Food = ' init.right_item '\n\n' ...
-            '**Left and right is from the participant''s perspective**' '\n\n' ...
-            '1 = Food is set up/participant has water; continue.' '\n' ...
-            '0 = I need to fix something; exit the script.' '\n' ...
-            'Response: ' ]);
-        else
-          reward_bowl_prep = input(['\n\n' ...
-            'Left Bowl = ' init.left_item '\n'...
-            'Right Bowl = ' init.right_item '\n\n' ...
-            '**Left and right is from the participant''s perspective**' '\n\n' ...
-            '1 = Bowls are set up; continue.' '\n' ...
-            '0 = I need to fix something; exit the script.' '\n' ...
-            'Response: ' ]);
-        end
-
-        if isempty(reward_bowl_prep) || ~ismember(reward_bowl_prep, [0 1])
-            disp('Invalid entry, please try again.')
-        end
-    end
-
-    if reward_bowl_prep == 0
-        disp([fprintf('\n') ...
-        'OK, you should restart the function to try again'])
-        sca;
-        return
-    end
-
-    exit_flag = tutorial_part2(init);
-
-    if exit_flag == 1
-        disp('The script was exited because ESCAPE was pressed')
-        sca; return
-    end
-end
+% if start_where <= 2
+% % ---- 1: Tutorial
+%     exit_flag = tutorial_part1(init);
+%
+%     if exit_flag == 1
+%         disp('The script was exited because ESCAPE was pressed')
+%         sca; return
+%     end
+% end
+%
+% if start_where <= 3
+% % ---- 2: practice trials (Block 0 in code)
+%     exit_flag = practice_trials(init, init.num_trials(1), init.block(1));
+%
+%     if exit_flag == 1
+%         disp('The script was exited because ESCAPE was pressed')
+%         sca; return
+%     end
+% end
+%
+% if start_where <= 4
+% % ---- 1: Tutorial
+% % ---- space prepped?
+%     reward_bowl_prep = 99;
+%     while isempty(reward_bowl_prep) || ~ismember(reward_bowl_prep, [0 1])
+%         if strcmp(init.condition, 'food')
+%           reward_bowl_prep = input(['\n\n' ...
+%             'Left Food = ' init.left_item '\n'...
+%             'Right Food = ' init.right_item '\n\n' ...
+%             '**Left and right is from the participant''s perspective**' '\n\n' ...
+%             '1 = Food is set up/participant has water; continue.' '\n' ...
+%             '0 = I need to fix something; exit the script.' '\n' ...
+%             'Response: ' ]);
+%         else
+%           reward_bowl_prep = input(['\n\n' ...
+%             'Left Bowl = ' init.left_item '\n'...
+%             'Right Bowl = ' init.right_item '\n\n' ...
+%             '**Left and right is from the participant''s perspective**' '\n\n' ...
+%             '1 = Bowls are set up; continue.' '\n' ...
+%             '0 = I need to fix something; exit the script.' '\n' ...
+%             'Response: ' ]);
+%         end
+%
+%         if isempty(reward_bowl_prep) || ~ismember(reward_bowl_prep, [0 1])
+%             disp('Invalid entry, please try again.')
+%         end
+%     end
+%
+%     if reward_bowl_prep == 0
+%         disp([fprintf('\n') ...
+%         'OK, you should restart the function to try again'])
+%         sca;
+%         return
+%     end
+%
+%     exit_flag = tutorial_part2(init);
+%
+%     if exit_flag == 1
+%         disp('The script was exited because ESCAPE was pressed')
+%         sca; return
+%     end
+% end
 
 if start_where <= 5
 % ---- 3: main experiment trials

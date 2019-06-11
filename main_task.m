@@ -171,7 +171,7 @@ else
         state2_color = 'purple';
         state2_name = 'Pentarus';
         state3_color = 'red';
-        state3_name = 'Rigel'
+        state3_name = 'Rigel';
     else
         state2_color = 'green';
         state2_name = 'Gaspar';
@@ -258,7 +258,9 @@ Screen('TextSize', w, init.textsize);
 % -----------------------------------------------------------------------------
 % -----------------------------------------------------------------------------
 % 7 - Task intro screens
-
+type = 0;
+picL = task_func.drawimage(w, A1, B1, A2, B2, A3, B3,type,1);
+picR = task_func.drawimage(w, A1, B1, A2, B2, A3, B3,1-type,1);
 DrawFormattedText(w,[
     'Welcome Space Captain,' '\n\n' ...
     'We are sending you on a 150 day quest to' '\n' ...
@@ -365,22 +367,22 @@ for trial = 1:trials
         if trial == (trials/5) + 1
             DrawFormattedText(w, [
                 'Let''s pause the game and take a short break!' '\n' ...
-                'You''ve earned ' num2str(sum(tick(1:trial-1,7))) ' tickets. Nice job!' '\n\n' ...
+                'You''ve earned ' num2str(nansum(tick(1:trial-1,7))) ' tickets. Nice job!' '\n\n' ...
                 'This is a good time to take a drink of water.' '\n\n' ...
                 'When you are ready, ' init.researcher ' will unpause the game.' ...
                 ],'center', 'center', white, [], [], [], 1.6);
         else
             DrawFormattedText(w, [
                 'Let''s pause the game and take a short break!' '\n' ...
-                'You''ve earned ' num2str(sum(tick(trial-trials/5:trial-1,7))) ' more tickets. Nice job!' '\n\n' ...
+                'You''ve earned ' num2str(nansum(tick(trial-trials/5:trial-1,7))) ' more tickets. Nice job!' '\n\n' ...
                 'This is a good time to take a drink of water.' '\n\n' ...
                 'When you are ready, ' init.researcher ' will unpause the game.' ...
                 ],'center', 'center', white, [], [], [], 1.6);
         end
 
         DrawFormattedText(w, [
-            trial/(trials/5) ' of 5' ...
-            ],rect(3)*.95, rect(4)*.95, white, [], [], [], 1.6);
+            num2str(trial/(trials/5)) ' of 5' ...
+            ],rect(3)*.9, rect(4)*.95, white, [], [], [], 1.6);
 
         Screen(w, 'Flip');
         task_func.advance_screen(init.input_source)
@@ -539,7 +541,7 @@ for trial = 1:trials
         end
 
     % ---- feedback screen
-        if choice_loc == L
+    if choice_loc == L
           % draw background
           Screen('DrawTexture', w, planet_2, [], space_bg);
           % draw original stimuli
@@ -552,7 +554,7 @@ for trial = 1:trials
           % wait 1 second
           WaitSecs(init.feedback_time);
 
-       elseif choice_loc == R
+        elseif choice_loc == R
           % draw background
           Screen('DrawTexture', w, planet_2, [], space_bg);
           % draw original stimuli
@@ -564,7 +566,7 @@ for trial = 1:trials
           Screen('Flip', w);
           % wait 1 second
           WaitSecs(init.feedback_time);
-        end
+     end
 
         % ---- payoff screen
         % ---- show feedback
@@ -696,7 +698,28 @@ for trial = 1:trials
               else
                   choice_loc = D;
               end
-
+        % ---- feedback screen
+             if choice_loc == U
+                % draw treasure to trade
+                Screen('TextSize', w, init.textsize_feedback);
+                Screen('DrawTexture', w, treasure_spent, [], treasure_trade);
+                DrawFormattedText(w, 'Trade your space treasure', 'center', 'center', white, [],[],[],[],[],reward_text);
+                % draw original stimuli
+                Screen('DrawTexture', w, reward_top, [], reward_top_point);
+                Screen('DrawTexture', w, reward_bot, [], reward_bot_point);
+                % draw frames around original stimuli
+                Screen('FrameRect',w,chosen_color,reward_top_frame,10);
+                Screen('FrameRect',w,frame_color,reward_bot_frame,10);
+                % draw number of tickets
+                Screen('TextSize', w, init.textsize_tickets);
+                if type == 0
+                    DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_bot);
+                else
+                    DrawFormattedText(w, num2str(tick(trial,3)), 'center', 'center', white, [],[],[],[],[],tick_text_top);
+                end
+                Screen('Flip', w);
+                % wait 1 second
+                WaitSecs(init.feedback_time);
              elseif choice_loc == D
                  % draw treasure to trade
                  Screen('TextSize', w, init.textsize_feedback);
@@ -919,7 +942,7 @@ for trial = 1:trials
 
               if action(trial,4) == 0
                   % chose snack/wrong --> increase range of dist
-                  if tick(trial, 3) > tick(trial, 1);
+                  if tick(trial, 3) > tick(trial, 1)
                       % range of dist
                       if tick(trial,8) == -1
                           tick(trial+1,2) = tick_window;
