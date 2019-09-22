@@ -10,7 +10,7 @@ function start
 % -----------------------------------Settings-----------------------------------
 % ------------------------------------------------------------------------------
 % testing or running the experiment?
-test = 0; % set to 1 for testing
+test = 1; % set to 1 for testing
 
 % ONLY SET = 1 DURING TESTING; collects screenshots of all of the instructions
 img_collect_on = 0;
@@ -49,14 +49,14 @@ loss_iti = [3, 0.5];
 % ----------------------------defaults for testing------------------------------
 % ------------------------------------------------------------------------------
 if test == 1
-    testing_on_mac = 0; % testing on the PC, not mac (testing_on_mac = 1 for mac)
-    num_trials_practice = 10;
-    num_trials_main_task = 10;
+    testing_on_mac = 1; % testing on the PC, not mac (testing_on_mac = 1 for mac)
+    num_trials_practice = 0;
+    num_trials_main_task = 15;
 
     if testing_on_mac == 1
         file_root = '/Users/alex/OneDrive - Duke University/1_research/2_mdt_thriving/6_raw_data'; % this is set up to use on Alex's personal computer
         sl = '/'; % Mac convention for the slashes
-        input_source = 5; % internal keyboard
+        input_source = 6; % internal keyboard (5); external keyboard (6)
     else
         % file_root = '\Users\ads48\Documents\mdt_thriving\raw_data'; this is set up for Alex's profile on the test computer
         file_root = '\Users\THRIVING_Study\Documents\spaceship_task\raw_data'; % this is set up to run on the PC thriving account
@@ -133,7 +133,6 @@ else
    sub_exists = 99;
 end
 
-
 if sub_exists == 1
    disp([ fprintf('\n') ...
    'OK, you should restart the function to try again'])
@@ -141,22 +140,63 @@ if sub_exists == 1
    return
 
 elseif sub_exists == 0
-    load([data_file_path sl 'init.mat']);
-
+  % this is looking for complete data other than on the main task; all files should exist but the number of trials doesn't match
+  % the number of trials with an iti_actual. I am using iti_actual as the indicator of a complete trial because it doesn't populate
+  % until the very end of the code for each trial.
     start_where = 99;
-    while isempty(start_where) || ~ismember(start_where, [0 1 2 3 4 5])
-        start_where = input(['Where do you want to start?' '\n' ...
-        'You will overwrite any existing data on and after the place you choose.' '\n\n' ...
-        '0 = CANCEL and restart the function' '\n' ...
-        '1 = Re-initialize the subject''s data (this completely starts over)' '\n' ...
-        '2 = Tutorial Part 1' '\n' ...
-        '3 = Practice Game' '\n' ...
-        '4 = Tutorial Part 2' '\n' ...
-        '5 = Main Game' '\n' ...
-        'Response: ']);
+    if isfile([data_file_path sl 'init.mat']) && isfile([data_file_path sl 'practice.mat']) && isfile([data_file_path sl 'task.mat'])
+        load([data_file_path sl 'init.mat']);
+        load([data_file_path sl 'task.mat']);
+        if init.num_trials(2) == nnz(task.iti_actual)
+            while isempty(start_where) || ~ismember(start_where, [0 99])
+                start_where = input(['\n\n' ...
+                'This subject has complete data,' '\n' ...
+                'are you sure you want to overwrite it?' '\n\n' ...
+                '0 = CANCEL and restart the function' '\n' ...
+                '99 = Yes, I want to overwrite the data' '\n' ...
+                'Response: ']);
 
-        if isempty(start_where) || ~ismember(start_where, [0 1 2 3 4 5])
-          disp('Invalid entry, please try again.')
+                if isempty(start_where) || ~ismember(start_where, [0 99])
+                  disp('Invalid entry, please try again.')
+                end
+            end
+        else
+            while isempty(start_where) || ~ismember(start_where, [0 5])
+                start_where = input(['\n\n' ...
+                'This subject has incomplete data for the main game.' '\n' ...
+                'It looks like they completed ' num2str(nnz(task.iti_actual)) ' trials.' '\n' ...
+                'They still have ' num2str(init.num_trials(2) - nnz(task.iti_actual)) ' to go.' '\n' ...
+                'Do you want to restart the game where they left off (on trial ' num2str(nnz(task.iti_actual) + 1) ')?' '\n\n' ...
+                '0 = I need to fix something; restart the function.' '\n' ...
+                '5 = Yes, restart the main game at trial ' num2str(nnz(task.iti_actual) + 1) '\n' ...
+                'Response: ']);
+
+                if isempty(start_where) || ~ismember(start_where, [0 5])
+                  disp('Invalid entry, please try again.')
+                end
+            end
+
+            init.trials_start = nnz(task.iti_actual) + 1;
+            save([data_file_path sl 'init'], 'init', '-v6');
+        end
+    end
+
+    if start_where == 99
+        while isempty(start_where) || ~ismember(start_where, [0 1 2 3 4 5])
+            start_where = input(['\n\n' ...
+            'Where do you want to start?' '\n' ...
+            'You will overwrite any existing data on and after the place you choose.' '\n\n' ...
+            '0 = CANCEL and restart the function' '\n' ...
+            '1 = Re-initialize the subject''s data (this completely starts over)' '\n' ...
+            '2 = Tutorial Part 1' '\n' ...
+            '3 = Practice Game' '\n' ...
+            '4 = Tutorial Part 2' '\n' ...
+            '5 = Main Game' '\n' ...
+            'Response: ']);
+
+            if isempty(start_where) || ~ismember(start_where, [0 1 2 3 4 5])
+              disp('Invalid entry, please try again.')
+            end
         end
     end
 
@@ -411,6 +451,7 @@ if start_where <= 1;
     init.pause_to_read = 0.5;
     init.explore_time = 1;
     init.feedback_time = 1;
+    init.trials_start = 1;
 
     save([data_file_path sl 'init'], 'init', '-v6');
 
@@ -440,7 +481,8 @@ if start_where <= 1;
        sca;
        return
     end
-
+else
+    load([data_file_path sl 'init.mat']);
 end
 
 if start_where <= 2
