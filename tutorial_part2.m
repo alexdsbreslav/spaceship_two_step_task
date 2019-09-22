@@ -549,11 +549,9 @@ for trial = 1:trials
           if type == 0
               earth_loc = reward_top_point;
               earth_frame = reward_top_frame;
-              RestrictKeysForKbCheck([U]);
           else
               earth_loc = reward_bot_point;
               earth_frame = reward_bot_frame;
-              RestrictKeysForKbCheck([D]);
           end
 
           % ---- Draw trial screen
@@ -566,7 +564,11 @@ for trial = 1:trials
           Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
           % ---- capture key press
-          [selection, x, y] = task_func.selection(init.input_source, [U,D], w, rects);
+          if type == 0
+              [selection, x, y] = task_func.selection(init.input_source, [U], w, rects);
+          else
+              [selection, x, y] = task_func.selection(init.input_source, [D], w, rects);
+          end
 
           % ---- capture selection
           [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
@@ -820,11 +822,9 @@ for trial = 1:trials
           if type == 0
               earth_loc = reward_top_point;
               earth_frame = reward_top_frame;
-              RestrictKeysForKbCheck([U]);
           else
               earth_loc = reward_bot_point;
               earth_frame = reward_bot_frame;
-              RestrictKeysForKbCheck([D]);
           end
 
           % ---- Draw trial screen
@@ -836,7 +836,12 @@ for trial = 1:trials
           Screen('Flip', w); img_idx = task_func.get_img(img_idx, init, init.img_collect_on, w);
 
           % ---- capture key press
-          [selection, x, y] = task_func.selection(init.input_source, [U,D], w, rects);
+          if type == 0
+              [selection, x, y] = task_func.selection(init.input_source, [U], w, rects);
+          else
+              [selection, x, y] = task_func.selection(init.input_source, [D], w, rects);
+          end
+
           % ---- capture selection
           [action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
 
