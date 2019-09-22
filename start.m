@@ -10,7 +10,7 @@ function start
 % -----------------------------------Settings-----------------------------------
 % ------------------------------------------------------------------------------
 % testing or running the experiment?
-test = 1; % set to 1 for testing
+test = 0; % set to 1 for testing
 
 % ONLY SET = 1 DURING TESTING; collects screenshots of all of the instructions
 img_collect_on = 0;
