@@ -14,6 +14,7 @@ exit_flag = 0;
 sl = init.slash_convention;
 
 % ---- psychtoolbox set up
+Screen('Preference', 'SkipSyncTests', 1);
 Screen('Preference', 'VisualDebugLevel', 1);% change psych toolbox screen check to black
 FlushEvents;
 HideCursor;
