@@ -1,6 +1,9 @@
 # Spaceship Two-Step Sequential Learning Task
 This is an adaptation of Nathaniel Daw's two-step decision making task.
-Original code and stimuli were generously shared by Dr. Arkady Konovalov and Dr. Catherine Hartley.
+
+- Author: Alexander Breslav (Duke)
+- Collaborators: Dr. Scott Huettel (Duke), Dr. Julia Schechter (Duke), Dr. Nancy Zucker (Duke), Dr. John Pearson (Duke)
+- Original code and stimuli were generously shared by Dr. Arkady Konovalov (UZH) [[citation]](https://www.nature.com/articles/ncomms12438?origin=ppub) and Dr. Catherine Hartley (NYU) [[citation]](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4899156/).
 
 This version of the task uses spaceships/aliens stimuli and is designed for kids.
 I have made a number of major changes for the purposes of my work:
