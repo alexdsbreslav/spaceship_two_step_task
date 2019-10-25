@@ -446,6 +446,7 @@ for trial = init.trials_start:trials
     % ---- stop reaction timer
     task.off(trial,1) = GetSecs - t0;
     task.off_datetime{trial,1} = clock;
+    task.rt(trial, 1) = task.off(trial,1) - task.on(trial,1);
 
     % ---- capture selection
     [task.action(trial,1), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
@@ -547,6 +548,7 @@ for trial = init.trials_start:trials
     % ---- stop reaction timer
         task.off(trial,2) = GetSecs - t0;
         task.off_datetime{trial,2} = clock;
+        task.rt(trial, 2) = task.off(trial,2) - task.on(trial,2);
 
     % ---- capture selection and determine payoff
         [task.action(trial,2), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
@@ -650,6 +652,7 @@ for trial = init.trials_start:trials
         % ---- stop reaction timer
               task.off(trial,4) = GetSecs - t0;
               task.off_datetime{trial,4} = clock;
+              task.rt(trial, 4) = task.off(trial,4) - task.on(trial,4);
 
         % ---- capture selection
               [task.action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
@@ -806,6 +809,7 @@ for trial = init.trials_start:trials
             % ---- stop reaction timer
             task.off(trial,4) = GetSecs - t0;
             task.off_datetime{trial,4} = clock;
+            task.rt(trial, 4) = task.off(trial,4) - task.on(trial,4);
 
             % ---- code selection
             task.action(trial,4)= NaN;
@@ -861,6 +865,7 @@ for trial = init.trials_start:trials
     % ---- stop reaction timer
         task.off(trial,3) = GetSecs - t0;
         task.off_datetime{trial,3} = clock;
+        task.rt(trial, 3) = task.off(trial,3) - task.on(trial,3);
 
     % ---- capture selection and determine payoff
         [task.action(trial,3), choice_loc] = task_func.choice(type, [L,R], selection, x, y);
@@ -964,6 +969,7 @@ for trial = init.trials_start:trials
         % ---- stop reaction timer
               task.off(trial,4) = GetSecs - t0;
               task.off_datetime{trial,4} = clock;
+              task.rt(trial, 4) = task.off(trial,4) - task.on(trial,4);
 
         % ---- capture selection
               [task.action(trial,4), choice_loc] = task_func.choice(type, [U,D], selection, x, y);
@@ -1118,6 +1124,7 @@ for trial = init.trials_start:trials
             % ---- stop reaction timer
             task.off(trial,4) = GetSecs - t0;
             task.off_datetime{trial,4} = clock;
+            task.rt(trial, 4) = task.off(trial,4) - task.on(trial,4);
 
             % ---- code selection
             task.action(trial,4) = NaN;
