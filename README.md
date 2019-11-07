@@ -19,6 +19,7 @@ Dependencies:
 - MatLab 9.4
 - Psychtoolbox 3
 - Statistics and Machine Learning Toolbox 11.3
+- Robotics System Toolbox 2.0
 
 Please do not share or use this code without my written consent.  
 alexander.breslav@duke.edu
