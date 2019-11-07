@@ -15,5 +15,10 @@ For this version of the task:
 
 - There are practice rounds and one block of 150 trials. In the block of 150 trials, participants attempt to win space treasure. After each trial in which they win space treasure, they are able to "trade" their space treasure for tickets or food. Tickets are accumulated and used to purchase a prize at the end of the study. If participants trade their space treasure for food, participants get one "bite" (e.g. 1 M&M, 1 CheezIt) of food immediately.
 
+Dependencies:
+- MatLab 9.4
+- Psychtoolbox 3
+- Statistics and Machine Learning Toolbox 11.3
+
 Please do not share or use this code without my written consent.  
 alexander.breslav@duke.edu
