@@ -148,6 +148,7 @@ elseif sub_exists == 0
         load([data_file_path sl 'init.mat']);
         load([data_file_path sl 'task.mat']);
         if init.num_trials(2) == nnz(task.iti_actual)
+            start_where = 999;
             while isempty(start_where) || ~ismember(start_where, [0 99])
                 start_where = input(['\n\n' ...
                 'This subject has complete data,' '\n' ...
